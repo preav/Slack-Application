@@ -9,5 +9,3 @@ import 'bootstrap';
 import 'jquery-ui/ui/disable-selection';
 
 require('font-awesome/css/font-awesome.css');
-
-console.log('Hello World');
