@@ -1,1 +1,10 @@
 @import '~bootstrap/scss/bootstrap';
+
+.footer {
+    position: fixed;
+    margin: auto;
+    bottom: 20px;
+    width: 80%;
+    color: white;
+    text-align: center;
+ }
