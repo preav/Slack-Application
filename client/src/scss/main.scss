@@ -1,5 +1,38 @@
 @import '~bootstrap/scss/bootstrap';
 
+html, body
+{
+    height:100%;
+    width:100%;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+#container-root
+{            
+    padding:0px;
+    margin:0px;
+    height:100%;
+}
+
+.home-section
+{
+    background-color:#F4F9FA;
+    padding: 64px 0px;
+}
+
+.home-section-inner
+{
+    margin: 0px 70px;
+}
+
+.home-section-header
+{
+    font-size: 4.8rem;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
 .footer {
     position: fixed;
     margin: auto;
