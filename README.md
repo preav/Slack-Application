@@ -1,2 +1,1 @@
-# Slack-Application
-Application which resembles Slack
+SLACK APP
