@@ -8,3 +8,33 @@
     color: white;
     text-align: center;
  }
+
+ .panBackground {
+    background: wheat;
+}
+
+.panComponents {
+    margin: 30px 70px 30px 70px;
+}
+
+.btn {
+    margin: 10px;
+}
+
+#close {
+    float:right;
+    display:inline-block;
+    padding:2px 5px;
+}
+
+#close:hover {
+    float:right;
+    display:inline-block;
+    padding:2px 5px;
+    color:#fff;
+}
+
+.commandComment {
+    width: 500px;
+    height: 50px;
+}
