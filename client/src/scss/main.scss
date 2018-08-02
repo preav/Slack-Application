@@ -1,9 +1,14 @@
 @import '~bootstrap/scss/bootstrap';
 
-html, body
+html
 {
     height:100%;
-    width:100%;
+}
+
+body
+{
+   min-height:100%;
+   background-color:#F4F9FA;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,7 +22,6 @@ html, body
 
 .home-section
 {
-    background-color:#F4F9FA;
     padding: 64px 0px;
 }
 
@@ -29,6 +33,25 @@ html, body
 .home-section-header
 {
     font-size: 4.8rem;
+}
+
+.dashboard
+{
+    background-color:#F4F9FA;
+}
+
+.team-link
+{
+    border: 1px solid #B5B8B9;
+    border-radius: 5px;
+    padding: .6rem 0 .6rem 1rem;
+    margin-bottom: 1.2rem;
+}
+
+.team-link:hover
+{
+    background-color:#D7DADA;
+    text-decoration: none;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
