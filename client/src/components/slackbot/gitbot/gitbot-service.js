@@ -1,32 +1,46 @@
-import { RECAST_API_URL, RECAST_APP_TOKEN } from '../constants/constants';
+import { config } from '../../../../../config/config';
+import { GITHUB_API_TOKEN, GITHUB_API_CREATE_REPO_URL } from '../constants/constants';
 
-// // persisting github create repo widget state into database
-// export const createRepositoryservice = function (widgetData) {
-//   console.log('widgetData in gitbot-service.js ', widgetData);
-//   // code calling firebase database
-//   // createRepositorydatabseCall(widgetData).then((response) => {
-//   //   console.log(`command-line-cotroller.js  recastResponse slug= ${response}`);
-//   // }).catch((err) => {
-//   //   console.log(err, 'error in command-line-controller.js ...');
-//   // });
-//   return 'returning from gitbot-service.js';
-// };
+const firebase = require('firebase');
 
-export const createRepositoryservice = widgetData => new Promise((resolve, reject) => {
-  // use database call
-  fetch(RECAST_API_URL + widgetData, {
-    method: 'post',
+firebase.initializeApp(config);
+// function to save data into firebase database
+export const createRepoFirebaseService = widgetData => new Promise((resolve, reject) => {
+  // const slackbotRef = ref.child('slackbot/gitbot');
+  firebase.database().ref(`slackbot/gitbot/${widgetData.id}`).set({
+    id: widgetData.id,
+    commandEntered: widgetData.commandEntered,
+    widgetName: widgetData.widgetName,
+    repositoryName: widgetData.repositoryName,
+    userId: widgetData.userId,
+    postedOn: widgetData.postedOn,
+  }, (error) => {
+    if (error) {
+      reject(error);
+      console.log(error, 'There is error while saving data into firebase...');
+    } else {
+      console.log('saved successfully...');
+      resolve(widgetData);
+    }
+  });
+});
+// function to create repository into github account (right now it is in account of anokha777)
+export const createRepoGithubService = repositoryName => new Promise((resolve, reject) => {
+  fetch(GITHUB_API_CREATE_REPO_URL, {
+    method: 'POST',
     headers: {
-      Authorization: `Token ${RECAST_APP_TOKEN}`,
       'Content-Type': 'application/json',
+      Authorization: `token ${GITHUB_API_TOKEN}`,
     },
+    body: JSON.stringify({
+      name: repositoryName,
+    }),
   }).then((res) => {
     res.json().then((data) => {
-      resolve(data.results);
+      resolve(data);
     });
   }).catch((err) => {
-    // reject(Error("There is error in resolving name of repository from sentence..."));
     reject(err);
-    console.log(err, 'There is error in resolving name of repository from sentence...');
+    console.log(err, 'There is error while creating git repository through github api...');
   });
 });

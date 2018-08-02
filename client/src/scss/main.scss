@@ -39,6 +39,38 @@
     height: 50px;
 }
 
+#playGround {
+    display: block;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    color: #333;
+    word-wrap: break-word;
+    margin: .5rem 0 .2rem;
+    font-size: .75rem;
+    line-height: 1.15rem;
+    background: #f9f9f9;
+    font-family: Monaco,Menlo,Consolas,"Courier New",monospace!important;
+    padding: .5rem;
+    -webkit-font-variant-ligatures: none;
+    font-variant-ligatures: none;
+    word-break: normal;
+    tab-size: 4;
+    float:left;
+    width:80%;
+    overflow-y: auto;
+    height: 600px;
+}
+
+.playGroungDiv{
+    background: wheat;
+    padding: 10px;
+    margin: 2px;
+}
+
+.playGroungDiv:hover{
+    background: rgb(175, 175, 175);
+}
+
 #todolistModalBody .fa {
     font-size: 24px;
     cursor: pointer;

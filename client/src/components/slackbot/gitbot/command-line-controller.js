@@ -7,11 +7,33 @@ export const hitEnter = function (e) {
   // calling recast api
     recastAPIservice(e.target.value).then((recastResponse) => {
       console.log(`command-line-cotroller.js  recastResponse slug= ${recastResponse.intents[0].slug}`);
+      const currentdate = new Date();
+      const datetime = `On ${currentdate.getDate()}/${
+        currentdate.getMonth() + 1}/${
+        currentdate.getFullYear()} at ${
+        currentdate.getHours()}:${
+        currentdate.getMinutes()}:${
+        currentdate.getSeconds()}`;
       if (recastResponse.intents[0].slug === 'create-git-repo') {
+        const widgetData = {
+          id: '2',
+          commandEntered: e.target.value,
+          widgetName: recastResponse.intents[0].slug,
+          repositoryName: recastResponse.entities.git_repo[0].value,
+          userId: '',
+          postedOn: datetime,
+        };
+
+        console.log(`widgetData=${widgetData}`);
+
+        // save createRepository widget state to database code --> calling gitbot-controller
+        createRepository(widgetData);
+      }
+      if (recastResponse.intents[0].slug === 'create-git-issue') {
         const widgetData = {
           id: '',
           commandEntered: e.target.value,
-          taskWidgetName: recastResponse.intents[0].slug,
+          widgetName: recastResponse.intents[0].slug,
           repositoryName: recastResponse.entities.git_repo[0].value,
           repositoryCmt: '',
         };
