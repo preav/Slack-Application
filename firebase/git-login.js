@@ -1,6 +1,7 @@
 import './firebase-config';
 import firebase from 'firebase';
 import { homeComponentView, createDashboardView } from '../client/src/components/onboarding/onboarding-controller';
+import { saveUpdateUser } from './onboarding-db';
 
 const provider = new firebase.auth.GithubAuthProvider();
 
@@ -12,14 +13,28 @@ export function gitLogin() {
 
     firebase.auth().signInWithPopup(provider)
       .then((result) => {
-        // const token = result.credential.accessToken;
-        // const user = result.user;
+        // console.log(result);
+        // console.log(result.credential.accessToken);
+        // console.log(result.user.uid);
+        // console.log(result.user.phoneNumber);
+        // console.log(result.additionalUserInfo.username);
+        // console.log(result.additionalUserInfo.providerId); //github.com
+        // console.log(result.additionalUserInfo.profile.html_url); // https://github.com/OceanK007
 
-        console.log(result);
-        // console.log(user);
-        // console.log(token);
+        const userObject = {
+          userId: result.user.uid,
+          name: result.user.displayName,
+          email: result.user.email,
+          profilePicture: result.user.photoURL,
+          phoneNumber: result.user.phoneNumber,
+          username: result.additionalUserInfo.username,
+          gitURL: result.additionalUserInfo.profile.html_url,
+          teams: ['team-one', 'team-two'],
+          status: 'active',
+          permission: { write: false, read: true },
+        };
 
-        // createDashboardView();
+        saveUpdateUser(userObject);
       });
     //   .catch((error) => {
     //     document.getElementById('git-login').disabled = false;
@@ -31,14 +46,13 @@ export function gitLogin() {
     //   });
   } else {
     // console.log('User already exist');
-    // createDashboardView();
+
   }
 }
 
 export function gitLogout() {
   firebase.auth().signOut()
     .then(() => {
-      // createDashboardView();
       // console.log('Signout successful!');
     }); // , (error) => { console.log('Signout failed'); };
 }
@@ -48,13 +62,17 @@ export function gitLogout() {
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
     console.log('State changed: User exist');
-    console.log(user);
-    const dashComponent = createDashboardView();
-    dashComponent.querySelector('#git-signout').addEventListener('click', () => { gitLogout(); });
+    // console.log(user);
+    createDashboardView();
+    document.querySelector('#git-signout').addEventListener('click', () => { gitLogout(); });
+    document.querySelector('#git-signout').classList.remove('d-none');
+    document.querySelector('#user-profile').classList.remove('d-none');
   } else {
     console.log("State changed: User doesn't exist");
     const homeComp = homeComponentView();
     homeComp.querySelector('#git-login').addEventListener('click', () => { gitLogin(); });
     homeComp.querySelector('#git-login').disabled = false;
+    document.querySelector('#git-signout').classList.add('d-none');
+    document.querySelector('#user-profile').classList.add('d-none');
   }
 });
