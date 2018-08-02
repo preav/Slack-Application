@@ -43,3 +43,15 @@
     font-size: 24px;
     cursor: pointer;
 }
+
+.reminderRow {
+    ul, li {
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        list-style: none;
+        padding: 0 16px;
+    }
+}
