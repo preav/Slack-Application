@@ -35,6 +35,10 @@ export function gitLogin() {
           permission: { write: false, read: true },
         };
 
+        // Saving username, since firebase.auth().currentUser doesn't provide username later on
+        firebase.auth().currentUser.username = result.additionalUserInfo.username;
+
+        // Saving/updating current logged in user
         saveUpdateUser(userObject);
       });
     //   .catch((error) => {

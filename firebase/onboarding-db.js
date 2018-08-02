@@ -22,7 +22,7 @@ export function writeUserData(userObject) {
 
 export function saveUpdateUser(userObject) {
   // read the data
-  database.ref(`/users/${userObject.userId}`).once('value', (snapshot) => {
+  database.ref(`/users/${userObject.username}`).once('value', (snapshot) => {
     // console.log(snapshot.val());
 
     if (snapshot.val() != null) {
@@ -32,15 +32,6 @@ export function saveUpdateUser(userObject) {
       //   console.log('User', snapshot.val());
       //   console.log(`user object: ${uId}, ${name}, ${email}, ${profilePicture}`);
       //   console.log(user);
-      //   const userFetched = {
-      //     userId: snapshot.key,
-      //     name: snapshot.val().name,
-      //     email: snapshot.val().email,
-      //     profilePicture: snapshot.val().profilePicture,
-      //     teams: snapshot.val().teams,
-      //     status: snapshot.val().status,
-      //     permission: snapshot.val().permission,
-      //   };
     } else {
       console.log('User not found in database: Saving user');
       writeUserData(userObject);
@@ -48,6 +39,25 @@ export function saveUpdateUser(userObject) {
   });
 }
 
+export function writeTeamData(teamObject) {
+  database.ref(`teams/${teamObject.teamName}`).set({
+    companyName: teamObject.companyName,
+    private: teamObject.private,
+    users: teamObject.users,
+    admins: teamObject.admins,
+  });
+}
+
+export function saveUpdateTeam(teamObject) {
+  database.ref(`/teams/${teamObject.teamName}`).once('value', (snapshot) => {
+    if (snapshot.val() != null) {
+      console.log('Team found in database');
+    } else {
+      console.log('Team not found in database: Saving team');
+      writeTeamData(teamObject);
+    }
+  });
+}
 // writeUserData(
 //   {
 //     userId: '2',

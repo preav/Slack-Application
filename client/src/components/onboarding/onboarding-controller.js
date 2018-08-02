@@ -1,6 +1,23 @@
 import { homePageComponent, homeViewHolderId } from './home/home-view';
 import { dashboardComponent, dashboardViewHolderId } from './dashboard/dashboard-view';
-// import { gitLogin, gitLogout } from '../../../../firebase/git-login';
+import { createTeamViewHolderId, createTeamComponent } from './team-create/team-create-view';
+
+import { submitTeamCreateForm } from './team-create/team-create-service';
+
+export function createTeamFormView() {
+  const teamName = document.getElementById('team-name').value;
+  // console.log(`value:${teamName}`);
+
+  if (teamName === '') {
+    alert('Please provide a team name');
+  } else {
+    const cTeamComp = createTeamComponent(teamName);
+    // cTeamComp.querySelector('#form-submit-cancel').
+    // addEventListener('click', () => { createDashboardView(); });
+    cTeamComp.querySelector('#form-submit').addEventListener('click', () => { submitTeamCreateForm(); });
+    $(`#${createTeamViewHolderId}`).empty().append(cTeamComp);
+  }
+}
 
 export function homeComponentView() {
   const homeComp = homePageComponent();
@@ -12,26 +29,7 @@ export function homeComponentView() {
 export function createDashboardView() {
   const dashComponent = dashboardComponent();
   // dashComponent.querySelector('#git-signout').addEventListener('click', () => { gitLogout(); });
+  dashComponent.querySelector('#create-team').addEventListener('click', () => { createTeamFormView(); });
   $(`#${dashboardViewHolderId}`).empty().append(dashComponent);
   return dashComponent;
 }
-
-export default function createComponents(url) {
-  switch (url) {
-    case 'home':
-      homeComponentView();
-      break;
-    case 'dashboard':
-      // createDashboardView();
-      break;
-    default:
-  }
-}
-
-function init() {
-  // createComponents('home');
-  // userLoginStatusCheck();
-  // console.log('Hello');
-}
-
-window.onload = init;
