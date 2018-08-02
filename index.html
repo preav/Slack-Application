@@ -51,6 +51,87 @@
   </header>
 
   <div class="container">
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#calendarModal">
+      Calendar
+    </button>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#todolistModal">
+      Todolist
+    </button>
+    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#reminderModal">
+      Reminder
+    </button>
+
+    <!-- START: Calander Modal -->
+    <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="calendarModalrTitle" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="calendarModalTitle">Calander of today</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="calendarModalBody">
+            ...
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END: Calander Modal -->
+    <!-- START: Reminder Modal -->
+    <div class="modal fade" id="reminderModal" tabindex="-1" role="dialog" aria-labelledby="reminderModalrTitle" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="reminderModalTitle">Reminder of today</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="reminderModalBody">
+            ...
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END: Reminder Modal -->
+    <!-- START: Todolist Modal -->
+    <div class="modal fade" id="todolistModal" tabindex="-1" role="dialog" aria-labelledby="todolistModalrTitle" aria-hidden="true">
+      <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="todolistModalTitle">Todo List</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="todolistModalBody">
+            <div class="card">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item p-2 bg-light">
+                  Data Structure
+                  <i class="float-right pl-2 fa fa-remove text-danger todoListItemsAction" data-action="remove"></i>
+                  <i class="float-right fa fa-check-square-o text-success todoListItemsAction" data-action="checked"></i>
+                </li>
+                <li class="list-group-item p-2">
+                  Ticket Booking
+                  <i class="float-right pl-2 fa fa-remove text-danger todoListItemsAction" data-action="remove"></i>
+                  <i class="float-right fa fa-square-o text-secondary todoListItemsAction" data-action="unchecked"></i>
+                </li>
+                <li class="list-group-item p-2">
+                  Design Meeting
+                  <i class="float-right pl-2 fa fa-remove text-danger todoListItemsAction" data-action="remove"></i>
+                  <i class="float-right fa fa-square-o text-secondary todoListItemsAction" data-action="unchecked"></i>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- END: Todolist Modal -->
     <div id="playGround"></div>
 
 
