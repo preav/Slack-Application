@@ -6,12 +6,13 @@ const database = firebase.database();
 
 export function writeUserData(userObject) {
   // to Write the data
-  database.ref(`users/${userObject.userId}`).set({
+  database.ref(`users/${userObject.username}`).set({
+    uid: userObject.uid,
+    accessToken: userObject.accessToken,
     name: userObject.name,
     email: userObject.email,
     profilePicture: userObject.profilePicture,
     phoneNumber: userObject.phoneNumber,
-    username: userObject.username,
     gitURL: userObject.gitURL,
     teams: userObject.teams,
     status: userObject.status,

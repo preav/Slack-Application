@@ -22,12 +22,13 @@ export function gitLogin() {
         // console.log(result.additionalUserInfo.profile.html_url); // https://github.com/OceanK007
 
         const userObject = {
-          userId: result.user.uid,
+          username: result.additionalUserInfo.username,
+          uid: result.user.uid,
+          accessToken: result.credential.accessToken,
           name: result.user.displayName,
           email: result.user.email,
           profilePicture: result.user.photoURL,
           phoneNumber: result.user.phoneNumber,
-          username: result.additionalUserInfo.username,
           gitURL: result.additionalUserInfo.profile.html_url,
           teams: ['team-one', 'team-two'],
           status: 'active',
