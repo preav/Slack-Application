@@ -1,7 +1,7 @@
 import './firebase-config';
 import firebase from 'firebase';
 import { homeComponentView, createDashboardView } from '../client/src/components/onboarding/onboarding-controller';
-import { saveUpdateUser } from './onboarding-db';
+import { saveUpdateUser, getTeamsOfCurrentUser } from './onboarding-db';
 
 const provider = new firebase.auth.GithubAuthProvider();
 
@@ -58,7 +58,7 @@ export function gitLogin() {
 export function gitLogout() {
   firebase.auth().signOut()
     .then(() => {
-      // console.log('Signout successful!');
+      console.log('Signout successful!');
     }); // , (error) => { console.log('Signout failed'); };
 }
 
@@ -69,6 +69,7 @@ firebase.auth().onAuthStateChanged((user) => {
     console.log('State changed: User exist');
     // console.log(user);
     createDashboardView();
+    getTeamsOfCurrentUser();
     document.querySelector('#git-signout').addEventListener('click', () => { gitLogout(); });
     document.querySelector('#git-signout').classList.remove('d-none');
     document.querySelector('#user-profile').classList.remove('d-none');

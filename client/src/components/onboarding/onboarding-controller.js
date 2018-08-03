@@ -25,9 +25,6 @@ export function createTeamFormView() {
     $(`#${createTeamViewHolderId}`).empty().append(cTeamComp);
   }
 }
-// import { getUserInfo } from './profile/profileService';
-
-// import { gitLogin, gitLogout } from '../../../../firebase/git-login';
 
 export function homeComponentView() {
   const homeComp = homePageComponent();
