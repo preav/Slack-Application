@@ -1,6 +1,7 @@
 import { homePageComponent, homeViewHolderId } from './home/home-view';
 import { dashboardComponent, dashboardViewHolderId } from './dashboard/dashboard-view';
 import { createTeamViewHolderId, createTeamComponent } from './team-create/team-create-view';
+import { invitationComponent, inivitationViewHolderId } from './invitation/invitation-view';
 
 import { submitTeamCreateForm } from './team-create/team-create-service';
 
@@ -16,7 +17,11 @@ export function createTeamFormView() {
     const cTeamComp = createTeamComponent(teamName);
     // cTeamComp.querySelector('#form-submit-cancel').
     // addEventListener('click', () => { createDashboardView(); });
-    cTeamComp.querySelector('#form-submit').addEventListener('click', () => { submitTeamCreateForm(); });
+    cTeamComp.querySelector('#form-submit').addEventListener('click', () => {
+      submitTeamCreateForm();
+      const inviView = invitationComponent();
+      $(`#${inivitationViewHolderId}`).empty().append(inviView);
+    });
     $(`#${createTeamViewHolderId}`).empty().append(cTeamComp);
   }
 }
