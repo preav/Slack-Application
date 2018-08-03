@@ -8,6 +8,8 @@ import 'bootstrap';
 
 import 'jquery-ui/ui/disable-selection';
 
+// import for slackbot main.js
+import './slackbot/main';
 
 $("#end").change(function () {
     var startDate = document.getElementById("start").value;
