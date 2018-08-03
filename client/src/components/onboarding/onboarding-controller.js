@@ -4,42 +4,8 @@ import { createTeamViewHolderId, createTeamComponent } from './team-create/team-
 import { inivitationViewHolderId, invitationComponent, mailSentBody } from './invitation/invitation-view';
 import { Email } from './invitation/smtp';
 import { submitTeamCreateForm } from './team-create/team-create-service';
-
 import profileViewComponent from './profile/profileView';
 
-export function createTeamFormView() {
-  const teamName = document.getElementById('team-name').value;
-  // console.log(`value:${teamName}`);
-
-  if (teamName === '') {
-    alert('Please provide a team name');
-  } else {
-    const cTeamComp = createTeamComponent(teamName);
-    // cTeamComp.querySelector('#form-submit-cancel').
-    // addEventListener('click', () => { createDashboardView(); });
-    cTeamComp.querySelector('#form-submit').addEventListener('click', () => {
-      submitTeamCreateForm();
-      const inviView = invitationComponent();
-      $(`#${inivitationViewHolderId}`).empty().append(inviView);
-    });
-    $(`#${createTeamViewHolderId}`).empty().append(cTeamComp);
-  }
-}
-
-export function homeComponentView() {
-  const homeComp = homePageComponent();
-  // homeComp.querySelector('#git-login').addEventListener('click', () => { gitLogin(); });
-  $(`#${homeViewHolderId}`).empty().append(homeComp);
-  return homeComp;
-}
-
-export function createDashboardView() {
-  const dashComponent = dashboardComponent();
-  // dashComponent.querySelector('#git-signout').addEventListener('click', () => { gitLogout(); });
-  dashComponent.querySelector('#create-team').addEventListener('click', () => { createTeamFormView(); });
-  $(`#${dashboardViewHolderId}`).empty().append(dashComponent);
-  return dashComponent;
-}
 
 export function createInvitationComponent() {
   const output = '<p>Please click on the below provided link to join Slack</p><br/><a href="https://www.asdf.com">Join Slack</a>';
@@ -90,3 +56,37 @@ document.querySelector('#user-profile').addEventListener('click', () => {
   $(`#${dashboardViewHolderId}`).empty().append(profileViewComponent());
   // getUserInfo();
 });
+
+
+export function createTeamFormView() {
+  const teamName = document.getElementById('team-name').value;
+  // console.log(`value:${teamName}`);
+
+  if (teamName === '') {
+    alert('Please provide a team name');
+  } else {
+    const cTeamComp = createTeamComponent(teamName);
+    // cTeamComp.querySelector('#form-submit-cancel').
+    // addEventListener('click', () => { createDashboardView(); });
+    cTeamComp.querySelector('#form-submit').addEventListener('click', () => {
+      submitTeamCreateForm();
+      createInvitationComponent();
+    });
+    $(`#${createTeamViewHolderId}`).empty().append(cTeamComp);
+  }
+}
+
+export function homeComponentView() {
+  const homeComp = homePageComponent();
+  // homeComp.querySelector('#git-login').addEventListener('click', () => { gitLogin(); });
+  $(`#${homeViewHolderId}`).empty().append(homeComp);
+  return homeComp;
+}
+
+export function createDashboardView() {
+  const dashComponent = dashboardComponent();
+  // dashComponent.querySelector('#git-signout').addEventListener('click', () => { gitLogout(); });
+  dashComponent.querySelector('#create-team').addEventListener('click', () => { createTeamFormView(); });
+  $(`#${dashboardViewHolderId}`).empty().append(dashComponent);
+  return dashComponent;
+}
