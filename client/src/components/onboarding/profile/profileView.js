@@ -4,8 +4,9 @@ import getCurrentUserData from './profileService';
 // export const profileViewHolderId = 'playGround';
 
 
-console.log(`current User>>>${getCurrentUserData}`);
 export default function profileViewComponent() {
+  // const userUID = firebase.auth().currentUser.uid;
+  console.log(getCurrentUserData());
   const profileView = createHTMLElement(
     `<div class="container" >
     <h1>Edit Profile</h1>
