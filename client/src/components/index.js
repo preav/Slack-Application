@@ -8,4 +8,8 @@ import 'bootstrap';
 
 import 'jquery-ui/ui/disable-selection';
 
+
+import './notifications/notification-controller';
+import './notifications/firebase';
+
 require('font-awesome/css/font-awesome.css');
