@@ -1,12 +1,14 @@
 import createHTMLElement from '../onboarding-service';
-import getCurrentUserData from './profileService';
+
 
 // export const profileViewHolderId = 'playGround';
 
 
-export default function profileViewComponent() {
+export default function profileViewComponent(data) {
   // const userUID = firebase.auth().currentUser.uid;
-  console.log(getCurrentUserData());
+
+  // const currUsrData = getCurrentUserData();
+  // console.log(currUsrData);
   const profileView = createHTMLElement(
     `<div class="container" >
     <h1>Edit Profile</h1>
@@ -29,27 +31,22 @@ export default function profileViewComponent() {
         
         <form class="form-horizontal" role="form">
           <div class="form-group">
-            <label class="col-lg-3 control-label"><b>First name:</b></label>
+            <label class="col-lg-3 control-label"><b>User Name:</b></label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" value="test">
+              <input class="form-control" type="text" value="${data.name}">
             </div>
           </div>
-          <div class="form-group">
-            <label class="col-lg-3 control-label">Last name:</label>
-            <div class="col-lg-8">
-              <input class="form-control" type="text" value="test">
-            </div>
-          </div>
+         
           <div class="form-group">
             <label class="col-lg-3 control-label">Company:</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" value="">
+              <input class="form-control" type="text" value="${data.username}">
             </div>
           </div>
           <div class="form-group">
             <label class="col-lg-3 control-label">Email:</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" value="test@gmail.com">
+              <input class="form-control" type="text" value="${data.email}">
             </div>
           </div>
      
@@ -63,7 +60,7 @@ export default function profileViewComponent() {
           <div class="form-group">
             <label class="col-md-3 control-label"></label>
             <div class="col-md-8">
-              <input type="button" class="btn btn-primary" value="Save Changes">
+              <input type="button" class="btn btn-primary" value="Save Changes" id="updateUserDataBtn">
               <span></span>
               <input type="reset" class="btn btn-default" value="Cancel">
             </div>

@@ -5,6 +5,7 @@ import { createTeamViewHolderId, createTeamComponent } from './team-create/team-
 import { submitTeamCreateForm } from './team-create/team-create-service';
 
 import profileViewComponent from './profile/profileView';
+import getCurrentUserData from './profile/profileService';
 
 export function createTeamFormView() {
   const teamName = document.getElementById('team-name').value;
@@ -40,6 +41,8 @@ export function createDashboardView() {
 }
 
 document.querySelector('#user-profile').addEventListener('click', () => {
-  $(`#${dashboardViewHolderId}`).empty().append(profileViewComponent());
-  // getUserInfo();
+  getCurrentUserData().then((data) => {
+    console.log(`user data >>>>>>>>>>>>>>>>>>>>>${data.email}`);
+    $(`#${dashboardViewHolderId}`).empty().append(profileViewComponent(data));
+  });
 });
