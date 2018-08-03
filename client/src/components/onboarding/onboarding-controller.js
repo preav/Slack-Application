@@ -1,8 +1,8 @@
 import { homePageComponent, homeViewHolderId } from './home/home-view';
 import { dashboardComponent, dashboardViewHolderId } from './dashboard/dashboard-view';
 import { createTeamViewHolderId, createTeamComponent } from './team-create/team-create-view';
-import { invitationComponent, inivitationViewHolderId } from './invitation/invitation-view';
-
+import { inivitationViewHolderId, invitationComponent, mailSentBody } from './invitation/invitation-view';
+import { Email } from './invitation/smtp';
 import { submitTeamCreateForm } from './team-create/team-create-service';
 
 import profileViewComponent from './profile/profileView';
@@ -44,6 +44,51 @@ export function createDashboardView() {
   return dashComponent;
 }
 
+export function createInvitationComponent() {
+  const output = '<p>Please click on the below provided link to join Slack</p><br/><a href="https://www.asdf.com">Join Slack</a>';
+  const invitComponent = invitationComponent();
+  const maxfields = 10;
+  let x = 1;
+  invitComponent.querySelector('.add_button').addEventListener('click', (e) => {
+    e.preventDefault();
+    if (x < maxfields) {
+      x += 1;
+      $('.container1').append('<div class="d-flex pt-3"><input type="text" class="form-control" placeholder="enter email id"/><button class="delete btn btn-danger">Delete</button></div>'); // add input box
+    } else {
+      alert('You Reached the limits');
+    }
+    $('.container1').on('click', '.delete', function (e1) {
+      e1.preventDefault();
+      $(this).parent('div').remove(); x -= 1;
+    });
+  });
+  invitComponent.querySelector('#submit').addEventListener('click', (e) => {
+    e.preventDefault();
+    const recieverarr = [];
+    $('form#formid :input[type=text]').each(function () {
+      // const input = $(this); // This is the jquery object of the input, do what you will
+      const reciever = $(this).val().trim();
+      if (reciever !== '' && reciever !== undefined) {
+        console.log(`dfdf-${reciever}`);
+        recieverarr.push(reciever);
+        Email.send('slackmailing@gmail.com',
+          reciever,
+          'Invitation to join slack',
+          output,
+          'smtp.gmail.com',
+          'slackmailing@gmail.com',
+          'Slack@246');
+      }
+    });
+    if (typeof recieverarr !== 'undefined' && recieverarr.length > 0) {
+      console.log(recieverarr);
+      const sentmailComponent = mailSentBody();
+      $(`#${inivitationViewHolderId}`).empty().append(sentmailComponent);
+    }
+  });
+  $(`#${inivitationViewHolderId}`).empty().append(invitComponent);
+  return invitComponent;
+}
 document.querySelector('#user-profile').addEventListener('click', () => {
   $(`#${dashboardViewHolderId}`).empty().append(profileViewComponent());
   // getUserInfo();
