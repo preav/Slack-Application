@@ -1,9 +1,11 @@
-import { createRepoFirebaseService, createRepoGithubService, createIssueGithubService } from './gitbot-service';
+import {
+  createRepoFirebaseService, createRepoGithubService,
+  createIssueGithubService, updateSlackBotResponse,
+} from './gitbot-service';
 import {
   createRepoResponse, showErrorMsg, createIssueResponse, showErrorMsgIssueCreate,
 } from './gitbot-view';
 
-// -----------------------------------Create repo and issue-----------
 // function to create repository
 export const createRepository = function (widgetData) {
   const createRepoWidgetEle = document.getElementById('playGround');
@@ -24,6 +26,9 @@ export const createRepository = function (widgetData) {
           widgetData.id, widgetData.postedOn, widgetData.commandEntered);
         createRepoWidgetEle.appendChild(newRepowidget);
         createRepoWidgetEle.scrollTop = createRepoWidgetEle.scrollHeight;
+        // update firebase database with slackbot response
+        updateSlackBotResponse(widgetData,
+          `Slack has created repository (${widgetData.repositoryName}) in your github account`);
       }).catch((err) => {
         console.log(err, 'error in gitbot-controller.js ...');
       });
@@ -64,8 +69,3 @@ export const createRepositoryIssue = function (widgetData) {
     console.log(err, 'Error occured while creating repository in github..');
   });
 };
-// -----------------------------------Create repo and issue end--------
-// ----------------------------------Reminder ------------------------
-
-
-// ----------------------------------Reminder end------------------------

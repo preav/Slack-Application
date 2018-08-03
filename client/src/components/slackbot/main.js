@@ -1,4 +1,4 @@
-import { hitEnter } from './gitbot/command-line-controller';
+import { hitEnter } from './command-line';
 
 import './todolist/todolist-controller';
 

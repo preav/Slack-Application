@@ -1,30 +1,4 @@
-// import { removeWidgetFromState } from '../controller/remove-widget'
-// import { createRepositoryOnGithub } from '../controller/create-repo'
-
-// function to create widget for create repository
-export const createRepoWidget = function (recastRepoName, panId) {
-  return `<div class='createGithubRepo panBackground playGroungDiv-bot' id='createGithubRepo_${panId}' >
-    <div class='panComponents'>
-    <span id='close' onclick='removeWidgetFromState(${panId})'>x</span>
-        <div class='form-row'>
-            <div class='form-group col-md-12'>
-                <label for='repositoryName'>Repository Name: </label>
-                <input type='text' class='form-control' id='repositoryName_${panId}' name='repositoryName' value="${recastRepoName}" />
-            </div>
-        </div>
-        <div class='form-row'>
-            <div class='form-group'>
-                <label for='commandComment'>Comment: </label>
-                <textarea class='form-control commandComment' id='commandComment_${panId}' name='commandComment'></textarea>
-            </div>
-        </div>
-  
-        <button type='submit' class='btn btn-primary' onclick='createRepositoryOnGithub(document.getElementById("repositoryName_${panId}").value, document.getElementById("commandComment_${panId}").value, ${panId});'>Create Github Repository</button>
-    </div>
-    </div>`;
-};
-
-  // function to respond back after repository created
+// function to respond back after repository created
 export const createRepoResponse = function (repoName, panId, dateTime, commandEntered) {
   return `<div class='createGithubRepo playGroungDiv-you' id='createGithubRepo-you_${panId}' >
         <span><strong><a href="#">You</a></strong></span>
