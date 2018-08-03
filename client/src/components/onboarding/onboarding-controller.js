@@ -4,6 +4,8 @@ import { createTeamViewHolderId, createTeamComponent } from './team-create/team-
 
 import { submitTeamCreateForm } from './team-create/team-create-service';
 
+import profileViewComponent from './profile/profileView';
+
 export function createTeamFormView() {
   const teamName = document.getElementById('team-name').value;
   // console.log(`value:${teamName}`);
@@ -18,6 +20,9 @@ export function createTeamFormView() {
     $(`#${createTeamViewHolderId}`).empty().append(cTeamComp);
   }
 }
+// import { getUserInfo } from './profile/profileService';
+
+// import { gitLogin, gitLogout } from '../../../../firebase/git-login';
 
 export function homeComponentView() {
   const homeComp = homePageComponent();
@@ -33,3 +38,8 @@ export function createDashboardView() {
   $(`#${dashboardViewHolderId}`).empty().append(dashComponent);
   return dashComponent;
 }
+
+document.querySelector('#user-profile').addEventListener('click', () => {
+  $(`#${dashboardViewHolderId}`).empty().append(profileViewComponent());
+  // getUserInfo();
+});
