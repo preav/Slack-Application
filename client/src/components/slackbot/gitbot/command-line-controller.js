@@ -1,6 +1,6 @@
 import { recastAPIservice } from '../recastai/recastAPI-service';
 
-import { createRepository } from './gitbot-controller';
+import { createRepository, createRepositoryIssue } from './gitbot-controller';
 
 export const hitEnter = function (e) {
   if (e.keyCode === 13) { // checks whether the pressed key is "Enter"
@@ -31,17 +31,19 @@ export const hitEnter = function (e) {
       }
       if (recastResponse.intents[0].slug === 'create-git-issue') {
         const widgetData = {
-          id: '',
+          id: '2',
           commandEntered: e.target.value,
           widgetName: recastResponse.intents[0].slug,
           repositoryName: recastResponse.entities.git_repo[0].value,
-          repositoryCmt: '',
+          issueName: recastResponse.entities.git_issue[0].value,
+          userId: '',
+          postedOn: datetime,
         };
 
         console.log(`widgetData=${widgetData}`);
 
         // save createRepository widget state to database code --> calling gitbot-controller
-        createRepository(widgetData);
+        createRepositoryIssue(widgetData);
       }
     }).catch((err) => {
       console.log(err, 'error in command-line-controller.js ...');

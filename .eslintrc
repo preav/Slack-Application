@@ -9,7 +9,9 @@
         "import/prefer-default-export": "off",
         "linebreak-style": 0,
         "func-names" :0,
-        "no-unused-vars" : 0
+        "no-unused-vars" : 0,
+        "allowEmptyReject": true,
+        "no-param-reassign": 0
     }
 
 }

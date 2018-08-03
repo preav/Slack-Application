@@ -3,7 +3,7 @@
 
 // function to create widget for create repository
 export const createRepoWidget = function (recastRepoName, panId) {
-  return `<div class='createGithubRepo panBackground playGroungDiv' id='createGithubRepo_${panId}' >
+  return `<div class='createGithubRepo panBackground playGroungDiv-bot' id='createGithubRepo_${panId}' >
     <div class='panComponents'>
     <span id='close' onclick='removeWidgetFromState(${panId})'>x</span>
         <div class='form-row'>
@@ -25,30 +25,43 @@ export const createRepoWidget = function (recastRepoName, panId) {
 };
 
   // function to respond back after repository created
-export const createRepoResponse = function (repoName, panId, dateTime) {
-  return `<div class='createGithubRepo panBackground playGroungDiv' id='createGithubRepo_${panId}' >
+export const createRepoResponse = function (repoName, panId, dateTime, commandEntered) {
+  return `<div class='createGithubRepo playGroungDiv-you' id='createGithubRepo-you_${panId}' >
+        <span><strong><a href="#">You</a></strong></span>
+        <p>${commandEntered}</p>
+        <span>${dateTime}</span>
+        </div>
+        <div class='createGithubRepo panBackground playGroungDiv-bot' id='createGithubRepo_${panId}' >
+        <span><strong>Slackbot</strong></span>
         <p>Slack has created repository (${repoName}) in your github account</p>
         <span>${dateTime}</span>
     </div>`;
 };
 
   // function to respond back after issue created
-export const createIssueResponse = function (repoName, issueName, issueNumber, panId) {
-  return `<div class='createGithubRepo panBackground playGroungDiv' id='createGithubIssue_${panId}' >
-        <p>Slack has created a new issue number -${issueNumber} (${issueName}) in repository (${repoName}) in your github account</p>
-    </div>`;
+export const createIssueResponse = function (repoName, IssueName, panId, dateTime, commandEntered) {
+  return `<div class='createGithubRepo playGroungDiv-you' id='createGithubIssue-you_${panId}' >
+          <span><strong><a href="#">You</a></strong></span>
+          <p>${commandEntered}</p>
+          <span>${dateTime}</span>
+          </div>
+          <div class='createGithubRepo panBackground playGroungDiv-bot' id='createGithubIssue_${panId}' >
+          <span><strong>Slackbot</strong></span>
+          <p>Slack has created an issue (${IssueName}) on repository (${repoName}) in your github account</p>
+          <span>${dateTime}</span>
+      </div>`;
 };
 
   // function to respond back after adding collaborator
 export const addCollabResponse = function (collabUser, panId) {
-  return `<div class='createGithubRepo panBackground playGroungDiv' id='addCollab_${panId}' >
+  return `<div class='createGithubRepo panBackground playGroungDiv-bot' id='addCollab_${panId}' >
         <p>Sure, Slack has set invitation to (${collabUser}).</p>
     </div>`;
 };
 
   // function to respond back after getting all list for a repository
 export const listDownIssues = function (repoName, panId) {
-  return `<div class="displayAllIssues panBackground playGroungDiv" id="displayAllIssues">
+  return `<div class="displayAllIssues panBackground playGroungDiv-bot" id="displayAllIssues">
       <div class="panComponents">
       <div> Issues for repository - ${repoName}</div>
       <span id='close' onclick='removeWidgetFromState(${panId})'>x</span>
@@ -93,18 +106,38 @@ export const listDownIssues = function (repoName, panId) {
   </div>`;
 };
 
-// function to show error message
-export const showErrorMsg = function (err, dateTime) {
-  return `
-        <div id="fail_msg" class="playGroungDiv"><p>${err}</p><span>${dateTime}</span>
+// function to show error message for creating repository in github
+export const showErrorMsg = function (err, dateTime, commandEntered) {
+  return `<div class='createGithubRepo playGroungDiv-you' >
+        <span><strong><a href="#">You</a></strong></span>
+        <p>${commandEntered}</p>
+        <span>${dateTime}</span>
+        </div>
+        <div id="fail_msg" class="playGroungDiv-bot">
+        <span><strong>Slackbot</strong></span>
+        <p>${err}</p><span>${dateTime}</span>
         </div>
     `;
+};
+
+// function to show error message for creating issue for a repository in github
+export const showErrorMsgIssueCreate = function (err, dateTime, commandEntered) {
+  return `<div class='createGithubRepo playGroungDiv-you' >
+          <span><strong><a href="#">You</a></strong></span>
+          <p>${commandEntered}</p>
+          <span>${dateTime}</span>
+          </div>
+          <div id="fail_msg" class="playGroungDiv-bot">
+          <span><strong>Slackbot</strong></span>
+          <p>${err}</p><span>${dateTime}</span>
+          </div>
+      `;
 };
 
 // function to show success message
 export const showSuccessMsg = function (success, dateTime) {
   return `
-        <div id="success_msg" class="playGroungDiv"><p>${success}</p><span>${dateTime}</span>
+        <div id="success_msg" class="playGroungDiv-bot"><p>${success}</p><span>${dateTime}</span>
         </div>
     `;
 };
