@@ -6,8 +6,8 @@ const database = firebase.database();
 
 export function writeUserData(userObject) {
   // to Write the data
-  database.ref(`users/${userObject.username}`).set({
-    uid: userObject.uid,
+  database.ref(`users/${userObject.uid}`).set({
+    username: userObject.username,
     accessToken: userObject.accessToken,
     name: userObject.name,
     email: userObject.email,
@@ -22,7 +22,7 @@ export function writeUserData(userObject) {
 
 export function saveUpdateUser(userObject) {
   // read the data
-  database.ref(`/users/${userObject.username}`).once('value', (snapshot) => {
+  database.ref(`/users/${userObject.uid}`).once('value', (snapshot) => {
     // console.log(snapshot.val());
 
     if (snapshot.val() != null) {

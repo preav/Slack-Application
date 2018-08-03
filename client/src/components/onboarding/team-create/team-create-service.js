@@ -2,8 +2,8 @@ import firebase from 'firebase';
 import { saveUpdateTeam } from '../../../../../firebase/onboarding-db';
 
 export function submitTeamCreateForm() {
-  const user = firebase.auth().currentUser;
-  console.log(user);
+  const userUID = firebase.auth().currentUser.uid;
+  console.log(userUID);
 
   const form = document.getElementById('create-team-form');
   const teamObject = {};
@@ -14,9 +14,9 @@ export function submitTeamCreateForm() {
       teamObject[element.name] = element.value;
     }
   });
-  teamObject.admins = ['username1', 'username2'];
+  teamObject.admins = [userUID];
   teamObject.private = false;
-  teamObject.users = ['my-username', 'my-username-2'];
+  teamObject.users = [userUID];
 
   console.log(teamObject);
 
