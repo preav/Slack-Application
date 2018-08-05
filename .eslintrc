@@ -12,6 +12,7 @@
         "no-unused-vars" : 0,
         "allowEmptyReject": true,
         "no-param-reassign": 0
+<<<<<<< HEAD
   },
   "globals": {
     "firebase": true,
@@ -20,4 +21,8 @@
     "userID001": true,
     "username": true
   }
+=======
+    }
+
+>>>>>>> b6c9bd32aa1163717be87da45d8b430fc0767742
 }
