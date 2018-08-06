@@ -58,6 +58,41 @@ export function saveUpdateTeam(teamObject) {
     }
   });
 }
+
+export function getTeamsOfCurrentUser() {
+  const userUID = firebase.auth().currentUser.uid;
+  console.log(userUID);
+
+  const joinedTeams = [];
+  database.ref('/teams/').orderByValue().on('value', (snapshot) => {
+    // console.log(snapshot.val());
+    $.each(snapshot.val(), (key, val) => {
+      // console.log(key);
+      // console.log(val);
+      $.each(val.users, (k, v) => {
+        // console.log(k);
+        // console.log(v);
+        if (userUID === v) {
+          joinedTeams.push(key);
+        }
+      });
+    });
+
+    console.log(joinedTeams);
+
+    // Adding
+    if (joinedTeams.length === 0) {
+      $('#teamsDisplayHeader').empty().append("You're not of part of any Slack workspace yet.");
+    } else {
+      $('#teamsDisplayHeader').empty().append("You're already a member of these Slack workspaces:");
+      $('#teamsDisplay').empty();
+      $.each(joinedTeams, (k, v) => {
+        $('#teamsDisplay').append(`<a class="team-link" href="javascript:void(0)">${v}</a>`);
+      });
+    }
+  });
+}
+
 // writeUserData(
 //   {
 //     userId: '2',

@@ -14,7 +14,7 @@ export default function profileViewComponent(data) {
     <h1>Edit Profile</h1>
       <hr>
     <div class="row">
-      <!-- left column -->
+      <!-- left column --
       <div class="col-md-3">
         <div class="text-center">
           <img src="./client/src//img/avatar.png" class="avatar" alt="avatar">

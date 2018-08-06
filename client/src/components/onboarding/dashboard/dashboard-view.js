@@ -20,16 +20,9 @@ export function dashboardComponent() {
             <div class="mt-5">
                 <div>
                     <h1>Your workspaces</h1>
-                    <p>You're already a member of these Slack workspaces:</p>
-                    <div id="teams" class="d-flex justify-content-center flex-column">
-                        <a class="team-link" href="javascript:void(0)">Your Team One</a>
-                        <a class="team-link" href="javascript:void(0)">Your Team One</a>
-                        <a class="team-link" href="javascript:void(0)">Your Team One</a>
-                        <a class="team-link" href="javascript:void(0)">Your Team One</a>
-                        <a class="team-link" href="javascript:void(0)">Your Team One</a>
-                        <a class="team-link" href="javascript:void(0)">Your Team One</a>
-                        <a class="team-link" href="javascript:void(0)">Your Team One</a>
-                        <a class="team-link" href="javascript:void(0)">Your Team One</a>
+                    <p id="teamsDisplayHeader">You're already a member of these Slack workspaces:</p>
+                    <div id="teamsDisplay" class="d-flex justify-content-center flex-column">
+                        <!-- <a class="team-link" href="javascript:void(0)">Your Team One</a> -->
                     </div>
                 </div>
             </div>

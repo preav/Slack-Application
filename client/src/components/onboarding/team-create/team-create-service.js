@@ -3,7 +3,7 @@ import { saveUpdateTeam } from '../../../../../firebase/onboarding-db';
 
 export function submitTeamCreateForm() {
   const userUID = firebase.auth().currentUser.uid;
-  console.log(userUID);
+  // console.log(userUID);
 
   const form = document.getElementById('create-team-form');
   const teamObject = {};
