@@ -4,11 +4,15 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 
+// To handle CROSS-ORIGIN exception
+const cors = require('cors')({origin: true});
+
 // Create and Deploy Your First Cloud Functions
 // https://firebase.google.com/docs/functions/write-firebase-functions
 
 exports.helloWorld = functions.https.onRequest((request, response) => {
- response.send("Hello Slack Developers from Firebase!");
+    cors(request, response, () => {});
+    response.send("Hello Slack Developers from Firebase!");
 });
 
 
@@ -26,13 +30,14 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 // 	},
 // 	"action":"UPDATE_USER"
 // }
-exports.saveUpdateUser = functions.https.onRequest((req, res) => {
-    const userId = req.query.userId;
-    const data = req.body.data;
-    const action = req.body.action;
+exports.saveUpdateUser = functions.https.onRequest((request, response) => {
+    cors(request, response, () => {});
+    const userId = request.query.userId;
+    const data = request.body.data;
+    const action = request.body.action;
     console.log("userId: "+userId);
-    console.log(req.query);
-    console.log(req.body);
+    console.log(request.query);
+    console.log(request.body);
     console.log("Action: "+action);
 
     switch(action)
@@ -43,12 +48,12 @@ exports.saveUpdateUser = functions.https.onRequest((req, res) => {
             if(error)
             {
                 console.log("Error occurred while saving user: "+error);
-                return res.json("Error occurred while saving user: "+error);
+                return response.json("Error occurred while saving user: "+error);
             }
             else
             {
                 console.log("User saved successfully");
-                return res.json("User saved successfully");
+                return response.json("User saved successfully");
             }
         });
         case "UPDATE_USER":
@@ -57,12 +62,12 @@ exports.saveUpdateUser = functions.https.onRequest((req, res) => {
             if(error)
             {
                 console.log("Error occurred while updating user: "+error);
-                return res.json("Error occurred while updating user: "+error);
+                return response.json("Error occurred while updating user: "+error);
             }
             else
             {
                 console.log("User updated successfully");
-                return res.json("User updated successfully");
+                return response.json("User updated successfully");
             }
         });
     }
@@ -72,13 +77,14 @@ exports.saveUpdateUser = functions.https.onRequest((req, res) => {
 // Get user Info
 // **URL FORMAT**
 //saveUpdateUser?userId=myuserid6
-exports.getUser = functions.https.onRequest((req,res) => {
-    const userId = req.query.userId;
+exports.getUser = functions.https.onRequest((request,response) => {
+    cors(request, response, () => {});
+    const userId = request.query.userId;
     console.log("userId: "+userId);
 
     return admin.database().ref('/users/'+userId).once('value', (snapshot) => {
         var data = snapshot.val();
         console.log(data);
-        res.json(data);
+        response.json(data);
      });
 });
