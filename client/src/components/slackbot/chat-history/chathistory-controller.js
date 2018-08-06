@@ -6,7 +6,7 @@ export const getUserChatHistory = function (userId) {
   const createWidgetEle = document.getElementById('playGround');
   // calling service function to create otherbot in firebase database
   getChatHistoryForUserService(userId).then((chathistory) => {
-    alert('chathistory');
+    //alert('chathistory');
     const errorOrSuccDiv = document.createElement('div');
     if (chathistory !== '') {
       const newRepowidget = document.createElement('div');
