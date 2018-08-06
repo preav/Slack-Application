@@ -1,12 +1,12 @@
 const firebase = require('firebase');
 
-// function to save to-do-list task data into firebase database -- firebase
-export const createTodolistService = widgetData => new Promise((resolve, reject) => {
-  const collectionKey = firebase.database().ref('SlackXT/slackbot/todolist').push({
+// function to save calendar event into firebase database -- firebase
+export const createCalendarEventService = widgetData => new Promise((resolve, reject) => {
+  const collectionKey = firebase.database().ref('SlackXT/slackbot/calendar').push({
     id: widgetData.id,
     commandEntered: widgetData.commandEntered,
     widgetName: widgetData.widgetName,
-    task: widgetData.task,
+    calendarEvent: widgetData.calendarEvent,
     userId: widgetData.userId,
     creatDate: widgetData.creatDate,
     creatTime: widgetData.creatTime,
@@ -16,7 +16,7 @@ export const createTodolistService = widgetData => new Promise((resolve, reject)
   console.log('collectionKey = ', collectionKey);
   if (collectionKey !== '') {
     widgetData.id = collectionKey;
-    console.log('to-do-list task saved successfully...', widgetData.id);
+    console.log('calendar event saved successfully...', widgetData.id);
     resolve(widgetData);
   } else {
     reject(new Error(`Error in saving your data into firebase database. 
@@ -25,11 +25,11 @@ export const createTodolistService = widgetData => new Promise((resolve, reject)
   }
 });
 
-// function to update slack response for to-do-list task to firebase database -- firebase
-export const updateSlackBotTodolistResponse = (widgetData, botResponse) => {
+// function to update slack response for calendar event to firebase database -- firebase
+export const updateSlackBotCalendarResponse = (widgetData, botResponse) => {
   widgetData.botResponse = botResponse;
   const updateCollectionKey = widgetData.id;
   const updates = {};
-  updates[`SlackXT/slackbot/todolist/${updateCollectionKey}`] = widgetData;
+  updates[`SlackXT/slackbot/calendar/${updateCollectionKey}`] = widgetData;
   return firebase.database().ref().update(updates);
 };

@@ -13,8 +13,10 @@ export const createRepository = function (widgetData) {
   createRepoGithubService(widgetData.repositoryName).then((gitCreateRepoRes) => {
     const errorOrSuccDiv = document.createElement('div');
     if (typeof gitCreateRepoRes.id !== 'number') {
-      errorOrSuccDiv.innerHTML = showErrorMsg(`Repository (${widgetData.repositoryName}) 
-      already exists on your account.`, widgetData.postedOn, widgetData.commandEntered);
+      errorOrSuccDiv.innerHTML = showErrorMsg(
+        `Repository (${widgetData.repositoryName}) already exists on your account.`,
+        widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered,
+      );
       createRepoWidgetEle.appendChild(errorOrSuccDiv);
       createRepoWidgetEle.scrollTop = createRepoWidgetEle.scrollHeight;
     } else {
@@ -23,7 +25,7 @@ export const createRepository = function (widgetData) {
         console.log(`gitbot-controller.js = ${response}`);
         const newRepowidget = document.createElement('div');
         newRepowidget.innerHTML = createRepoResponse(widgetData.repositoryName,
-          widgetData.id, widgetData.postedOn, widgetData.commandEntered);
+          widgetData.id, widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered);
         createRepoWidgetEle.appendChild(newRepowidget);
         createRepoWidgetEle.scrollTop = createRepoWidgetEle.scrollHeight;
         // update firebase database with slackbot response
@@ -48,7 +50,7 @@ export const createRepositoryIssue = function (widgetData) {
     if (typeof gitCreateIssueRes.id !== 'number') {
       errorOrSuccDiv.innerHTML = showErrorMsgIssueCreate('Due to tecnical glitch Github issue '
       + 'cannot be created.',
-      widgetData.postedOn, widgetData.commandEntered);
+      widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered);
       createRepoWidgetEle.appendChild(errorOrSuccDiv);
       createRepoWidgetEle.scrollTop = createRepoWidgetEle.scrollHeight;
     } else {
@@ -58,7 +60,7 @@ export const createRepositoryIssue = function (widgetData) {
         const newRepowidget = document.createElement('div');
         newRepowidget.innerHTML = createIssueResponse(widgetData.repositoryName,
           widgetData.issueName,
-          widgetData.id, widgetData.postedOn, widgetData.commandEntered);
+          widgetData.id, widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered);
         createRepoWidgetEle.appendChild(newRepowidget);
         createRepoWidgetEle.scrollTop = createRepoWidgetEle.scrollHeight;
       }).catch((err) => {

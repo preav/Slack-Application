@@ -1,4 +1,5 @@
 import { hitEnter } from './command-line';
+import { getUserChatHistory } from './chat-history/chathistory-controller';
 
 import './todolist/todolist-controller';
 
@@ -10,3 +11,5 @@ enteredCommand.addEventListener('keydown', (e) => {
     hitEnter(e);
   }
 });
+
+getUserChatHistory('userId'); // pass real user

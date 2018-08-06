@@ -22,7 +22,7 @@
 //           repositoryName: recastResponse.entities.git_repo[0].value,
 //           userId: '',
 //           postedOn: datetime,
-//           claclbotRes: '',
+//           botResponse: '',
 //         };
 
 //         console.log(`widgetData=${widgetData}`);

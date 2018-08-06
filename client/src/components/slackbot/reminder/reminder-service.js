@@ -1,8 +1,6 @@
-import { config } from '../../../../../firebase/firebase';
-
 const firebase = require('firebase');
 
-firebase.initializeApp(config);
+// firebase.initializeApp(config);
 // function to savereminder data into firebase database -- firebase
 export const createReminderService = widgetData => new Promise((resolve, reject) => {
   const collectionKey = firebase.database().ref('SlackXT/slackbot/reminder').push({
@@ -13,7 +11,8 @@ export const createReminderService = widgetData => new Promise((resolve, reject)
     reminderDate: widgetData.reminderDate,
     remindeeUser: widgetData.remindeeUser,
     userId: widgetData.userId,
-    postedOn: widgetData.postedOn,
+    creatDate: widgetData.creatDate,
+    creatTime: widgetData.creatTime,
     botResponse: widgetData.botResponse,
   }).getKey();
 
@@ -28,3 +27,12 @@ export const createReminderService = widgetData => new Promise((resolve, reject)
     console.log('There is error while saving data into firebase...');
   }
 });
+
+// function to update slack response for reminder to firebase database -- firebase
+export const updateSlackBotReminderResponse = (widgetData, botResponse) => {
+  widgetData.botResponse = botResponse;
+  const updateCollectionKey = widgetData.id;
+  const updates = {};
+  updates[`SlackXT/slackbot/reminder/${updateCollectionKey}`] = widgetData;
+  return firebase.database().ref().update(updates);
+};

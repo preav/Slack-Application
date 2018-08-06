@@ -11,7 +11,8 @@ export const createRepoFirebaseService = widgetData => new Promise((resolve, rej
     widgetName: widgetData.widgetName,
     repositoryName: widgetData.repositoryName,
     userId: widgetData.userId,
-    postedOn: widgetData.postedOn,
+    creatDate: widgetData.creatDate,
+    creatTime: widgetData.creatTime,
   }).getKey();
 
   console.log('collectionKey = ', collectionKey);
@@ -71,10 +72,10 @@ export const createIssueGithubService = (repositoryName,
 });
 
 // function to update slack response to firebase database -- firebase
-export const updateSlackBotResponse = (widgetData, slackbotRes) => {
-  widgetData.claclbotRes = slackbotRes;
+export const updateSlackBotResponse = (widgetData, botResponse) => {
+  widgetData.botResponse = botResponse;
   const updateCollectionKey = widgetData.id;
   const updates = {};
-  updates[`/slackbot/gitbot/${updateCollectionKey}`] = widgetData;
+  updates[`SlackXT/slackbot/gitbot/${updateCollectionKey}`] = widgetData;
   return firebase.database().ref().update(updates);
 };
