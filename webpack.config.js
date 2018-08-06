@@ -12,7 +12,7 @@ var config = {
   },
   module: {
     rules: [
-      {
+      /*{
         enforce: 'pre',
         test: /\.js?$/,
         exclude: [/node_modules/],
@@ -20,7 +20,7 @@ var config = {
         options: {
           fix: true,
         },
-      },
+  },*/
       {
         test: /\.js?$/,
         exclude: [/node_modules/],
