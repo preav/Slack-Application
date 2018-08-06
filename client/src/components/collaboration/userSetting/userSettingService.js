@@ -7,8 +7,6 @@ firebase.initializeApp(config);
 
 // Get a reference to the database service
 const database = firebase.database();
-console.log(database);
-
 
 function getAllChannels() {
   const userContactref = firebase.database().ref('team-6').child('channels');
@@ -24,9 +22,9 @@ function getAllChannels() {
             <div class="buttom-panel text-center mt-1">
               <div id="contactDetails">${conName}</div>
                   <div>
-                      <button id="muteContact">mute</button>
-                      <button id="unmuteContact">unmute</buttob>
-                      <button id="removeContact">remove</button>
+                      <button id="muteChannel">mute Channel</button>
+                      <button id="unmuteChannel">unmute Channel</buttob>
+                      <button id="removeChannel">remove Channel</button>
                   </div>
                 </form>
             </div>
@@ -39,27 +37,22 @@ function getAllChannels() {
 }
 document.getElementById('userContacts').addEventListener('click', getAllChannels);
 
-
 function getAllUsers() {
   const userContactref = firebase.database().ref('team-6').child('directMessages').child('users');
   userContactref.once('value', (snapshot) => {
+    // const getAllContactValue = snapshot.val();
     const getAllContactValue = Object.keys(snapshot.val());
-    // const getAllContactKey = Object.values(snapshot.val());
-    // console.log('get something123', getAllContactValue);
-    // console.log('get something1234', getAllContactKey);
-    // const conName = Object.values(contactVal);
     let getAllContactHtml = '';
     const abc = getAllContactValue.map((contactVal) => {
       getAllContactHtml += `
         <div>
             <div class="buttom-panel text-center mt-1">
-              <div id="contactDetails">${contactVal}</div>
-                  <div>
-                      <button id="muteContact">mute</button>
-                      <button id="unmuteContact">unmute</buttob>
-                      <button id="removeContact">remove</button>
-                  </div>
-                </form>
+                <div id="contactUser">${contactVal}</div>
+                <div>
+                    <button id="muteUser">mute User</button>
+                    <button id="unmuteUser">unmute User</buttob>
+                    <button id="removeUser">remove User</button>
+                </div>
             </div>
         </div>
         `;
@@ -68,34 +61,6 @@ function getAllUsers() {
     jQuery('#showContactInformation').append(getAllContactHtml);
   });
 }
-
-// function getAllUsers() {
-//   const userContactref = firebase.database().ref('team-6/channels/');
-//   userContactref.on('value', (snapshot) => {
-//     const getAllContactValue = snapshot.val();
-//     let getAllContactHtml = '';
-//     console.log('getContact', getAllContactValue);
-//     const abc = getAllContactValue.map((contactVal) => {
-//       console.log(contactVal);
-
-//       getAllContactHtml += `
-//         <div>
-//             <div class="buttom-panel text-center mt-1">
-//               <div id="contactDetails">${contactVal}</div>
-//                   <div>
-//                       <button id="muteContact">mute</button>
-//                       <button id="unmuteContact">unmute</buttob>
-//                       <button id="removeContact">remove</button>
-//                   </div>
-//                 </form>
-//             </div>
-//         </div>
-//         `;
-//       return getAllContactHtml;
-//     });
-//     jQuery('#showContactInformation').append(getAllContactHtml);
-//   });
-// }
 document.getElementById('userContacts').addEventListener('click', getAllUsers);
 
 
@@ -114,12 +79,13 @@ function fnAddMember(status, userName) {
 
 document.getElementById('addmember').addEventListener('click', fnAddMember);
 
-//= ========================================================================
 // functionality for updating something in firebase via
-function muteContact() {
-  const channelN = document.getElementById('contactDetails').testContent;
-  const newPostKey = firebase.database().ref(`/channels/${1234567}`).update({
-    private: 'public',
+function muteUsers() {
+  const channelN = document.getElementById('muteUser').value;
+
+  console.log('channelN', channelN);
+  const newPostKey = firebase.database().ref('team-6/directMessages/users').update({
+    mute: false,
   }, (error) => {
     if (error) {
       console.log(error, 'There is error while saving data into firebase...');
@@ -129,17 +95,16 @@ function muteContact() {
   });
 }
 
-jQuery(document).on('click', '#muteContact', (e) => {
+jQuery(document).on('click', '#muteUser', (e) => {
   e.preventDefault();
   console.log('mute Contact');
-  muteContact();
+  muteUsers();
 });
 
-//= =============================================================================
 function unMuteContact() {
-  const channelN = document.getElementById('contactDetails').testContent;
-  const newPostKey = firebase.database().ref(`/channels/${1234567}`).update({
-    private: 'private',
+  const channelName = document.getElementById('muteUser').testContent;
+  const newPostKey = firebase.database().ref('team-6/channels').update({
+    mute: false,
   }, (error) => {
     if (error) {
       console.log(error, 'There is error while saving data into firebase...');
@@ -155,9 +120,7 @@ jQuery(document).on('click', '#unmuteContact', (e) => {
   unMuteContact();
 });
 
-// document.getElementById('muteContact').addEventListener('click', unMuteContact);
 
-//= =============================================================================
 function deleteContact() {
   const deleteChannelRef = firebase.database().ref(`/channels/${123}`).remove();
 }
@@ -171,5 +134,5 @@ jQuery(document).on('click', '#deleteContact', (e) => {
 
 
 export {
-  fnAddMember, muteContact, deleteContact, unMuteContact, database, getAllChannels, getAllUsers,
+  fnAddMember, muteUsers, deleteContact, unMuteContact, database, getAllChannels, getAllUsers,
 };

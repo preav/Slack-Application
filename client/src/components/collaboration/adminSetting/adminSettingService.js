@@ -20,4 +20,5 @@ function fnCreateChannel(channelName, channelType, channelId) {
 
 document.getElementById('createChannel').addEventListener('click', fnCreateChannel);
 
+
 export { fnCreateChannel };
