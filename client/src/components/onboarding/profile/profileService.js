@@ -5,27 +5,8 @@ import firebase from 'firebase';
 // const currUser = firebase.auth().currentUser.uid;
 const dbRef = firebase.database().ref();
 
-/*
-
-readAllGamesById(gameId) {
-       console.log("Inside readAllGamesById method");
-
-       return new Promise(function (resolve, reject) {
-           let gameDetails = firebaseDB.ref("games/").orderByChild("id").equalTo(gameId);
-
-           gameDetails.on("value", function (game) {
-               console.log(game.val());
-               resolve(game.val());
-           }, function (error) {
-               console.log("Error: " + error.code);
-               reject(error.code)
-           });
-
-       });
-   };
-*/
-export default function getCurrentUserData() {
-  const userUID = firebase.auth().currentUser.uid;
+export function getCurrentUserData() {
+  /* const userUID = firebase.auth().currentUser.uid;
   const users = dbRef.child(`users/${userUID}`);
   // users.once('value', snapshot => snapshot.val());
   return new Promise(((resolve, reject) => {
@@ -34,5 +15,37 @@ export default function getCurrentUserData() {
     }, (error) => {
       reject(error.code);
     });
-  }));
+  })); */
+  const userUID = firebase.auth().currentUser.uid;
+  const dataPromise = fetch(`https://us-central1-slackxt.cloudfunctions.net/getUserInfo?userId=${userUID}`);
+  return new Promise((resolve, reject) => {
+    dataPromise
+      .then((res) => {
+        res.json().then((data) => {
+          resolve(data);
+        });
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
+
+export function updateUserData(userData) {
+  // alert('test');
+  const userUID = firebase.auth().currentUser.uid;
+
+  dbRef.child(`users/${userUID}`).set({
+    username: userData.username,
+    accessToken: userData.accessToken,
+    name: userData.name,
+    email: 'updated_mailid@test.com',
+    profilePicture: userData.profilePicture,
+    phoneNumber: userData.phoneNumber,
+    gitURL: userData.gitURL,
+    teams: userData.teams,
+    status: userData.status,
+    permission: userData.permission,
+  });
+  // console.log(currUsrTempData);
 }

@@ -1,4 +1,5 @@
 import createHTMLElement from '../onboarding-service';
+// import updateUserData from './profile/profileService';
 
 
 // export const profileViewHolderId = 'playGround';
@@ -33,20 +34,20 @@ export default function profileViewComponent(data) {
           <div class="form-group">
             <label class="col-lg-3 control-label"><b>User Name:</b></label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" value="${data.name}">
+              <input class="form-control" type="text" id="userName" value="${data.name}">
             </div>
           </div>
          
           <div class="form-group">
             <label class="col-lg-3 control-label">Company:</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" value="${data.username}">
+              <input class="form-control" type="text" id="company" value="${data.username}">
             </div>
           </div>
           <div class="form-group">
             <label class="col-lg-3 control-label">Email:</label>
             <div class="col-lg-8">
-              <input class="form-control" type="text" value="${data.email}">
+              <input class="form-control" type="text" id="mailId" value="${data.email}">
             </div>
           </div>
      
@@ -60,7 +61,7 @@ export default function profileViewComponent(data) {
           <div class="form-group">
             <label class="col-md-3 control-label"></label>
             <div class="col-md-8">
-              <input type="button" class="btn btn-primary" value="Save Changes" id="updateUserDataBtn">
+              <input type="button" class="btn btn-primary updateUserDataBtn" value="Save Changes" id="updateUserDataBtn">
               <span></span>
               <input type="reset" class="btn btn-default" value="Cancel">
             </div>
