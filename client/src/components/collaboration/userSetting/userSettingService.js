@@ -11,18 +11,18 @@ console.log(database);
 
 
 function getAllChannels() {
-  const userContactref = firebase.database().ref('team-6/channels');
-  userContactref.on('value', (snapshot) => {
-    const getAllContactValue = snapshot.val();
+  const userContactref = firebase.database().ref('team-6').child('channels');
+  userContactref.once('value', (snapshot) => {
+    const getAllContactValue = Object.values(snapshot.val());
+
+    console.log('get something', getAllContactValue);
     let getAllContactHtml = '';
-    console.log('getContact', getAllContactValue);
     const abc = getAllContactValue.map((contactVal) => {
-      // const channelName = contactVal.key;
-      // console.log(channelName);
+      const conName = Object.keys(contactVal);
       getAllContactHtml += `
         <div>
             <div class="buttom-panel text-center mt-1">
-              <div id="contactDetails">${contactVal}</div>
+              <div id="contactDetails">${conName}</div>
                   <div>
                       <button id="muteContact">mute</button>
                       <button id="unmuteContact">unmute</buttob>
@@ -41,27 +41,30 @@ document.getElementById('userContacts').addEventListener('click', getAllChannels
 
 
 function getAllUsers() {
-  const userContactref = firebase.database().ref('team-6/channels');
-  userContactref.on('value', (snapshot) => {
-    const channelName = snapshot.key;
+  const userContactref = firebase.database().ref('team-6').child('directMessages').child('users');
+  userContactref.once('value', (snapshot) => {
+    const getAllContactValue = Object.keys(snapshot.val());
+    // const getAllContactKey = Object.values(snapshot.val());
+    // console.log('get something123', getAllContactValue);
+    // console.log('get something1234', getAllContactKey);
+    // const conName = Object.values(contactVal);
     let getAllContactHtml = '';
-    channelName.on('value', (user) => {
+    const abc = getAllContactValue.map((contactVal) => {
       getAllContactHtml += `
-      <div>
-        <div class="buttom-panel text-center mt-1">
-          <div id="contactDetails">${user}</div>
-            <div>
-              <button id="muteContact">mute</button>
-              <button id="unmuteContact">unmute</buttob>
-              <button id="removeContact">remove</button>
+        <div>
+            <div class="buttom-panel text-center mt-1">
+              <div id="contactDetails">${contactVal}</div>
+                  <div>
+                      <button id="muteContact">mute</button>
+                      <button id="unmuteContact">unmute</buttob>
+                      <button id="removeContact">remove</button>
+                  </div>
+                </form>
             </div>
-          </form>
         </div>
-      </div>
-      `;
+        `;
       return getAllContactHtml;
     });
-
     jQuery('#showContactInformation').append(getAllContactHtml);
   });
 }
