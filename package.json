@@ -25,7 +25,11 @@
     "eslint-loader": "^2.1.0",
     "eslint-plugin-import": "^2.13.0",
     "file-loader": "^1.1.11",
+<<<<<<< HEAD
+    "firebase": "^5.3.1",
+=======
     "firebase": "^5.3.0",
+>>>>>>> b6c9bd32aa1163717be87da45d8b430fc0767742
     "font-awesome": "^4.7.0",
     "hammerjs": "^2.0.8",
     "html-loader": "^0.5.5",
