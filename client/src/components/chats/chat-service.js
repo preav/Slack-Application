@@ -1,6 +1,7 @@
 import { createStore } from 'redux'
 import { chat } from './chat-reducers'
 import { addChatToStore } from './chat-controller'
+import moment from 'moment';
 const firebase = require('firebase');
 var markdown = require("markdown").markdown;
 
@@ -17,7 +18,6 @@ var ref = firebase.database().ref().child('messages').limitToLast(5);
 var database = firebase.database();
 
 btnSubmit.addEventListener('click', evt => {
-    
     const rawMessage = document.querySelector('#enteredCommand').value;
     const message = markdown.toHTML(rawMessage);
     const currentDateTime = Date.now();
@@ -40,10 +40,12 @@ btnSubmit.addEventListener('click', evt => {
 ref.on('child_added', function (dataSnapshot) {
     console.log("DataSnapshot", dataSnapshot.val());
     const paraElement = document.createElement('p');
-    paraElement.innerHTML = `<strong>${dataSnapshot.val().sentBy}</strong> - ${dataSnapshot.val().date}<br>
+    const formattedTime = moment(dataSnapshot.val().date).fromNow();
+    paraElement.innerHTML = `<strong>${dataSnapshot.val().sentBy}</strong> - ${formattedTime}<br>
                                 ${dataSnapshot.val().messageText}`;
     document.getElementById('playGround').appendChild(paraElement);
     document.querySelector('#enteredCommand').value = "";
+    $("div.emojionearea-editor").data("emojioneArea").setText('');
 })
 
 // get the Initial data from the Chat
