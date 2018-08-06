@@ -1,4 +1,5 @@
 @import '~bootstrap/scss/bootstrap';
+@import '~emojionearea/dist/emojionearea.css';
 
 .footer {
     position: fixed;
@@ -99,6 +100,7 @@
         list-style: none;
         padding: 0 16px;
     }
+}
  legend {
     background-color: #000;
     color: #fff;

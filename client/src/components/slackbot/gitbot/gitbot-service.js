@@ -3,7 +3,7 @@ import { GITHUB_API_TOKEN, GITHUB_API_CREATE_REPO_URL, GITHUB_API_USER_URL } fro
 
 const firebase = require('firebase');
 
-firebase.initializeApp(config);
+// firebase.initializeApp(config);
 // function to save data into firebase database -- firebase
 export const createRepoFirebaseService = widgetData => new Promise((resolve, reject) => {
   const collectionKey = firebase.database().ref('SlackXT/slackbot/gitbot').push({

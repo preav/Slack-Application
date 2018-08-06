@@ -1,12 +1,24 @@
 import firebase from 'firebase';
 
-const config = {
-  apiKey: 'AIzaSyCCGyDmn1eBE-kJdy3uJ9m5Zui6I06YyBo',
-  authDomain: 'slackxt-notifications.firebaseapp.com',
-  databaseURL: 'https://slackxt-notifications.firebaseio.com',
-  projectId: 'slackxt-notifications',
-  storageBucket: 'slackxt-notifications.appspot.com',
-  messagingSenderId: '226487853474',
+//SUSHMA
+// const config = {
+//   apiKey: 'AIzaSyCCGyDmn1eBE-kJdy3uJ9m5Zui6I06YyBo',
+//   authDomain: 'slackxt-notifications.firebaseapp.com',
+//   databaseURL: 'https://slackxt-notifications.firebaseio.com',
+//   projectId: 'slackxt-notifications',
+//   storageBucket: 'slackxt-notifications.appspot.com',
+//   messagingSenderId: '226487853474',
+// };
+// firebase.initializeApp(config);
+
+// Initialize Firebase ANIL KUMAR
+var config = {
+  apiKey: "AIzaSyBXSX7MSICIhesYDQa0Rsa8z4h29pfLvDI",
+  authDomain: "chatapp-19fa7.firebaseapp.com",
+  databaseURL: "https://chatapp-19fa7.firebaseio.com",
+  projectId: "chatapp-19fa7",
+  storageBucket: "chatapp-19fa7.appspot.com",
+  messagingSenderId: "648696728261"
 };
 firebase.initializeApp(config);
 
@@ -108,4 +120,3 @@ function createSearchResult(user,text) {
 }
 
 export default config;
->>>>>>> 2df0859cf4294d11d07b9c8fe696435f505e6ba6
