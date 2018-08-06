@@ -8,7 +8,7 @@ const config = {
   storageBucket: 'slackxt-notifications.appspot.com',
   messagingSenderId: '226487853474',
 };
-firebase.initializeApp(config);
+// firebase.initializeApp(config);
 
 
 
@@ -108,4 +108,3 @@ function createSearchResult(user,text) {
 }
 
 export default config;
->>>>>>> 2df0859cf4294d11d07b9c8fe696435f505e6ba6
