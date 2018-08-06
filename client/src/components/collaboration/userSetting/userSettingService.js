@@ -1,11 +1,8 @@
 import firebase from 'firebase';
 import { config } from '../../../../../config/config';
 
-<<<<<<< HEAD
 const jQuery = require('jquery');
 
-=======
->>>>>>> b6c9bd32aa1163717be87da45d8b430fc0767742
 firebase.initializeApp(config);
 
 // Get a reference to the database service
@@ -13,18 +10,19 @@ const database = firebase.database();
 console.log(database);
 
 
-<<<<<<< HEAD
-function getAllContacts() {
-  const userContactref = firebase.database().ref('team001/users/userID001/contact');
+function getAllChannels() {
+  const userContactref = firebase.database().ref('team-6/channels');
   userContactref.on('value', (snapshot) => {
     const getAllContactValue = snapshot.val();
     let getAllContactHtml = '';
     console.log('getContact', getAllContactValue);
     const abc = getAllContactValue.map((contactVal) => {
+      // const channelName = contactVal.key;
+      // console.log(channelName);
       getAllContactHtml += `
         <div>
             <div class="buttom-panel text-center mt-1">
-              <div>${contactVal}</div>
+              <div id="contactDetails">${contactVal}</div>
                   <div>
                       <button id="muteContact">mute</button>
                       <button id="unmuteContact">unmute</buttob>
@@ -39,57 +37,69 @@ function getAllContacts() {
     jQuery('#showContactInformation').append(getAllContactHtml);
   });
 }
-document.getElementById('userContacts').addEventListener('click', getAllContacts);
+document.getElementById('userContacts').addEventListener('click', getAllChannels);
 
 
-document.getElementById('muteContact').addEventListener('click', getAllContacts);
-document.getElementById('unmuteContact').addEventListener('click', getAllContacts);
-document.getElementById('removeContact').addEventListener('click', getAllContacts);
-//= ============================================================================================
-// function fnCreateChannel() {
-//   const channelref = database.ref(`channels/${123}`).set({
-//     channelName: 'new',
-//     private: true,
-//     users: {
-//       userName: 'saket1',
-//     },
-//   }, (error) => {
-//     if (error) {
-//       console.log(error, 'There is error while saving data into firebase...');
-//     } else {
-//       console.log('channel created successfully...');
-//     }
-//   });
-// }
+function getAllUsers() {
+  const userContactref = firebase.database().ref('team-6/channels');
+  userContactref.on('value', (snapshot) => {
+    const channelName = snapshot.key;
+    let getAllContactHtml = '';
+    channelName.on('value', (user) => {
+      getAllContactHtml += `
+      <div>
+        <div class="buttom-panel text-center mt-1">
+          <div id="contactDetails">${user}</div>
+            <div>
+              <button id="muteContact">mute</button>
+              <button id="unmuteContact">unmute</buttob>
+              <button id="removeContact">remove</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      `;
+      return getAllContactHtml;
+    });
 
-
-// document.getElementById('createChannel').addEventListener('click', fnCreateChannel);
-=======
-function fnCreateChannel() {
-  const channelref = database.ref(`channels/${12345678}`).set({
-    channelName: 'new',
-    private: true,
-    users: {
-      userName: 'saket1',
-    },
-  }, (error) => {
-    if (error) {
-      console.log(error, 'There is error while saving data into firebase...');
-    } else {
-      console.log('channel created successfully...');
-    }
+    jQuery('#showContactInformation').append(getAllContactHtml);
   });
 }
 
+// function getAllUsers() {
+//   const userContactref = firebase.database().ref('team-6/channels/');
+//   userContactref.on('value', (snapshot) => {
+//     const getAllContactValue = snapshot.val();
+//     let getAllContactHtml = '';
+//     console.log('getContact', getAllContactValue);
+//     const abc = getAllContactValue.map((contactVal) => {
+//       console.log(contactVal);
 
-document.getElementById('createChannel').addEventListener('click', fnCreateChannel);
->>>>>>> b6c9bd32aa1163717be87da45d8b430fc0767742
+//       getAllContactHtml += `
+//         <div>
+//             <div class="buttom-panel text-center mt-1">
+//               <div id="contactDetails">${contactVal}</div>
+//                   <div>
+//                       <button id="muteContact">mute</button>
+//                       <button id="unmuteContact">unmute</buttob>
+//                       <button id="removeContact">remove</button>
+//                   </div>
+//                 </form>
+//             </div>
+//         </div>
+//         `;
+//       return getAllContactHtml;
+//     });
+//     jQuery('#showContactInformation').append(getAllContactHtml);
+//   });
+// }
+document.getElementById('userContacts').addEventListener('click', getAllUsers);
 
-//= ============================================================================
-function fnAddMember() {
-  const memberRef = database.ref(`users/${12345}`).set({
+
+function fnAddMember(status, userName) {
+  const memberRef = database.ref('team001/users/').push({
     status: 'active',
-    userName: 'sachin',
+    userName: 'sasasas',
   }, (error) => {
     if (error) {
       console.log(error, 'There is error while saving data into firebase...');
@@ -103,10 +113,10 @@ document.getElementById('addmember').addEventListener('click', fnAddMember);
 
 //= ========================================================================
 // functionality for updating something in firebase via
-<<<<<<< HEAD
 function muteContact() {
+  const channelN = document.getElementById('contactDetails').testContent;
   const newPostKey = firebase.database().ref(`/channels/${1234567}`).update({
-    private: 'nothing',
+    private: 'public',
   }, (error) => {
     if (error) {
       console.log(error, 'There is error while saving data into firebase...');
@@ -116,14 +126,17 @@ function muteContact() {
   });
 }
 
-document.getElementById('muteContact').addEventListener('click', muteContact);
+jQuery(document).on('click', '#muteContact', (e) => {
+  e.preventDefault();
+  console.log('mute Contact');
+  muteContact();
+});
+
 //= =============================================================================
 function unMuteContact() {
-=======
-function muteChannel() {
->>>>>>> b6c9bd32aa1163717be87da45d8b430fc0767742
+  const channelN = document.getElementById('contactDetails').testContent;
   const newPostKey = firebase.database().ref(`/channels/${1234567}`).update({
-    private: 'nothing',
+    private: 'private',
   }, (error) => {
     if (error) {
       console.log(error, 'There is error while saving data into firebase...');
@@ -133,31 +146,27 @@ function muteChannel() {
   });
 }
 
-<<<<<<< HEAD
-document.getElementById('muteContact').addEventListener('click', unMuteContact);
+jQuery(document).on('click', '#unmuteContact', (e) => {
+  e.preventDefault();
+  console.log('unmute Contact');
+  unMuteContact();
+});
+
+// document.getElementById('muteContact').addEventListener('click', unMuteContact);
 
 //= =============================================================================
 function deleteContact() {
   const deleteChannelRef = firebase.database().ref(`/channels/${123}`).remove();
 }
 
-document.getElementById('deleteContact').addEventListener('click', deleteContact);
+
+jQuery(document).on('click', '#deleteContact', (e) => {
+  e.preventDefault();
+  console.log('unmute Contact');
+  deleteContact();
+});
 
 
 export {
-  fnAddMember, muteContact, deleteContact, unMuteContact, database, getAllContacts,
-=======
-document.getElementById('muteChannel').addEventListener('click', muteChannel);
-
-//= =============================================================================
-function deleteChannel() {
-  const deleteChannelRef = firebase.database().ref(`/channels/${1234567}`).remove();
-}
-
-document.getElementById('deleteChannel').addEventListener('click', deleteChannel);
-
-
-export {
-  fnCreateChannel, fnAddMember, muteChannel, deleteChannel,
->>>>>>> b6c9bd32aa1163717be87da45d8b430fc0767742
+  fnAddMember, muteContact, deleteContact, unMuteContact, database, getAllChannels, getAllUsers,
 };

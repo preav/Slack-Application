@@ -4,8 +4,8 @@ function fnCreateChannel(channelName, channelType, channelId) {
   const channelN = document.getElementById('channelName').value;
   const channelT = document.getElementById('channelType').value;
   const channelI = document.getElementById('channelId').value;
-  const channelref = database.ref('team001/channels/');
-  channelref.set({
+  const channelref = database.ref('team-6/channels/');
+  channelref.push({
     channelId: channelI,
     channelName: channelN,
     private: channelT,
@@ -19,6 +19,5 @@ function fnCreateChannel(channelName, channelType, channelId) {
 }
 
 document.getElementById('createChannel').addEventListener('click', fnCreateChannel);
-
 
 export { fnCreateChannel };
