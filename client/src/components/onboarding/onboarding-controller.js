@@ -8,7 +8,17 @@ import profileViewComponent from './profile/profileView';
 
 
 export function createInvitationComponent() {
-  const output = '<p>Please click on the below provided link to join Slack</p><br/><a href="https://www.asdf.com">Join Slack</a>';
+  const form = document.getElementById('create-team-form');
+  let teamName;
+  Array.from(form.elements).forEach((element) => {
+    // console.log(element.nodeName);
+    // console.log(`${element.name}=${element.value}`);
+    if (element.nodeName.toLowerCase() === 'input') {
+      teamName = element.value;
+      console.log(`teamname-${teamName}`);
+    }
+  });
+  // const output = '<p>Please click on the below provided link to join Slack</p><br/><a href="https://www.asdf.com">Join Slack</a>';
   const invitComponent = invitationComponent();
   const maxfields = 10;
   let x = 1;
@@ -34,6 +44,8 @@ export function createInvitationComponent() {
       if (reciever !== '' && reciever !== undefined) {
         console.log(`dfdf-${reciever}`);
         recieverarr.push(reciever);
+        const redireURL = `https://www.asdf.com?teamname=${teamName}&useremail=${reciever}`;
+        const output = `<p>Please click on the below provided link to join Slack</p><br/><a href="${redireURL}">Join Slack</a>`;
         Email.send('slackmailing@gmail.com',
           reciever,
           'Invitation to join slack',
