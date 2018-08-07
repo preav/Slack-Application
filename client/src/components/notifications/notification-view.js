@@ -23,7 +23,7 @@ export const noficationTemplate = () => {
             <img class="card-img-top" src="" alt="Photo of sunset">
             <!-- Text Content -->
             <div class="card-body">
-            <p class="card-text">drgsdfbdf</p></div>
+            <p class="card-text" id="mes">drgsdfbdf</p></div>
             </div>
       <div class="card" style="max-width: 202px;">
             <!-- Image -->

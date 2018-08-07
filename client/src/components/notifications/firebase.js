@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import appConfig from './appConfig';
 
-firebase.initializeApp(appConfig);
+
 // const ref = firebase.database().ref('team001');
 
 
@@ -15,8 +15,10 @@ firebase.initializeApp(appConfig);
 // console.log(appConfig);
 
 
-const rootRef = firebase.database().ref('team001');
-const newRoot = rootRef.child('conversations/userID001/messages/0/body');
+firebase.initializeApp(appConfig);
+const rootRef = firebase.database().ref('team-6');
+const newRoot = rootRef.child('channels');
+
 
 newRoot.on('value', (snapshot) => {
   snapshot.forEach((_child) => {
@@ -28,3 +30,17 @@ newRoot.on('value', (snapshot) => {
     }
   });
 });
+
+// return document.querySelectorAll('#mes')[0];
+// export default func();
+
+// const channelList = rootRef.child('channels');
+// channelList.om('value', (userDetails) => {
+//   const channelName = userDetails.key;
+//   const userList = userDetails.child(users);
+//   userList.on('value', (user) => {
+//     if (user.key === '${userID}') {
+//       const msgObject = user.child('messages').child('messageText');
+//     }
+//   });
+// });
