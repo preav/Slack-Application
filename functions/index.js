@@ -11,8 +11,9 @@ const cors = require('cors')({ origin: true });
 // https://firebase.google.com/docs/functions/write-firebase-functions
 
 exports.helloWorld = functions.https.onRequest((request, response) => {
-    cors(request, response, () => {});
-    response.send("Hello Slack Developers from Firebase!");
+    return cors(request, response, () => {
+        response.send("Hello Slack Developers from Firebase!");
+    });
 });
 
 
@@ -27,41 +28,43 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 //     "phone":"239472974927"
 // }
 exports.saveUpdateUser = functions.https.onRequest((request, response) => {
-    cors(request, response, () => {});
-    const userId = request.query.userId;
-    const userData = request.body;
-    console.log("userId: " + userId);
-    console.log(request.query);
-    console.log(request.body);
+    return cors(request, response, () => {
+        const userId = request.query.userId;
+        const userData = request.body;
+        console.log("userId: " + userId);
+        console.log(request.query);
+        console.log(request.body);
+        console.log("Request method: "+request.method);
 
-    admin.database().ref('/users/' + userId).once('value', (snapshot) => {
-        var data = snapshot.val();
-        console.log(data);
-        console.log(snapshot.val() === null);
+        admin.database().ref('/users/' + userId).once('value', (snapshot) => {
+            var data = snapshot.val();
+            console.log(data);
+            console.log(snapshot.val() === null);
 
-        if (snapshot.val() === null) {
-            return admin.database().ref('/users/' + userId).set(userData, (error) => {
-                //console.log(snapshot);
-                if (error) {
-                    console.log("Error occurred while saving user: " + error);
-                    return response.json(error);
-                } else {
-                    console.log("User saved successfully");
-                    return response.json("User saved successfully");
-                }
-            });
-        } else {
-            return admin.database().ref('/users/' + userId).update(userData, (error) => {
-                //console.log(snapshot);
-                if (error) {
-                    console.log("Error occurred while updating user: " + error);
-                    return response.json(error);
-                } else {
-                    console.log("User updated successfully");
-                    return response.json("User updated successfully");
-                }
-            });
-        }
+            if (snapshot.val() === null) {
+                admin.database().ref('/users/' + userId).set(userData, (error) => {
+                    //console.log(snapshot);
+                    if (error) {
+                        console.log("Error occurred while saving user: " + error);
+                        response.send(error);
+                    } else {
+                        console.log("User saved successfully");
+                        response.send("User saved successfully");
+                    }
+                });
+            } else {
+                admin.database().ref('/users/' + userId).update(userData, (error) => {
+                    //console.log(snapshot);
+                    if (error) {
+                        console.log("Error occurred while updating user: " + error);
+                        response.send(error);
+                    } else {
+                        console.log("User updated successfully");
+                        response.send("User updated successfully");
+                    }
+                });
+            }
+        });
     });
 });
 
@@ -69,14 +72,15 @@ exports.saveUpdateUser = functions.https.onRequest((request, response) => {
 // **URL FORMAT**
 //saveUpdateUser?userId=myuserid6
 exports.getUser = functions.https.onRequest((request, response) => {
-    cors(request, response, () => {});
-    const userId = request.query.userId;
-    console.log("userId: " + userId);
+    return cors(request, response, () => {
+        const userId = request.query.userId;
+        console.log("userId: " + userId);
 
-    return admin.database().ref('/users/' + userId).once('value', (snapshot) => {
-        var data = snapshot.val();
-        console.log(data);
-        response.json(data);
+        admin.database().ref('/users/' + userId).once('value', (snapshot) => {
+            var data = snapshot.val();
+            console.log(data);
+            response.send(data);
+        });
     });
 });
 
@@ -144,5 +148,70 @@ exports.sendNotifications = functions.database.ref('/team6/directMessages/users/
         return admin.messaging().sendToDevice(tokens, payload)
             .then(response => cleanInvalidTokens(tokensWithKey, response.results))
             .then(() => admin.database().ref('/notifications').child(NOTIFICATION_SNAPSHOT.key).remove());
+    });
+});
+
+// Create/Update Team
+// **URL FORMAT**
+//saveUpdateTeam?teamName=team-one
+// **JSON FORMAT**
+// {
+//     "admins":["user1","user2"],
+//     "companyName":"Sapient"
+// }
+exports.saveUpdateTeam = functions.https.onRequest((request, response) => {
+    return cors(request, response, () => {
+        const teamId = request.query.teamName;
+        const teamData = request.body;
+        console.log("teamId: " + teamId);
+        console.log(request.query);
+        console.log(request.body);
+        console.log("Request method: "+request.method);
+
+        admin.database().ref('/teams/' + teamId).once('value', (snapshot) => {
+            var data = snapshot.val();
+            console.log(data);
+            console.log(snapshot.val() === null);
+
+            if (snapshot.val() === null) {
+                admin.database().ref('/teams/' + teamId).set(teamData, (error) => {
+                    //console.log(snapshot);
+                    if (error) {
+                        console.log("Error occurred while saving team: " + error);
+                        response.send(error);
+                    } else {
+                        console.log("Team saved successfully");
+                        response.send("Team saved successfully");
+                    }
+                });
+            } else {
+                admin.database().ref('/teams/' + teamId).update(teamData, (error) => {
+                    //console.log(snapshot);
+                    if (error) {
+                        console.log("Error occurred while updating team: " + error);
+                        response.send(error);
+                    } else {
+                        console.log("Team updated successfully");
+                        response.send("Team updated successfully");
+                    }
+                });
+            }
+        });
+    });
+});
+
+// Get user Info
+// **URL FORMAT**
+//saveUpdateTeam?teamName=team-one
+exports.getTeam = functions.https.onRequest((request, response) => {
+    return cors(request, response, () => {
+        const teamId = request.query.teamName;
+        console.log("teamId: " + teamId);
+
+        admin.database().ref('/teams/' + teamId).once('value', (snapshot) => {
+            var data = snapshot.val();
+            console.log(data);
+            response.send(data);
+        });
     });
 });
