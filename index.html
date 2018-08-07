@@ -136,8 +136,7 @@
 
       <div class="container" id="UserSettings">
         <button id="userContacts" class="btn btn-success">userContacts</button>
-        <div id="showContactInformation">
-        </div>
+       
       </div>
       <button onclick="getUserChatHistory('userId')" class="btn btn-success"> Chat History </button>
 
@@ -189,7 +188,10 @@
       </div>
 
       <div class="container-fluid d-flex text-left containerWrapper">
-        <section id="chatLists" class="col-xs-5 col-sm-3"></section>
+        <section id="chatLists" class="col-xs-5 col-sm-3">
+          <div id="showContactInformation">
+          </div>
+        </section>
         <section id="chatArea" class="col-xs-7 col-sm-9 d-flex flex-column">
           <div id="messageBody"></div>
           <label for="enteredCommand" class="sr-only"> Text Message Area </label>

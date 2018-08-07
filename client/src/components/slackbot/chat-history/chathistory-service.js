@@ -1,4 +1,4 @@
-import { config } from '../../../../../firebase/firebase';
+import { config } from '../../../../../firebase/firebase-config';
 
 const firebase = require('firebase');
 

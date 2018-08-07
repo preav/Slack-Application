@@ -2,8 +2,10 @@ import { createStore } from 'redux'
 import { chat } from './chat-reducers'
 import { addChatToStore } from './chat-controller'
 import moment from 'moment';
-const firebase = require('firebase');
+//const firebase = require('firebase');
 var markdown = require("markdown").markdown;
+import '../../../../firebase/firebase-config';
+import firebase from 'firebase';
 
 const store = createStore(chat)
 
@@ -29,7 +31,7 @@ btnSubmit.addEventListener('click', evt => {
     if (currentUser) {
         userDisplayName = currentUser.displayName;
     }
-
+    console.log(currentUser);
     firebase.database().ref('messages').push({
         messageText: message,
         date: currentDateTime,

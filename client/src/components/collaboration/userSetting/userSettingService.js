@@ -1,5 +1,7 @@
- import {firebase, database} from '../../../../../firebase/firebase';
+ import firebase from 'firebase';
+import '../../../../../firebase/firebase-config';
 
+let database = firebase.database();
 const jQuery = require('jquery');
 
 function getAllChannels() {

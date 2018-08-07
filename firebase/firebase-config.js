@@ -10,4 +10,4 @@ const config = {
   storageBucket: 'slackcollaboration-fa323.appspot.com',
   messagingSenderId: '906342147667',
 };
-// firebase.initializeApp(config);
+firebase.initializeApp(config);

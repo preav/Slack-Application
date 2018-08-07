@@ -1,8 +1,8 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
-var config = {
-  entry: ['jquery','babel-polyfill',
+const config = {
+  entry: ['jquery', 'babel-polyfill',
     './client/src/components/index.js',
     './client/src/scss/main.scss'
   ],
@@ -65,7 +65,17 @@ var config = {
       }, {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         loader: "url-loader?limit=10000&mimetype=image/svg+xml"
-      }]
+      }, {
+        test: require.resolve('jquery'),
+        use: [{
+          loader: 'expose-loader',
+          options: 'jQuery',
+        }, {
+          loader: 'expose-loader',
+          options: '$',
+        }]
+      }
+    ]
   },
   plugins: [
     new webpack.ProvidePlugin({
