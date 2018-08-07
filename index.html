@@ -125,22 +125,21 @@
     <div class="container">
 
       <div class="container">
-        <button id="muteChannel">Mute Channel</button>
-        <button id="unmuteChannel">unMute Channel</button>
+        <button id="muteChannel" class="btn btn-success">Mute Channel</button>
+        <button id="unmuteChannel" class="btn btn-success">unMute Channel</button>
         <!-- <button id="createChannel">Create Channel</button> -->
-        <button id="addmember">Add Member</button>
-        <button id="removemember">Remove Member</button>
-        <button id="leaveChannel">Leave Channel</button>
-        <button id="deleteChannel">Delete Channel</button>
+        <button id="addmember" class="btn btn-success">Add Member</button>
+        <button id="removemember" class="btn btn-success">Remove Member</button>
+        <button id="leaveChannel" class="btn btn-success">Leave Channel</button>
+        <button id="deleteChannel" class="btn btn-success">Delete Channel</button>
       </div>
 
       <div class="container" id="UserSettings">
-        <button id="userContacts">userContacts</button>
+        <button id="userContacts" class="btn btn-success">userContacts</button>
         <div id="showContactInformation">
-
         </div>
       </div>
-
+      <button onclick="getUserChatHistory('userId')" class="btn btn-success"> Chat History </button>
 
       <div class="container" id="adminSettings">
         <div class="modal fade" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -185,23 +184,24 @@
           <button id="createChannel" class="btn btn-primary btn-rounded mb-4" data-toggle="modal" data-target="#modalSubscriptionForm">Create Channel</button>
         </div>
       </div>
-
-
-
-      <div class="d-flex flex-fill">
-        <div id="playGround" class="d-flex flex-fill">
+      <div class="container">
+          <div id="playGround"></div>
         </div>
-
-        <div class="footer">
-          <div class="commandLineInput" id="commandLineInput">
-            <input class="form-control form-control-lg text-left" type="text" id="enteredCommand" placeholder="Message #channel...">
-            <input type="submit" id="submit" class="btn btn-success" value="Send" />
-          </div>
-
+      <div class="container-fluid d-flex text-left containerWrapper">
+          <section id="chatLists" class="col-xs-5 col-sm-3"></section>
+          <section id="chatArea" class="col-xs-7 col-sm-9 d-flex flex-column">
+              <div id="messageBody"></div>
+              <label for="enteredCommand" class="sr-only"> Text Message Area </label>
+              <div class="input-group" id="textArea">
+                <input type="text" class="form-control form-control-lg" id="enteredCommand" 
+                placeholder="Type your message here..." aria-describedby="enter">
+                <div class="input-group-append">
+                  <button type="submit" id="enter" class="input-group-text" value="Send"> Send </button>
+                </div>
+              </div>
+          </section>
         </div>
-
-        <button onclick="getUserChatHistory('userId')">Click me</button>
-      </div>
+    </div>
     </div>
     </div>
   </section>

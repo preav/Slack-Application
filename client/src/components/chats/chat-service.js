@@ -11,7 +11,7 @@ const store = createStore(chat)
 console.log(store.getState())
 
 // get Elements
-const btnSubmit = document.getElementById('submit');
+const btnSubmit = document.getElementById('enter');
 var ref = firebase.database().ref().child('messages').limitToLast(5);
 
 // Get a reference to the database service
@@ -19,6 +19,9 @@ var database = firebase.database();
 
 btnSubmit.addEventListener('click', evt => {
     const rawMessage = document.querySelector('#enteredCommand').value;
+    for (let elem of document.getElementsByClassName('emojionearea-editor')) {
+        elem.innerText = ' ';
+    }
     const message = markdown.toHTML(rawMessage);
     const currentDateTime = Date.now();
     let userDisplayName = 'Anil Kumar';
@@ -43,9 +46,7 @@ ref.on('child_added', function (dataSnapshot) {
     const formattedTime = moment(dataSnapshot.val().date).fromNow();
     paraElement.innerHTML = `<strong>${dataSnapshot.val().sentBy}</strong> - ${formattedTime}<br>
                                 ${dataSnapshot.val().messageText}`;
-    document.getElementById('playGround').appendChild(paraElement);
-    document.querySelector('#enteredCommand').value = "";
-    $("div.emojionearea-editor").data("emojioneArea").setText('');
+    document.getElementById('messageBody').appendChild(paraElement);
 })
 
 // get the Initial data from the Chat
