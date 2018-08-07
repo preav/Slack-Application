@@ -13,11 +13,11 @@ function getAllChannels() {
     let getAllContactHtml = '';
     const abc = getAllContactValue.map((contactVal) => {
       const conName = Object.keys(contactVal);
-      getAllContactHtml += `
+      getAllContactHtml = `
         <div>
             <div class="buttom-panel text-center mt-1">
-              <div id="contactDetails">${conName}</div>
-                  <div channelId='${conName}'>
+              <div id=${conName} class="channels">${conName}</div>
+                  <div id="${conName}channel">
                       <button type="button" class="muteChannel">mute Channel</button>
                       <button type="button" class="unmuteChannel">unmute Channel</buttob>
                       <button type="button" class="removeChannel">remove Channel</button>
@@ -26,13 +26,19 @@ function getAllChannels() {
             </div>
         </div>
         `;
-      return getAllContactHtml;
+      //return getAllContactHtml;
+      jQuery('#showContactInformation').append(getAllContactHtml);
+      document.getElementById(`${conName}`).addEventListener('click', clickChannel);
     });
-    jQuery('#showContactInformation').append(getAllContactHtml);
+    // jQuery('#showContactInformation').append(getAllContactHtml);
+    // document.getElementById(`${conName}`).addEventListener('click', clickChannel);
   });
 }
 document.getElementById('userContacts').addEventListener('click', getAllChannels);
 
+function clickChannel() {
+  console.log('channel clicked');
+}
 function getAllUsers() {
   const userContactref = database.ref('team-6').child('directMessages').child('users');
   userContactref.once('value', (snapshot) => {
