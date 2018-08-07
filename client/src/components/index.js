@@ -40,6 +40,11 @@ import '../components/notification/dateFiltercontroller';
 
 import './onboarding/main';
 
+
+import './notifications/notification-controller';
+import './notifications/firebase';
+
+
 require('font-awesome/css/font-awesome.css');
 
 
