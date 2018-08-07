@@ -1,5 +1,7 @@
-import { updateSlackBotCalendarResponse, createCalendarEventService } from './calendar-service';
-import { calendarEventCreateMsg } from './calendar-view';
+import { 
+  updateSlackBotCalendarResponse, createCalendarEventService, getCalendarForUserService 
+} from './calendar-service';
+import { calendarEventCreateMsg,openCalendarView,newCalendarlistItemView } from './calendar-view';
 
 // function to create calendar event
 export const createCalendarEvent = function (widgetData) {
@@ -31,5 +33,37 @@ export const createCalendarEvent = function (widgetData) {
     }
   }).catch((err) => {
     console.log(err, 'Error occured while creating calandar event in firebase database..');
+  });
+};
+
+// function to open Calendar modal
+export const openCalendar = function (openWidgetType) {
+  const createWidgetEle = document.getElementById('playGround');
+  // calling service function to get calendar data from firebase database
+  getCalendarForUserService(openWidgetType.userId).then((calendarListData) => {
+    // converting object to array
+    const calendarListDataArray = Object.keys(calendarListData).map(i => calendarListData[i])
+    if (calendarListDataArray.length != 0) {
+      const newRepowidget = document.createElement('div');
+      newRepowidget.innerHTML = openCalendarView();
+      createWidgetEle.appendChild(newRepowidget);
+
+      //to remove old calendar value from modal                
+      var oldDOMcalendarlist = document.getElementById('calendarElementsItem');
+      while(oldDOMcalendarlist.firstChild){
+        oldDOMcalendarlist.removeChild(oldDOMcalendarlist.firstChild);
+      }
+
+      // add each calendar task elements in modal list
+      for(var i = 0; i < calendarListDataArray.length; i++){
+        const calendarlistElementsItem = document.getElementById('calendarElementsItem');
+        const newCalendarlistItem = document.createElement('div');
+        newCalendarlistItem.innerHTML = newCalendarlistItemView(calendarListDataArray[i]);
+        calendarlistElementsItem.appendChild(newCalendarlistItem);
+      }
+      $('#calendarModal').modal('show'); 
+    }
+  }).catch((err) => {
+    console.log(err, 'Error occured while calendar list from firebase database..');
   });
 };

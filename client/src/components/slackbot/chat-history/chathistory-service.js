@@ -1,8 +1,13 @@
+import { config } from '../../../../../firebase/firebase';
+
 const firebase = require('firebase');
+
+// firebase.initializeApp(config);
 
 // function to retrieve chat history for a user from firebase database -- firebase
 export const getChatHistoryForUserService = userId => new Promise((resolve, reject) => {
-  firebase.database().ref('SlackXT/slackbot/otherbot').once('value').then((snapshot) => {
+  firebase.database().ref(`SlackXT/slackbot/${userId}`).once('value')
+  .then((snapshot) => {
     const chathistory = snapshot.val();
     if (chathistory !== '') {
       console.log('chat history retrieved successfully...', chathistory);
