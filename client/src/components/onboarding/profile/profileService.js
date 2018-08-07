@@ -28,6 +28,7 @@ export function updateUserData(name, email) {
     method: 'POST',
     mode: 'no-cors',
     headers : {"Access-Control-Allow-Origin":true},
+    contentType: 'application/json;charset=UTF-8',
     body: JSON.stringify({     
           "name" :name,
           "email" :email       
@@ -43,22 +44,31 @@ export function updateUserData(name, email) {
     .catch((err) => {
       console.log('Error:', err.message);
     });
-
-  // const dataPromise = fetch(`https://us-central1-slackcollaboration-fa323.cloudfunctions.net/saveUpdateUser?userId=${userUID}`);
-
-  /* dbRef.child(`users/${userUID}`).set({
-     username: userData.username,
-     accessToken: userData.accessToken,
-     name: userData.name,
-     email: 'updated_mailid@test.com',
-     profilePicture: userData.profilePicture,
-     phoneNumber: userData.phoneNumber,
-     gitURL: userData.gitURL,
-     teams: userData.teams,
-     status: userData.status,
-     permission: userData.permission,
-   }); */
-  // console.log(currUsrTempData);
 }
 
 
+export function saveUpdateUser(updated_name, updated_email) {
+  // Return a new promise.
+  const userId = firebase.auth().currentUser.uid;
+  console.log(`https://us-central1-slackcollaboration-fa323.cloudfunctions.net/saveUpdateUser?userId=${userId}`);
+  //console.log(userData);
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: `https://us-central1-slackcollaboration-fa323.cloudfunctions.net/saveUpdateUser?userId=${userId}`,
+      type: 'POST',
+      // data: userData,
+      data: JSON.stringify({ name: updated_name,
+      email : updated_email }),
+      contentType: 'application/json;charset=UTF-8',
+      dataType: 'text',
+      success(data) {
+        console.log('Saved data');
+        resolve(data);
+      },
+      error(e) {
+        console.log('Error in saving data');
+        reject(e.statusText);
+      },
+    });
+  });
+ }

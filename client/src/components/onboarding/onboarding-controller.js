@@ -5,7 +5,7 @@ import { inivitationViewHolderId, invitationComponent, mailSentBody } from './in
 import { Email } from './invitation/smtp';
 import { submitTeamCreateForm } from './team-create/team-create-service';
 import profileViewComponent from './profile/profileView';
-import { getCurrentUserData, updateUserData } from './profile/profileService';
+import { getCurrentUserData, saveUpdateUser } from './profile/profileService';
 
 
 export function createInvitationComponent() {
@@ -78,9 +78,22 @@ document.querySelector('#user-profile').addEventListener('click', () => {
       const userName = document.getElementById('userName').value;
       const email = document.getElementById('mailId').value;
       console.log("calling update>>>>"+userName+"-----"+email);
-      updateUserData(userName, email);
-      console.log(data);
+      //saveUpdateUser(userName, email);
+
+      saveUpdateUser(userName, email).then((response) => {
+        console.log(response);
+      }, (error) => {
+        console.log(`Error in saving/updating user: ${error.toString()}`);
+      });
+
     });
+
+    $('#closeBtn').click(() => {
+      alert("test");
+      window.history.go(-1);
+     // window.history.back();
+    });
+    
   });
 });
 

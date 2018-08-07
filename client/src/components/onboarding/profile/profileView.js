@@ -61,7 +61,8 @@ export default function profileViewComponent(data) {
             <div class="col-md-8">
               <input type="button" class="btn btn-primary updateUserDataBtn" value="Save Changes" id="updateUserDataBtn">
               <span></span>
-              <input type="reset" class="btn btn-default" value="Cancel">
+              <input type="reset" class="btn btn-default"  id="closeBtn" value="Cancel">
+              
             </div>
           </div>
         </form>
