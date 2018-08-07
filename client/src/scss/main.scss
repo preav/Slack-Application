@@ -68,10 +68,6 @@ body
    font-size: 0.8rem;
 }
 
-#textArea{
-   margin-bottom: 0px;
-}
-
 
 #container-root
 {            
@@ -269,4 +265,10 @@ label {
     display: inline-block;
     text-align: right;
     width: 20%;
+}
+
+.emojionearea .emojionearea-editor {
+    min-height: 36px;
+    max-height: 36px;
+    padding-top: 8px;
 }

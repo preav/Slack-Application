@@ -185,22 +185,24 @@
         </div>
       </div>
       <div class="container">
-          <div id="playGround"></div>
-        </div>
+        <div id="playGround"></div>
+      </div>
+
       <div class="container-fluid d-flex text-left containerWrapper">
-          <section id="chatLists" class="col-xs-5 col-sm-3"></section>
-          <section id="chatArea" class="col-xs-7 col-sm-9 d-flex flex-column">
-              <div id="messageBody"></div>
-              <label for="enteredCommand" class="sr-only"> Text Message Area </label>
-              <div class="input-group" id="textArea">
-                <input type="text" class="form-control form-control-lg" id="enteredCommand" 
-                placeholder="Type your message here..." aria-describedby="enter">
-                <div class="input-group-append">
-                  <button type="submit" id="enter" class="input-group-text" value="Send"> Send </button>
-                </div>
+        <section id="chatLists" class="col-xs-5 col-sm-3"></section>
+        <section id="chatArea" class="col-xs-7 col-sm-9 d-flex flex-column">
+          <div id="messageBody"></div>
+          <label for="enteredCommand" class="sr-only"> Text Message Area </label>
+          <form id="add-msg-form" onsubmit="return false">
+            <div class="input-group mb-3">
+              <input type="text" class="form-control text-left" type="text" id="enteredCommand" placeholder="Message #channel...">
+              <div class="input-group-append">
+                <input type="submit" id="enter" class="btn btn-success m-0" value="Send" />
               </div>
-          </section>
-        </div>
+            </div>
+          </form>
+        </section>
+      </div>
     </div>
     </div>
     </div>
