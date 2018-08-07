@@ -1,12 +1,8 @@
-// firebase configuration
-
-const config = {
-  apiKey: 'AIzaSyAZv4-Vvrc6OoC2IB8ooPwodGsjguGJ-kI',
-  authDomain: 'skackbot.firebaseapp.com',
-  databaseURL: 'https://skackbot.firebaseio.com',
-  projectId: 'skackbot',
-  storageBucket: '',
-  messagingSenderId: '736179462970',
+export const config = {
+  apiKey: 'AIzaSyAJ-x46vf7le3_76owE2KkNYDneQLwx2xA',
+  authDomain: 'slackcollaboration-fa323.firebaseapp.com',
+  databaseURL: 'https://slackcollaboration-fa323.firebaseio.com',
+  projectId: 'slackcollaboration-fa323',
+  storageBucket: 'slackcollaboration-fa323.appspot.com',
+  messagingSenderId: '906342147667',
 };
-
-export { config };
