@@ -14,6 +14,17 @@ import {
 import { config } from '../../../config/config';
 
 
+import 'firebase';
+
+import '../../../firebase/firebase';
+
+import './slackbot/main';
+
+import '../components/notification/dateFiltercontroller';
+
+
+
+
 require('font-awesome/css/font-awesome.css');
 
 

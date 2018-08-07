@@ -8,3 +8,168 @@
     color: white;
     text-align: center;
  }
+
+ .panBackground {
+    background: wheat;
+}
+
+.panComponents {
+    margin: 30px 70px 30px 70px;
+}
+
+.btn {
+    margin: 10px;
+}
+
+#close {
+    float:right;
+    display:inline-block;
+    padding:2px 5px;
+}
+
+#close:hover {
+    float:right;
+    display:inline-block;
+    padding:2px 5px;
+    color:#fff;
+}
+
+.commandComment {
+    width: 500px;
+    height: 50px;
+}
+
+#playGround {
+    display: block;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    color: #333;
+    word-wrap: break-word;
+    margin: .5rem 0 .2rem;
+    font-size: .75rem;
+    line-height: 1.15rem;
+    background: #f9f9f9;
+    font-family: Monaco,Menlo,Consolas,"Courier New",monospace!important;
+    padding: .5rem;
+    -webkit-font-variant-ligatures: none;
+    font-variant-ligatures: none;
+    word-break: normal;
+    tab-size: 4;
+    float:left;
+    width:80%;
+    overflow-y: auto;
+    height: 600px;
+}
+
+.playGroungDiv-bot{
+    background: wheat;
+    padding: 10px;
+    margin: 2px;
+    text-align: right;
+    border-radius: 10px;
+}
+.playGroungDiv-you{
+    background: rgb(232, 248, 140);
+    padding: 10px;
+    margin: 2px;
+    text-align: left;
+    border-radius: 10px;
+}
+
+.playGroungDiv-bot:hover{
+    background: rgb(175, 175, 175);
+}
+
+.playGroungDiv-you:hover{
+    background: rgb(175, 175, 175);
+}
+
+#todolistModalBody .fa {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.reminderRow {
+    ul, li {
+        margin: 0;
+        padding: 0;
+    }
+
+    li {
+        list-style: none;
+        padding: 0 16px;
+    }
+}
+ legend {
+    background-color: #000;
+    color: #fff;
+    padding: 3px 6px;
+}
+
+.output {
+    font: 1rem 'Fira Sans', sans-serif;
+}
+
+$padding-base: 15px;
+$color-body: #fff;
+$color-border: #ddd;
+$color-link: #0275d8;
+$border-radius: .25rem;
+
+.nav-tabs {
+	&--vertical {
+		border-bottom: none;
+		border-right: 1px solid $color-border;
+		display: flex;
+		flex-flow: column nowrap;
+	}
+	
+	&--left {
+		margin: 0 $padding-base;
+		
+		.nav-item + .nav-item {
+			margin-top: .25rem;
+		}
+		
+		.nav-link {
+			transition: border-color .125s ease-in;
+			white-space: nowrap;
+			
+			&:hover {
+				background-color: lighten($color-border, 10%);
+				border-color: transparent;
+			}
+		}
+		
+		.nav-link.active {
+			border-bottom-color: $color-border;
+			border-right-color: $color-body;
+			border-bottom-left-radius: $border-radius;
+			border-top-right-radius: 0;
+			margin-right: -1px;
+			
+			&:hover {
+				background-color: $color-body;
+				border-color: $color-link $color-body $color-link $color-link;
+			}
+		}
+	}
+}
+
+#myModal .modal-dialog {
+    -webkit-transform: translate(0,-50%);
+    -o-transform: translate(0,-50%);
+    transform: translate(0,-50%);
+    top: 50%;
+    margin: 0 auto;
+}
+
+input {
+    margin: .4rem;
+}
+
+label {
+    display: inline-block;
+    text-align: right;
+    width: 20%;
+}
