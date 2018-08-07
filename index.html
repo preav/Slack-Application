@@ -193,11 +193,20 @@
         </div>
 
         <div class="footer">
-          <div class="commandLineInput" id="commandLineInput">
-            <input class="form-control form-control-lg text-left" type="text" id="enteredCommand" placeholder="Message #channel...">
-            <input type="submit" id="submit" class="btn btn-success" value="Send" />
-          </div>
-
+          <form id="add-msg-form" onsubmit="alert('submit');return false">
+            <div class="input-group mb-3">
+              <input type="text" class="form-control text-left" type="text" id="enteredCommand" placeholder="Message #channel...">
+              <div class="input-group-append">
+                <input type="submit" id="submit" class="btn btn-success m-0" value="Send" />
+              </div>
+            </div>
+          </form>
+          <!-- <form id="add-msg-form" onsubmit="alert('submit');return false">
+            <div class="commandLineInput" id="commandLineInput">
+              <input class="form-control form-control-lg text-left" type="text" id="enteredCommand" placeholder="Message #channel...">
+              <input type="submit" id="submit" class="btn btn-success" value="Send" />
+            </div>
+          </form> -->
         </div>
 
         <button onclick="getUserChatHistory('userId')">Click me</button>
