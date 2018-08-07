@@ -14,12 +14,10 @@ export default function profileViewComponent(data) {
     `<div class="container" >
     <h1>Edit Profile</h1>
       <hr>
-    <div class="row">
-      <!-- left column --
+    <div class="row">     
       <div class="col-md-3">
         <div class="text-center">
-          <img src="./client/src//img/avatar.png" class="avatar" alt="avatar">
-        
+          <img src="./client/src//img/avatar.png" class="avatar" alt="avatar">        
           
           <input type="file" class="form-control">
         </div>
