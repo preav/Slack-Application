@@ -2,7 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
 var config = {
-  entry: ['babel-polyfill',
+  entry: ['jquery','babel-polyfill',
     './client/src/components/index.js',
     './client/src/scss/main.scss'
   ],

@@ -1,17 +1,15 @@
-import { config } from '../../../../../config/config';
+import { config } from '../../../../../firebase/firebase';
 import { GITHUB_API_TOKEN, GITHUB_API_CREATE_REPO_URL, GITHUB_API_USER_URL } from '../constants/constants';
 
 const firebase = require('firebase');
-
-//firebase.initializeApp(config);
-// function to save data into firebase database
 export const createRepoFirebaseService = widgetData => new Promise((resolve, reject) => {
-  const collectionKey = firebase.database().ref('slackbot/gitbot').push({
+  const collectionKey = firebase.database().ref('SlackXT/slackbot/gitbot').push({
     commandEntered: widgetData.commandEntered,
     widgetName: widgetData.widgetName,
     repositoryName: widgetData.repositoryName,
     userId: widgetData.userId,
-    postedOn: widgetData.postedOn,
+    creatDate: widgetData.creatDate,
+    creatTime: widgetData.creatTime,
   }).getKey();
 
   console.log('collectionKey = ', collectionKey);
@@ -24,26 +22,9 @@ export const createRepoFirebaseService = widgetData => new Promise((resolve, rej
     widget data is ${widgetData}`));
     console.log('There is error while saving data into firebase...');
   }
-
-  // firebase.database().ref('slackbot/gitbot').push({
-  //   id: widgetData.id,
-  //   commandEntered: widgetData.commandEntered,
-  //   widgetName: widgetData.widgetName,
-  //   repositoryName: widgetData.repositoryName,
-  //   userId: widgetData.userId,
-  //   postedOn: widgetData.postedOn,
-  // }, (error) => {
-  //   if (error) {
-  //     reject(error);
-  //     console.log(error, 'There is error while saving data into firebase...');
-  //   } else {
-  //     console.log('saved successfully...');
-  //     resolve(widgetData);
-  //   }
-  // });
 });
 
-// function to create repository into github account (right now it is in account of anokha777)
+// function to create repository into github account -- github
 export const createRepoGithubService = repositoryName => new Promise((resolve, reject) => {
   fetch(GITHUB_API_CREATE_REPO_URL, {
     method: 'POST',
@@ -64,7 +45,7 @@ export const createRepoGithubService = repositoryName => new Promise((resolve, r
   });
 });
 
-// function to create issue into github account for a repo.
+// function to create issue into github account for a repo. -- github
 export const createIssueGithubService = (repositoryName,
   issueName) => new Promise((resolve, reject) => {
   fetch(`${GITHUB_API_USER_URL + repositoryName}/issues`, {
@@ -86,3 +67,12 @@ export const createIssueGithubService = (repositoryName,
     console.log(err, 'There is error while creating git issue through github api...');
   });
 });
+
+// function to update slack response to firebase database -- firebase
+export const updateSlackBotResponse = (widgetData, botResponse) => {
+  widgetData.botResponse = botResponse;
+  const updateCollectionKey = widgetData.id;
+  const updates = {};
+  updates[`SlackXT/slackbot/gitbot/${updateCollectionKey}`] = widgetData;
+  return firebase.database().ref().update(updates);
+};

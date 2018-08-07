@@ -1,9 +1,11 @@
-import { createRepoFirebaseService, createRepoGithubService, createIssueGithubService } from './gitbot-service';
+import {
+  createRepoFirebaseService, createRepoGithubService,
+  createIssueGithubService, updateSlackBotResponse,
+} from './gitbot-service';
 import {
   createRepoResponse, showErrorMsg, createIssueResponse, showErrorMsgIssueCreate,
 } from './gitbot-view';
 
-// -----------------------------------Create repo and issue-----------
 // function to create repository
 export const createRepository = function (widgetData) {
   const createRepoWidgetEle = document.getElementById('playGround');
@@ -11,8 +13,10 @@ export const createRepository = function (widgetData) {
   createRepoGithubService(widgetData.repositoryName).then((gitCreateRepoRes) => {
     const errorOrSuccDiv = document.createElement('div');
     if (typeof gitCreateRepoRes.id !== 'number') {
-      errorOrSuccDiv.innerHTML = showErrorMsg(`Repository (${widgetData.repositoryName}) 
-      already exists on your account.`, widgetData.postedOn, widgetData.commandEntered);
+      errorOrSuccDiv.innerHTML = showErrorMsg(
+        `Repository (${widgetData.repositoryName}) already exists on your account.`,
+        widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered,
+      );
       createRepoWidgetEle.appendChild(errorOrSuccDiv);
       createRepoWidgetEle.scrollTop = createRepoWidgetEle.scrollHeight;
     } else {
@@ -21,9 +25,12 @@ export const createRepository = function (widgetData) {
         console.log(`gitbot-controller.js = ${response}`);
         const newRepowidget = document.createElement('div');
         newRepowidget.innerHTML = createRepoResponse(widgetData.repositoryName,
-          widgetData.id, widgetData.postedOn, widgetData.commandEntered);
+          widgetData.id, widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered);
         createRepoWidgetEle.appendChild(newRepowidget);
         createRepoWidgetEle.scrollTop = createRepoWidgetEle.scrollHeight;
+        // update firebase database with slackbot response
+        updateSlackBotResponse(widgetData,
+          `Slack has created repository (${widgetData.repositoryName}) in your github account`);
       }).catch((err) => {
         console.log(err, 'error in gitbot-controller.js ...');
       });
@@ -43,7 +50,7 @@ export const createRepositoryIssue = function (widgetData) {
     if (typeof gitCreateIssueRes.id !== 'number') {
       errorOrSuccDiv.innerHTML = showErrorMsgIssueCreate('Due to tecnical glitch Github issue '
       + 'cannot be created.',
-      widgetData.postedOn, widgetData.commandEntered);
+      widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered);
       createRepoWidgetEle.appendChild(errorOrSuccDiv);
       createRepoWidgetEle.scrollTop = createRepoWidgetEle.scrollHeight;
     } else {
@@ -53,7 +60,7 @@ export const createRepositoryIssue = function (widgetData) {
         const newRepowidget = document.createElement('div');
         newRepowidget.innerHTML = createIssueResponse(widgetData.repositoryName,
           widgetData.issueName,
-          widgetData.id, widgetData.postedOn, widgetData.commandEntered);
+          widgetData.id, widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered);
         createRepoWidgetEle.appendChild(newRepowidget);
         createRepoWidgetEle.scrollTop = createRepoWidgetEle.scrollHeight;
       }).catch((err) => {
@@ -64,8 +71,3 @@ export const createRepositoryIssue = function (widgetData) {
     console.log(err, 'Error occured while creating repository in github..');
   });
 };
-// -----------------------------------Create repo and issue end--------
-// ----------------------------------Reminder ------------------------
-
-
-// ----------------------------------Reminder end------------------------

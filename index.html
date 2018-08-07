@@ -63,7 +63,7 @@
           <!-- Date filter option -->
           <span>
             <i data-toggle="modal" data-target="#myModal" class="fa fa-filter fa-2x text-white"></i>
-            <!--<a class="btn pull-right text-white">Filter</a>-->
+            <a class="btn pull-right text-white">Filter</a>
           </span>
 
           <!-- The Modal -->
@@ -101,6 +101,12 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Modal footer -->
+              <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-dismiss="modal" id="ok">OK</button>
+              </div>
+
             </div>
           </div>
 
@@ -323,7 +329,7 @@
         </div>
       </div>
       <!-- END: Todolist Modal -->
-      <div id="playGround"></div>
+      <!-- <div id="playGround"></div> -->
 
 
 
@@ -331,12 +337,18 @@
         <div id="playGround" class="d-flex flex-fill">
         </div>
 
-        <!-- <div class="footer">
-      <div class="commandLineInput" id="commandLineInput">
-        <input class="form-control form-control-lg" type="text" id="enteredCommand" placeholder="Message #channel...">
+        <div class="footer">
+          <div class="commandLineInput" id="commandLineInput">
+            <input class="form-control form-control-lg text-left" type="text" id="enteredCommand" placeholder="Message #channel...">
+            <input type="submit" id="submit" class="btn btn-success" value="Send" />
+          </div>
+
+        </div>
+
+        <button onclick="getUserChatHistory('userId')">Click me</button>
       </div>
-    </div> -->
-      </div>
+    </div>
+    </div>
   </section>
 
 
