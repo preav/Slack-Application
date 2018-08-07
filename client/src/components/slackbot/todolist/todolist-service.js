@@ -1,8 +1,9 @@
 const firebase = require('firebase');
+import { database } from '../../../../../firebase/firebase';
 
 // function to save to-do-list task data into firebase database -- firebase
 export const createTodolistService = widgetData => new Promise((resolve, reject) => {
-  const collectionKey = firebase.database()
+  const collectionKey = database
   .ref(`SlackXT/slackbot/${widgetData.userId}/todolist`).push({
     id: widgetData.id,
     commandEntered: widgetData.commandEntered,
@@ -34,12 +35,12 @@ export const updateSlackBotTodolistResponse = (widgetData, botResponse) => {
   const updateCollectionKey = widgetData.id;
   const updates = {};
   updates[`SlackXT/slackbot/${widgetData.userId}/todolist/${updateCollectionKey}`] = widgetData;
-  return firebase.database().ref().update(updates);
+  return database.ref().update(updates);
 };
 
 // function to get user's todo list from firebase database -- firebase
 export const getTodolistForUserService = userId => new Promise((resolve, reject) => {
-  firebase.database().ref(`SlackXT/slackbot/${userId}/todolist`).once('value')
+  database.ref(`SlackXT/slackbot/${userId}/todolist`).once('value')
   .then((snapshot) => {
     const todolistData = snapshot.val();
     if (todolistData !== '') {
@@ -62,16 +63,16 @@ export const getTodolistForUserService = userId => new Promise((resolve, reject)
 //   }
 
 //   if (action === 'remove') {
-//     resolve(firebase.database().ref()
+//     resolve(database.ref()
 //     .child(`SlackXT/slackbot/${userId}/todolist/${taskId}`).remove());
 //   } else if(action === 'checked' || action === 'unchecked'){
 //     //update todolist task
-//     var rawData=firebase.database().ref().child(`SlackXT/slackbot/${userId}/todolist/${taskId}`);
+//     var rawData=database.ref().child(`SlackXT/slackbot/${userId}/todolist/${taskId}`);
 //     return rawData.update({
 //       taskCompleted: action
 //     }).then((updateResponse) => {
 //       // get todolist task to refresh task status in todolist
-//     firebase.database().ref(`SlackXT/slackbot/${userId}/todolist/${taskId}`).once('value')
+//     database.ref(`SlackXT/slackbot/${userId}/todolist/${taskId}`).once('value')
 //       .then((snapshot) => {
 //         const todolistTask = snapshot.val();
 //         if (todolistTask !== '') {
@@ -95,9 +96,9 @@ export const markOrUnmarkOrDelete = ( (action, taskId, userId)  => {
     action = 'checked';
   }
   if (action === 'remove') {
-    firebase.database().ref().child(`SlackXT/slackbot/${userId}/todolist/${taskId}`).remove();
+    database.ref().child(`SlackXT/slackbot/${userId}/todolist/${taskId}`).remove();
   } else if (action === 'checked' || action === 'unchecked') {
-    var rawData=firebase.database().ref().child(`SlackXT/slackbot/${userId}/todolist/${taskId}`);
+    var rawData=database.ref().child(`SlackXT/slackbot/${userId}/todolist/${taskId}`);
     return rawData.update({
       taskCompleted: action
     });

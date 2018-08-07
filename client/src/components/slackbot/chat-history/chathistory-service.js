@@ -2,7 +2,7 @@ import { config } from '../../../../../firebase/firebase';
 
 const firebase = require('firebase');
 
-firebase.initializeApp(config);
+// firebase.initializeApp(config);
 
 // function to retrieve chat history for a user from firebase database -- firebase
 export const getChatHistoryForUserService = userId => new Promise((resolve, reject) => {

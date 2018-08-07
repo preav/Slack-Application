@@ -1,8 +1,9 @@
+import { database } from '../../../../../firebase/firebase';
 const firebase = require('firebase');
 
 // function to save calendar event into firebase database -- firebase
 export const createCalendarEventService = widgetData => new Promise((resolve, reject) => {
-  const collectionKey = firebase.database()
+  const collectionKey = database
   .ref(`SlackXT/slackbot/${widgetData.userId}/calendar`).push({
     id: widgetData.id,
     commandEntered: widgetData.commandEntered,
@@ -33,12 +34,12 @@ export const updateSlackBotCalendarResponse = (widgetData, botResponse) => {
   const updateCollectionKey = widgetData.id;
   const updates = {};
   updates[`SlackXT/slackbot/${widgetData.userId}/calendar/${updateCollectionKey}`] = widgetData;
-  return firebase.database().ref().update(updates);
+  return database.ref().update(updates);
 };
 
 // function to get user's calendar list from firebase database -- firebase
 export const getCalendarForUserService = userId => new Promise((resolve, reject) => {
-  firebase.database().ref(`SlackXT/slackbot/${userId}/calendar`).once('value')
+  database.ref(`SlackXT/slackbot/${userId}/calendar`).once('value')
   .then((snapshot) => {
     const calendarListData = snapshot.val();
     if (calendarListData !== '') {
