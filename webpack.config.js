@@ -2,7 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
 var config = {
-  entry: ['babel-polyfill',
+  entry: ['jquery','babel-polyfill',
     './client/src/components/index.js',
     './client/src/scss/main.scss'
   ],
@@ -12,15 +12,15 @@ var config = {
   },
   module: {
     rules: [
-      // {
-      //   enforce: 'pre',
-      //   test: /\.js?$/,
-      //   exclude: [/node_modules/],
-      //   loader: 'eslint-loader',
-      //   options: {
-      //     fix: true,
-      //   },
-      // },
+      /*{
+        enforce: 'pre',
+        test: /\.js?$/,
+        exclude: [/node_modules/],
+        loader: 'eslint-loader',
+        options: {
+          fix: true,
+        },
+  },*/
       {
         test: /\.js?$/,
         exclude: [/node_modules/],
