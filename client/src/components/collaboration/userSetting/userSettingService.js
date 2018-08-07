@@ -1,15 +1,9 @@
-import firebase from 'firebase';
-import { config } from '../../../../../config/config';
+ import {firebase, database} from '../../../../../firebase/firebase';
 
 const jQuery = require('jquery');
 
-firebase.initializeApp(config);
-
-// Get a reference to the database service
-const database = firebase.database();
-
 function getAllChannels() {
-  const userContactref = firebase.database().ref('team-6').child('channels');
+  const userContactref = database.ref('team-6').child('channels');
   userContactref.once('value', (snapshot) => {
     const getAllContactValue = Object.values(snapshot.val());
 
@@ -38,7 +32,7 @@ function getAllChannels() {
 document.getElementById('userContacts').addEventListener('click', getAllChannels);
 
 function getAllUsers() {
-  const userContactref = firebase.database().ref('team-6').child('directMessages').child('users');
+  const userContactref = database.ref('team-6').child('directMessages').child('users');
   userContactref.once('value', (snapshot) => {
     const getAllContactValue = Object.keys(snapshot.val());
     let getAllContactHtml = '';
@@ -80,7 +74,7 @@ document.getElementById('addmember').addEventListener('click', fnAddMember);
 
 // functionality for updating something in firebase via
 function muteUsers(userId) {
-  const newPostKey = firebase.database().ref(`team-6/directMessages/users/${userId}`).update({
+  const newPostKey = database.ref(`team-6/directMessages/users/${userId}`).update({
     mute: true,
   }, (error) => {
     if (error) {
@@ -97,7 +91,7 @@ jQuery(document).on('click', '.muteUser', (e) => {
 });
 
 function unMuteUsers(userId) {
-  const newPostKey = firebase.database().ref(`team-6/directMessages/users/${userId}`).update({
+  const newPostKey = database.ref(`team-6/directMessages/users/${userId}`).update({
     mute: false,
   }, (error) => {
     if (error) {
@@ -115,7 +109,7 @@ jQuery(document).on('click', '.unmuteUser', (e) => {
 
 
 function deleteUsers(userId) {
-  const removeUserRef = firebase.database().ref(`team-6/directMessages/users/${userId}`).remove();
+  const removeUserRef = database.ref(`team-6/directMessages/users/${userId}`).remove();
   getAllUsers();
 }
 
@@ -128,7 +122,7 @@ jQuery(document).on('click', '.removeUser', (e) => {
 
 //= =====================================================================
 function muteChannel(channelId) {
-  const newPostKey = firebase.database().ref('team-6').child('channels').child(`${channelId}`)
+  const newPostKey = database.ref('team-6').child('channels').child(`${channelId}`)
     .update({
       mute: true,
     }, (error) => {
@@ -147,7 +141,7 @@ jQuery(document).on('click', '.muteChannel', (e) => {
 
 
 function unMuteChannel(channelId) {
-  const newPostKey = firebase.database().ref('team-6').child('channels').child(`${channelId}`)
+  const newPostKey = database.ref('team-6').child('channels').child(`${channelId}`)
     .update({
       mute: 'saket',
     }, (error) => {
@@ -165,7 +159,7 @@ jQuery(document).on('click', '.unmuteChannel', (e) => {
 });
 
 function removeChannel(channelId) {
-  const newPostKey = firebase.database().ref('team-6').child('channels').child(`${channelId}`)
+  const newPostKey = database.ref('team-6').child('channels').child(`${channelId}`)
     .remove();
   getAllChannels();
 }
