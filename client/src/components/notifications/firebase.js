@@ -1,5 +1,6 @@
-import firebase from 'firebase';
+// import firebase from 'firebase';
 import appConfig from './appConfig';
+import {firebase, database } from '../../../../firebase/firebase';
 
 
 // const ref = firebase.database().ref('team001');
@@ -15,8 +16,8 @@ import appConfig from './appConfig';
 // console.log(appConfig);
 
 
-firebase.initializeApp(appConfig);
-const rootRef = firebase.database().ref('team-6');
+// firebase.initializeApp(appConfig);
+const rootRef = database.ref('team-6');
 const newRoot = rootRef.child('channels');
 
 

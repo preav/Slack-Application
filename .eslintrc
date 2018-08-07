@@ -1,8 +1,24 @@
 {
   "extends": "airbnb-base",
-  "parser": "babel-eslint",
+  "parser": "babel-eslint", 
   "env": {
     "browser": true,
     "jquery": true
+  }, 
+    "rules": {
+        "import/prefer-default-export": "off",
+        "linebreak-style": 0,
+        "func-names" :0,
+        "no-unused-vars" : 0,
+        "allowEmptyReject": true,
+        "no-param-reassign": 0
+  },
+  "globals": {
+    "firebase": true,
+    "userId": true,
+    "email": true,
+    "userID001": true,
+    "username": true
   }
 }
+
