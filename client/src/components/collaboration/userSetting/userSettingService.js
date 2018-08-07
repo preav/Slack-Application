@@ -1,5 +1,6 @@
  import firebase from 'firebase';
 import '../../../../../firebase/firebase-config';
+import {clickChannel} from '../../../../src/components/chats/chat-service';
 
 let database = firebase.database();
 const jQuery = require('jquery');
@@ -30,15 +31,13 @@ function getAllChannels() {
       jQuery('#showContactInformation').append(getAllContactHtml);
       document.getElementById(`${conName}`).addEventListener('click', clickChannel);
     });
-    // jQuery('#showContactInformation').append(getAllContactHtml);
-    // document.getElementById(`${conName}`).addEventListener('click', clickChannel);
   });
 }
 document.getElementById('userContacts').addEventListener('click', getAllChannels);
 
-function clickChannel() {
-  console.log('channel clicked');
-}
+// function clickChannel() {
+//   console.log('channel clicked');
+// }
 function getAllUsers() {
   const userContactref = database.ref('team-6').child('directMessages').child('users');
   userContactref.once('value', (snapshot) => {
