@@ -21,10 +21,10 @@ function getAllChannels() {
         <div>
             <div class="buttom-panel text-center mt-1">
               <div id="contactDetails">${conName}</div>
-                  <div>
-                      <button id="muteChannel">mute Channel</button>
-                      <button id="unmuteChannel">unmute Channel</buttob>
-                      <button id="removeChannel">remove Channel</button>
+                  <div channelId='${conName}'>
+                      <button type="button" class="muteChannel">mute Channel</button>
+                      <button type="button" class="unmuteChannel">unmute Channel</buttob>
+                      <button type="button" class="removeChannel">remove Channel</button>
                   </div>
                 </form>
             </div>
@@ -40,18 +40,17 @@ document.getElementById('userContacts').addEventListener('click', getAllChannels
 function getAllUsers() {
   const userContactref = firebase.database().ref('team-6').child('directMessages').child('users');
   userContactref.once('value', (snapshot) => {
-    // const getAllContactValue = snapshot.val();
     const getAllContactValue = Object.keys(snapshot.val());
     let getAllContactHtml = '';
     const abc = getAllContactValue.map((contactVal) => {
       getAllContactHtml += `
         <div>
             <div class="buttom-panel text-center mt-1">
-                <div id="contactUser">${contactVal}</div>
-                <div>
-                    <button id="muteUser">mute User</button>
-                    <button id="unmuteUser">unmute User</buttob>
-                    <button id="removeUser">remove User</button>
+                <div class="contactUser">${contactVal}</div>
+                <div userId='${contactVal}'>
+                    <button type="button" class="muteUser">mute User</button>
+                    <button type="button" class="unmuteUser">unmute User</buttob>
+                    <button type="button" class="removeUser">remove User</button>
                 </div>
             </div>
         </div>
@@ -80,11 +79,25 @@ function fnAddMember(status, userName) {
 document.getElementById('addmember').addEventListener('click', fnAddMember);
 
 // functionality for updating something in firebase via
-function muteUsers() {
-  const channelN = document.getElementById('muteUser').value;
+function muteUsers(userId) {
+  const newPostKey = firebase.database().ref(`team-6/directMessages/users/${userId}`).update({
+    mute: true,
+  }, (error) => {
+    if (error) {
+      console.log(error, 'There is error while saving data into firebase...');
+    } else {
+      console.log('saved successfully...');
+    }
+  });
+}
 
-  console.log('channelN', channelN);
-  const newPostKey = firebase.database().ref('team-6/directMessages/users').update({
+jQuery(document).on('click', '.muteUser', (e) => {
+  const userId = e.target.parentElement.getAttribute('userId');
+  muteUsers(userId);
+});
+
+function unMuteUsers(userId) {
+  const newPostKey = firebase.database().ref(`team-6/directMessages/users/${userId}`).update({
     mute: false,
   }, (error) => {
     if (error) {
@@ -95,44 +108,85 @@ function muteUsers() {
   });
 }
 
-jQuery(document).on('click', '#muteUser', (e) => {
-  e.preventDefault();
-  console.log('mute Contact');
-  muteUsers();
-});
-
-function unMuteContact() {
-  const channelName = document.getElementById('muteUser').testContent;
-  const newPostKey = firebase.database().ref('team-6/channels').update({
-    mute: false,
-  }, (error) => {
-    if (error) {
-      console.log(error, 'There is error while saving data into firebase...');
-    } else {
-      console.log('saved successfully...');
-    }
-  });
-}
-
-jQuery(document).on('click', '#unmuteContact', (e) => {
-  e.preventDefault();
-  console.log('unmute Contact');
-  unMuteContact();
+jQuery(document).on('click', '.unmuteUser', (e) => {
+  const userId = e.target.parentElement.getAttribute('userId');
+  unMuteUsers(userId);
 });
 
 
-function deleteContact() {
-  const deleteChannelRef = firebase.database().ref(`/channels/${123}`).remove();
+function deleteUsers(userId) {
+  const removeUserRef = firebase.database().ref(`team-6/directMessages/users/${userId}`).remove();
+  getAllUsers();
 }
 
 
-jQuery(document).on('click', '#deleteContact', (e) => {
-  e.preventDefault();
-  console.log('unmute Contact');
-  deleteContact();
+jQuery(document).on('click', '.removeUser', (e) => {
+  const userId = e.target.parentElement.getAttribute('userId');
+  console.log('User Removed');
+  deleteUsers(userId);
+});
+
+//= =====================================================================
+function muteChannel(channelId) {
+  const newPostKey = firebase.database().ref('team-6').child('channels').child(`${channelId}`)
+    .update({
+      mute: true,
+    }, (error) => {
+      if (error) {
+        console.log(error, 'There is error while saving data into firebase...');
+      } else {
+        console.log('channel muted successfully...');
+      }
+    });
+}
+
+jQuery(document).on('click', '.muteChannel', (e) => {
+  const channelId = e.target.parentElement.getAttribute('channelId');
+  muteChannel(channelId);
+});
+
+
+function unMuteChannel(channelId) {
+  const newPostKey = firebase.database().ref('team-6').child('channels').child(`${channelId}`)
+    .update({
+      mute: 'saket',
+    }, (error) => {
+      if (error) {
+        console.log(error, 'There is error while saving data into firebase...');
+      } else {
+        console.log('saved successfully...');
+      }
+    });
+}
+
+jQuery(document).on('click', '.unmuteChannel', (e) => {
+  const channelId = e.target.parentElement.getAttribute('channelId');
+  unMuteChannel(channelId);
+});
+
+function removeChannel(channelId) {
+  const newPostKey = firebase.database().ref('team-6').child('channels').child(`${channelId}`)
+    .remove();
+  getAllChannels();
+}
+
+
+jQuery(document).on('click', '.removeChannel', (e) => {
+  const channelId = e.target.parentElement.getAttribute('channelId');
+  console.log('Channel Removed');
+  removeChannel(channelId);
 });
 
 
 export {
-  fnAddMember, muteUsers, deleteContact, unMuteContact, database, getAllChannels, getAllUsers,
+  fnAddMember,
+  muteUsers,
+  deleteUsers,
+  unMuteUsers,
+  database,
+  getAllChannels,
+  getAllUsers,
+  muteChannel,
+  unMuteChannel,
+  removeChannel,
 };
