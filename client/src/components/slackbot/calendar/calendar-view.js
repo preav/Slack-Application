@@ -11,3 +11,32 @@ export const calendarEventCreateMsg = function (botResponse, panId, creatDate, c
               <span>On ${creatDate} at ${creatTime}</span>
           </div>`;
 };
+
+export const openCalendarView = function () {
+  return `<div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="calendarModalrTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="calendarModalTitle">Calendar</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="calendarModalBody">
+        <div class="card">
+          <ul class="list-group list-group-flush" id="calendarElementsItem">
+            
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>`;
+};
+
+export const newCalendarlistItemView = function (calendarDataItem) {
+  return `<li class="list-group-item p-2 bg-light">
+  ${calendarDataItem.commandEntered}
+  
+</li>`;
+};

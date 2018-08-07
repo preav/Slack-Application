@@ -1,18 +1,19 @@
-import { config } from '../../../../../firebase/firebase';
+//import { config } from '../../../../../firebase/firebase';
 import { GITHUB_API_TOKEN, GITHUB_API_CREATE_REPO_URL, GITHUB_API_USER_URL } from '../constants/constants';
 
 const firebase = require('firebase');
 
-firebase.initializeApp(config);
+//firebase.initializeApp(config);
 // function to save data into firebase database -- firebase
 export const createRepoFirebaseService = widgetData => new Promise((resolve, reject) => {
-  const collectionKey = firebase.database().ref('SlackXT/slackbot/gitbot').push({
+  const collectionKey = firebase.database().ref(`SlackXT/slackbot/${widgetData.userId}/gitbot`).push({
     commandEntered: widgetData.commandEntered,
     widgetName: widgetData.widgetName,
     repositoryName: widgetData.repositoryName,
     userId: widgetData.userId,
     creatDate: widgetData.creatDate,
     creatTime: widgetData.creatTime,
+    currentdateTime: widgetData.currentdateTime,
   }).getKey();
 
   console.log('collectionKey = ', collectionKey);
@@ -76,6 +77,6 @@ export const updateSlackBotResponse = (widgetData, botResponse) => {
   widgetData.botResponse = botResponse;
   const updateCollectionKey = widgetData.id;
   const updates = {};
-  updates[`SlackXT/slackbot/gitbot/${updateCollectionKey}`] = widgetData;
+  updates[`SlackXT/slackbot/${widgetData.userId}/gitbot/${updateCollectionKey}`] = widgetData;
   return firebase.database().ref().update(updates);
 };

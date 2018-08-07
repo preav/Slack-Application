@@ -3,7 +3,7 @@ const firebase = require('firebase');
 // firebase.initializeApp(config);
 // function to savereminder data into firebase database -- firebase
 export const createReminderService = widgetData => new Promise((resolve, reject) => {
-  const collectionKey = firebase.database().ref('SlackXT/slackbot/reminder').push({
+  const collectionKey = firebase.database().ref(`SlackXT/slackbot/${widgetData.userId}/reminder`).push({
     id: widgetData.id,
     commandEntered: widgetData.commandEntered,
     widgetName: widgetData.widgetName,
@@ -13,6 +13,7 @@ export const createReminderService = widgetData => new Promise((resolve, reject)
     userId: widgetData.userId,
     creatDate: widgetData.creatDate,
     creatTime: widgetData.creatTime,
+    currentdateTime: widgetData.currentdateTime,
     botResponse: widgetData.botResponse,
   }).getKey();
 
@@ -33,6 +34,22 @@ export const updateSlackBotReminderResponse = (widgetData, botResponse) => {
   widgetData.botResponse = botResponse;
   const updateCollectionKey = widgetData.id;
   const updates = {};
-  updates[`SlackXT/slackbot/reminder/${updateCollectionKey}`] = widgetData;
+  updates[`SlackXT/slackbot/${widgetData.userId}/reminder/${updateCollectionKey}`] = widgetData;
   return firebase.database().ref().update(updates);
 };
+
+// function to get user's reminder list from firebase database -- firebase
+export const getReminderForUserService = userId => new Promise((resolve, reject) => {
+  firebase.database().ref(`SlackXT/slackbot/${userId}/reminder`).once('value')
+  .then((snapshot) => {
+    const reminderListData = snapshot.val();
+    if (reminderListData !== '') {
+      console.log('reminder list retrieved successfully...', reminderListData);
+      resolve(reminderListData);
+    } else {
+      reject(new Error(`Error occured while retrieving reminder list for 
+        userId: ${userId} from firebase database.`));
+      console.log('There is error while retrieving reminder list from firebase database...');
+    }
+  });
+});

@@ -12,4 +12,4 @@ enteredCommand.addEventListener('keydown', (e) => {
   }
 });
 
-getUserChatHistory('userId'); // pass real user
+getUserChatHistory('testUser1'); // pass real user

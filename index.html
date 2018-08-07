@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>  
+
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="icon" href="./client/src/img/favicon.png" type="image/png">
   <title>Slack#</title>
-</head> 
+</head>
+
 <body>
   <!-- Nvigation bar -->
   <header class="navigationBar">
@@ -39,215 +41,18 @@
               <a class="dropdown-item" href="#">Other Portfolio</a>
             </div>
           </li>
-        </ul> 
-           <!-- Date filter option -->  
-            <span>
-              <i data-toggle="modal" data-target="#myModal" class="fa fa-filter fa-2x text-white"></i>
-                <!--<a class="btn pull-right text-white">Filter</a>-->
-              </span>
-          
-            <!-- The Modal -->
-            <div class="modal" id="myModal">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                
-                  <!-- Modal Header -->
-                  <div style="background-color: #000;color: #fff;text-align:center;" class="model-header">
-                    <h5>Filter Messages With Date</h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                  </div>
-                  
-                  <!-- Modal body -->
-                  <div class="modal-body">
-                      <fieldset>              
-                      
-                          <div>
-                              <label for="start">Start</label>
-                              <input type="date" id="start" name="trip"
-                                     value="2018-07-22"
-                                     min="2018-01-01" max="2018-12-31" />
-                          </div>
-                      
-                          <div>
-                              <label for="end">End</label>
-                              <input type="date" id="end" name="trip"
-                                     value="2018-07-29"
-                                     min="2018-01-01" max="2018-12-31"/ >
-                          </div>
-                      
-                      </fieldset>
-                  </div>
-                  
-                  <!-- Modal footer -->
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-dark" data-dismiss="modal" id="ok">OK</button>
-                  </div>
-                  
-                </div>
-              </div>
-            </div>
-            
-        
-        <form class="form-inline my-7 my-lg-0">
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>       
+        </form>
       </div>
     </nav>
   </header>
 
   <div class="container">
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#calendarModal">
-      Calendar
-    </button>
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#todolistModal">
-      Todolist
-    </button>
-    <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#reminderModal">
-      Reminder
-    </button>
-
-    <!-- START: Calander Modal -->
-    <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="calendarModalrTitle" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="calendarModalTitle">Calander</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body" id="calendarModalBody">
-            <div class="container border">
-              <div class="calendarRow">
-                <div class="row">
-                  <div class="col-12 px-2 py-1 text-white bg-secondary">
-                    Monday, April 15, 2018
-                  </div>
-                </div>
-                <div class="row border-bottom">
-                  <div class="col-sm-3 border-right">
-                    All Day
-                  </div>
-                  <div class="col-sm-9">
-                    Triveni's Birthday
-                  </div>
-                </div>
-              </div>
-              <div class="calendarRow">
-                <div class="row">
-                  <div class="col-12 px-2 py-1 text-white bg-secondary">
-                    Tuesday, April 16, 2018
-                  </div>
-                </div>
-                <div class="row border-bottom">
-                  <div class="col-sm-3 border-right">
-                    9:00AM-10:00AM
-                  </div>
-                  <div class="col-sm-9">
-                    Meeting with John
-                  </div>
-                </div>
-                <div class="row border-bottom">
-                  <div class="col-sm-3 border-right">
-                    01:00PM-02:00PM
-                  </div>
-                  <div class="col-sm-9">
-                    Lunch with XT Team
-                  </div>
-                </div>
-                <div class="row border-bottom">
-                  <div class="col-sm-3 border-right">
-                    04:30PM-05:30PM
-                  </div>
-                  <div class="col-sm-9">
-                    React Session
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- END: Calander Modal -->
-    <!-- START: Reminder Modal -->
-    <div class="modal fade" id="reminderModal" tabindex="-1" role="dialog" aria-labelledby="reminderModalrTitle" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="reminderModalTitle">Reminders</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body" id="reminderModalBody">
-            <div class="border">
-              <div class="reminderRow">
-                <div class="px-2 py-1 text-white bg-secondary">
-                  Sunday, May 16, 2018
-                </div>
-                <ul>
-                  <li>Remember to pick up dry cleaning</li>
-                  <li>Remind me to water the flowers when I get home</li>
-                </ul>
-              </div>
-              <div class="reminderRow">
-                <div class="px-2 py-1 text-white bg-secondary">
-                  Monday, May 17, 2018
-                </div>
-                <ul>
-                  <li>Remind me to buy food on my way to home</li>
-                  <li>Remind me to check the mailbox</li>
-                  <li>Remind me about this in an hour</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- END: Reminder Modal -->
-    <!-- START: Todolist Modal -->
-    <div class="modal fade" id="todolistModal" tabindex="-1" role="dialog" aria-labelledby="todolistModalrTitle" aria-hidden="true">
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="todolistModalTitle">Todo List</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body" id="todolistModalBody">
-            <div class="card">
-              <ul class="list-group list-group-flush">
-                <li class="list-group-item p-2 bg-light">
-                  Data Structure
-                  <i class="float-right pl-2 fa fa-remove text-danger todoListItemsAction" data-action="remove"></i>
-                  <i class="float-right fa fa-check-square-o text-success todoListItemsAction" data-action="checked"></i>
-                </li>
-                <li class="list-group-item p-2">
-                  Ticket Booking
-                  <i class="float-right pl-2 fa fa-remove text-danger todoListItemsAction" data-action="remove"></i>
-                  <i class="float-right fa fa-square-o text-secondary todoListItemsAction" data-action="unchecked"></i>
-                </li>
-                <li class="list-group-item p-2">
-                  Design Meeting
-                  <i class="float-right pl-2 fa fa-remove text-danger todoListItemsAction" data-action="remove"></i>
-                  <i class="float-right fa fa-square-o text-secondary todoListItemsAction" data-action="unchecked"></i>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- END: Todolist Modal -->
     <div id="playGround"></div>
-   
-    
+
 
 
     <div class="footer">
@@ -255,12 +60,10 @@
         <input class="form-control form-control-lg" type="text" id="enteredCommand" placeholder="Message #channel...">
       </div>
     </div>
-    
-    <button onclick="getUserChatHistory('userId')">Click me</button>
   </div>
 
 
-<script src="client/public/bundle.js"></script>  
+  <script src="client/public/bundle.js"></script>
 </body>
 
 </html>

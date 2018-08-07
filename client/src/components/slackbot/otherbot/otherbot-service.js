@@ -2,7 +2,7 @@ const firebase = require('firebase');
 
 // function to save otherbot into firebase database -- firebase
 export const createOtherbotService = widgetData => new Promise((resolve, reject) => {
-  const collectionKey = firebase.database().ref('SlackXT/slackbot/otherbot').push({
+  const collectionKey = firebase.database().ref(`SlackXT/slackbot/${widgetData.userId}/otherbot`).push({
     id: widgetData.id,
     commandEntered: widgetData.commandEntered,
     widgetName: widgetData.widgetName,
@@ -11,6 +11,7 @@ export const createOtherbotService = widgetData => new Promise((resolve, reject)
     userId: widgetData.userId,
     creatDate: widgetData.creatDate,
     creatTime: widgetData.creatTime,
+    currentdateTime: widgetData.currentdateTime,
     botResponse: widgetData.botResponse,
   }).getKey();
 
@@ -31,6 +32,6 @@ export const updateSlackBotOtherbotResponse = (widgetData, botResponse) => {
   widgetData.botResponse = botResponse;
   const updateCollectionKey = widgetData.id;
   const updates = {};
-  updates[`SlackXT/slackbot/otherbot/${updateCollectionKey}`] = widgetData;
+  updates[`SlackXT/slackbot/${widgetData.userId}/otherbot/${updateCollectionKey}`] = widgetData;
   return firebase.database().ref().update(updates);
 };
