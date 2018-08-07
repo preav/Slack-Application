@@ -1,5 +1,76 @@
 @import '~bootstrap/scss/bootstrap';
 
+html
+{
+    height:100%;
+}
+
+body
+{
+   min-height:100%;
+   background-color:#F4F9FA;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+#container-root
+{            
+    padding:0px;
+    margin:0px;
+    height:100%;
+}
+
+.home-section
+{
+    padding: 64px 0px;
+}
+
+.home-section-inner
+{
+    margin: 0px 70px;
+}
+
+.home-section-header
+{
+    font-size: 4.8rem;
+}
+
+.dashboard
+{
+    background-color:#F4F9FA;
+}
+
+.team-link
+{
+    border: 1px solid #B5B8B9;
+    border-radius: 5px;
+    padding: .6rem 0 .6rem 1rem;
+    margin-bottom: 1.2rem;
+}
+
+.team-link:hover
+{
+    background-color:#D7DADA;
+    text-decoration: none;
+}
+
+.form-container
+{
+    padding: 1.5rem;
+    margin-right: 0;
+    margin-left: 0;
+    border-width: .2rem;
+    margin: 1rem -15px 0;
+    border: 1px solid #E4E7E7;
+    border-radius: 4px;
+}
+
+.avatar{
+    border-radius: 50%;
+    width: 80%;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
+
 .footer {
     position: fixed;
     margin: auto;

@@ -25,6 +25,8 @@ import '../components/notification/dateFiltercontroller';
 
 
 
+import './onboarding/main';
+
 require('font-awesome/css/font-awesome.css');
 
 
