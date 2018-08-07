@@ -1,4 +1,5 @@
 @import '~bootstrap/scss/bootstrap';
+@import '~jquery-ui/themes/base/autocomplete';
 @import '~emojionearea/dist/emojionearea.css';
 
 html
@@ -125,6 +126,82 @@ body
 .avatar{
     border-radius: 50%;
     width: 80%;
+    color: white;
+    text-align: center;
+ }
+
+.search{
+    border: groove;
+    width: 20rem;
+    margin-top: 1rem;
+    font-family: cursive;
+    font-weight: 200;
+    border: 1px solid #919193;
+}
+
+#contentHolder{
+    border-radius: 0.7rem;
+}
+
+#searchItem{
+    border-color: white;
+}
+
+#seachHeader{
+    padding: 0rem;
+}
+
+.modal-header .close {
+    padding: 1.7rem;
+}
+
+#footerContent{
+    font-size: 11.84px;
+    color: rgb(102, 100, 100);
+}
+
+#searchFooter{
+    background-color: #f9f9f9;
+}
+
+.modal-content{
+    border-radius: 0.8rem;
+}
+
+.modal-footer{
+    border-radius: 0.8rem;
+    border-top:none;
+}
+
+.form-control:focus{
+    border-color: white;
+    box-shadow:unset;
+}
+
+
+#searchResult {
+    ul {
+        position: static !important;
+        margin: 0;
+        padding: 0;
+        border: 1px solid #ccc;
+
+        li {
+            list-style: none;
+            border-bottom: 1px solid #ccc;
+            padding: 5px 10px;
+            cursor: pointer;
+
+            &:hover {
+                background: #666;
+                color: #fff;
+            }
+        }
+    }
+}
+
+.ui-helper-hidden-accessible {
+    display: none;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 

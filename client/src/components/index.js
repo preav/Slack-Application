@@ -1,5 +1,8 @@
 import 'jquery';
 import 'jquery-ui/ui/widgets/sortable';
+
+import 'jquery-ui/ui/widgets/autocomplete';
+
 import 'popper.js';
 import 'bootstrap';
 import 'jquery-ui/ui/disable-selection';
@@ -45,8 +48,11 @@ import './notifications/notification-controller';
 import './notifications/firebase';
 
 
-require('font-awesome/css/font-awesome.css');
+import '../components/search/controller';
 
+import '../../../firebase/firebase';
+
+require('font-awesome/css/font-awesome.css');
 
 jQuery(document).ready(() => {
   getAllChannels();
