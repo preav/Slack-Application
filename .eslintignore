@@ -1,0 +1,4 @@
+# Make Eslint ignore these folders
+dist
+src
+node_modules
