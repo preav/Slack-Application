@@ -14,8 +14,6 @@ document.getElementById('searchPeople').addEventListener('click', function () {
 
 document.getElementById("searchAll").addEventListener('click', function () {
     searchAll();
-    // searchAllChannels();
-    // searchAllUsers();
 });
 
 $(document).ready(function () {

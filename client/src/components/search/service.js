@@ -51,46 +51,53 @@ export function getAllUsers(teamId) {
 }
 
 function getDirectMessages(){
-    const db=firebase.database().ref('/team-6/directMessages/users');
-    db.on('value',(userList)=>{
-        userList.forEach((id)=>{
-            let prnt=id.child('messages');
-            id.forEach((msg)=>{
-                let message=msg.child('messageText').val();
-                let rcvDate=msg.child("date").val();
-                let by=msg.child("sentBy").val();
-                let msgId=msg.child("messageId").val();
-                let data={
-                    text: message,
-                    date: rcvDate,
-                    sentby: by,
-                    id: msgId 
-                }
-                globallist[2].messages.push(data);
-                globallist[3].all.push(message);
+    const users = firebase.database().ref('/team-6/directMessages/users');
+    users.on('value', (snapshot) => {
+        const getAllUserIds = Object.values(snapshot.val());
+        const abc = getAllUserIds.map((msgVal) => {
+            Object.entries(msgVal).forEach(([key, value]) => {
+                const msgsList = value;
+                Object.entries(msgsList).forEach(([key, value]) => {
+                    const msgData = value;
+                    let message=msgData.messageText;
+                    let rcvDate=msgData.date;
+                    let by=msgData.sentBy;
+                    let msgId=msgData.messageId;
+                    let data={
+                        text: message,
+                        date: rcvDate,
+                        sentby: by,
+                        id: msgId 
+                    }
+                    globallist[2].messages.push(data);
+                    globallist[3].all.push(message);
+                });
             });
         });
     });
 }
 
-function getChannelMessages(){
-    const db=firebase.database().ref('/team-6/channels/0/chn001/users');
-    db.on ('value',(userList)=>{
-        userList.forEach((userId)=>{
-            userId.forEach((user)=>{
-                user.forEach((msg)=>{
-                let message=msg.child('messageText').val();
-                let rcvDate=msg.child("date").val();
-                let by=msg.child("sentBy").val();
-                let msgId=msg.child("messageId").val();
-                let data={
-                    text: message,
-                    date: rcvDate,
-                    sentby: by,
-                    id: msgId 
-                }
-                globallist[2].messages.push(data);
-                globallist[3].all.push(message);            
+function getChannelMessages() {
+    const channelMsg = firebase.database().ref('/team-6/channelMsg/');
+    channelMsg.on('value', (snapshot) => {
+        const getAllChannelValue = Object.values(snapshot.val());
+        const abc = getAllChannelValue.map((chnVal) => {
+            Object.entries(chnVal).forEach(([key, value]) => {
+                const msgsList = value;
+                Object.entries(msgsList).forEach(([key, value]) => {
+                    const msgData = value;
+                    let message=msgData.messageText;
+                    let rcvDate=msgData.date;
+                    let by=msgData.sentBy;
+                    let msgId=msgData.messageId;
+                    let data={
+                        text: message,
+                        date: rcvDate,
+                        sentby: by,
+                        id: msgId 
+                    }
+                    globallist[2].messages.push(data);
+                    globallist[3].all.push(message);
                 });
             });
         });
@@ -121,7 +128,7 @@ export function searchAllChannels() {
             }
           })
           .autocomplete( "instance" )._renderItem = function( ul, item ) {
-            return $(`<li class="list-group-item"><i style="font-size:10px">ch-</i>${item.value}</li>`)
+            return $(`<li class="list-group-item"><a src="#"><i style="font-size:10px">ch-</i>${item.value}</a></li>`)
               .appendTo( ul );
           };
     });
