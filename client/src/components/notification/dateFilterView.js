@@ -27,49 +27,35 @@ function createHTMLElement(html) {
     return createHTMLElement(createResultTemplateTxt);
   }
 
-  export function chatDisplay()
-  {      const createResultTemplateTxt = 
-    `<div class="d-flex flex-row mt-2">
-	<ul class="nav nav-tabs nav-tabs--vertical nav-tabs--left sticky-offset" role="navigation">
-    <li class="nav-item">
-    <a href="#" role="tab" class="text-dark"><b>Channels</b></a>
-    </li>
-       <li class="nav-item">
-			<a href="#channel1" class="nav-link active" data-toggle="tab" role="tab" aria-controls="Channel1">Channel1</a>
-		</li>
-		<li class="nav-item">
-			<a href="#channel2" class="nav-link" data-toggle="tab" role="tab" aria-controls="Channel2">Channel2</a>
-        </li>
-        <li class="nav-item">
-    <a href="#" role="tab" class="text-dark"><b>Direct Messages</b></a>
-    </li>
-		<li class="nav-item">
-			<a href="#userA" class="nav-link disabled" data-toggle="tab" role="tab" aria-controls="userA">userA</a>
-		</li>
-		<li class="nav-item">
-			<a href="#userB" class="nav-link" data-toggle="tab" role="tab" aria-controls="userB">userB</a>
-		</li>
-	</ul>
-	<div class="tab-content">
-		<div class="tab-pane fade show active" id="channel1" role="tabpanel">			
-            <p>userA  (21/08/87 8.00PM): Aenean purus pharetra dictum.</p>
-            <p>userB  (21/08/87 8.03PM): Chekcing msgs purus pharetra dictum.</p>
-		</div>
-		<div class="tab-pane fade" id="channel2" role="tabpanel">		
-            <p>userB (2/08/87 8.00PM): Aenean purus pharetra dictum.</p>
-            <p>userC (2/08/87 8.03PM): Chekcing msgs purus pharetra dictum.</p>
-        </div>
-		<div class="tab-pane fade" id="userA" role="tabpanel">
-            <p>userF (2/08/87 8.00PM): Aenean purus pharetra dictum.</p>
-            <p>userC (2/08/87 8.03PM): Chekcing msgs purus pharetra dictum.</p>
-        </div>
-        <div class="tab-pane fade" id="userB" role="tabpanel">
-            <p>userF (2/08/87 8.00PM): Aenean purus pharetra dictum.</p>
-            <p>userC (2/08/87 8.03PM): Chekcing msgs purus pharetra dictum.</p>            
-        </div>
-	</div>
-</div>`;
-return createHTMLElement(createResultTemplateTxt);
+  function tabDisplay(src)
+  {
+    const srcTab=`<li class="nav-item">
+    <a href="#${src}" class="nav-link text-secondary" data-toggle="tab" role="tab" aria-controls="${src}">${src}</a>
+    </li>`; 
+    return createHTMLElement(srcTab);
+
+  }
+  function tabContentDisplay(src, msg)
+  {
+    const srcContentDisplay=`<div class="tab-pane fade" id="${src}" role="tabpanel">
+    <p>${msg}</p>           
+ </div>`; 
+    return createHTMLElement(srcContentDisplay);
+
   }
 
-  
+  function displayUserChat(user, msg)
+  {
+      document.getElementById('userTab').appendChild(tabDisplay(`${user}`));
+      document.getElementById('channelContent').appendChild(tabContentDisplay(`${user}`,`${msg}`));
+  }
+  function displayChannelsChat(channel, msg)
+  {
+      document.getElementById('channelTab').appendChild(tabDisplay(`${channel}`));
+      document.getElementById('channelContent').appendChild(tabContentDisplay(`${channel}`,`${msg}`));
+     
+    }
+ 
+ 
+
+  export {displayUserChat,displayChannelsChat};
