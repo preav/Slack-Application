@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import '../../../../../firebase/firebase-config';
-import { clickChannel } from '../../../../src/components/chats/chat-service';
+import { openChatDetailsForChannel, openChatDetailsForUser } from '../../../../src/components/chats/chat-service';
 
 let database = firebase.database();
 const jQuery = require('jquery');
@@ -19,7 +19,7 @@ function getAllChannels(teamName) {
     const abc = getAllContactValue.map((contactVal) => {
       // const conName = Object.keys(contactVal);
       getAllContactHtml += `
-        <li id=${contactVal} class="channels">
+        <li id=${contactVal} class="channels" data-channelId=${contactVal}>
         ${contactVal}
         <span id="${contactVal}channel">
           <a class="muteChannel"><i class="fa fa-microphone-slash"></i></a>
@@ -34,6 +34,12 @@ function getAllChannels(teamName) {
   jQuery('#showContactInformation').append(getAllContactHtml);
   // document.getElementById(`${contactVal}`).addEventListener('click', clickChannel);
 }
+
+$(document).on("click", '.channels', function(){
+  const channelId = $(this).data('channelId');
+  openChatDetailsForChannel(channelId);
+});
+
 document.getElementById('userContacts').addEventListener('click', getAllChannels);
 
 function getAllUsers(teamName) {
@@ -43,7 +49,7 @@ function getAllUsers(teamName) {
     let getAllContactHtml = `<ul class="side-list"><li data-toggle="modal" data-teamID=${teamName} data-target="#searchModal" id="searchPeople">Direct Messages</li>`;
     const abc = getAllContactValue.map((contactVal) => {
       getAllContactHtml += `
-      <li class="contactUser">
+      <li class="contactUser" data-userid=${contactVal}>
         ${contactVal}
         <span userId = ${contactVal}>
           <a class="muteUser"><i class="fa fa-microphone-slash"></i></a>
@@ -57,6 +63,10 @@ function getAllUsers(teamName) {
     jQuery('#showContactInformation').append(getAllContactHtml);
   });
 }
+$(document).on("click", '.contactUser', function(){
+  const userId = $(this).data('userid');
+  openChatDetailsForUser(userId);
+});
 document.getElementById('userContacts').addEventListener('click', getAllUsers);
 
 

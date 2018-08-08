@@ -3,13 +3,36 @@ import { dashboardComponent, dashboardViewHolderId } from './dashboard/dashboard
 import { createTeamViewHolderId, createTeamComponent } from './team-create/team-create-view';
 import { inivitationViewHolderId, invitationComponent, mailSentBody } from './invitation/invitation-view';
 import { Email } from './invitation/smtp';
-import { submitTeamCreateForm } from './team-create/team-create-service';
+import { submitTeamCreateForm, getTeam } from './team-create/team-create-service';
 import profileViewComponent from './profile/profileView';
 import { getCurrentUserData, saveUpdateUserProfile } from './profile/profileService';
 import { checkAuthStateChange, gitLogin, gitLogout } from '../../../../firebase/git-login';
-import { saveUpdateUser, getCurrentUserDetails } from '../../../../firebase/onboarding-db';
+import { saveUpdateUser, getCurrentUserDetails, saveUpdateTeam } from '../../../../firebase/onboarding-db';
 import { getAllChannels, getAllUsers } from '../collaboration/userSetting/userSettingService';
+import store from './profileReducer';
 
+store.subscribe(() =>{
+  var currentState = store.getState();
+  localStorage["current_user"] = JSON.stringify(currentState);
+ });
+
+const getUrlParameter = function getUrlParameter(sParam) {
+  const sPageURL = decodeURIComponent(window.location.search.substring(1));
+  const sURLVariables = sPageURL.split('&');
+  let sParameterName;
+  let i;
+  for (i = 0; i < sURLVariables.length; i += 1) {
+    sParameterName = sURLVariables[i].split('=');
+
+    if (sParameterName[0] === sParam) {
+      return sParameterName[1] === undefined ? true : sParameterName[1];
+    }
+  }
+  return undefined;
+};
+const teamnameFromUrl = decodeURIComponent(getUrlParameter('teamname'));
+const url = window.location.href;
+console.log(teamnameFromUrl);
 
 export function createInvitationComponent() {
   const form = document.getElementById('create-team-form');
@@ -17,7 +40,7 @@ export function createInvitationComponent() {
   Array.from(form.elements).forEach((element) => {
     // console.log(element.nodeName);
     // console.log(`${element.name}=${element.value}`);
-    if (element.nodeName.toLowerCase() === 'input') {
+    if (element.id.toString() === 'teamName') {
       teamName = element.value;
       console.log(`teamname-${teamName}`);
     }
@@ -39,6 +62,10 @@ export function createInvitationComponent() {
       $(this).parent('div').remove(); x -= 1;
     });
   });
+  invitComponent.querySelector('.skip_button').addEventListener('click', (e) => {
+    e.preventDefault();
+    proceedNext(teamName,`Skipped inivitation for team ${teamName}`);
+  });
   invitComponent.querySelector('#submit').addEventListener('click', (e) => {
     e.preventDefault();
     const recieverarr = [];
@@ -48,7 +75,8 @@ export function createInvitationComponent() {
       if (reciever !== '' && reciever !== undefined) {
         console.log(`dfdf-${reciever}`);
         recieverarr.push(reciever);
-        const redireURL = `https://www.asdf.com?teamname=${teamName}&useremail=${reciever}`;
+        const appUrl = window.location.href;
+        const redireURL = `${appUrl}?teamname=${teamName}`;// &useremail=${reciever}`;
         const output = `<p>Please click on the below provided link to join Slack</p><br/><a href="${redireURL}">Join Slack</a>`;
         Email.send('slackmailing@gmail.com',
           reciever,
@@ -61,15 +89,18 @@ export function createInvitationComponent() {
     });
     if (typeof recieverarr !== 'undefined' && recieverarr.length > 0) {
       console.log(recieverarr);
-      const sentmailComponent = mailSentBody();
-      $(`#${inivitationViewHolderId}`).empty().append(sentmailComponent);
+      //const sentmailComponent = mailSentBody();
+      //$(`#${inivitationViewHolderId}`).empty().append(sentmailComponent);
+      proceedNext(teamName,`Inivitation for team ${teamName} sent to all the recipients`);
     }
   });
   $(`#${inivitationViewHolderId}`).empty().append(invitComponent);
   return invitComponent;
 }
-
-
+export function proceedNext(teamName,inputmessage) {
+  alert(inputmessage);
+  //do next
+}
 document.querySelector('#user-profile').addEventListener('click', () => {
   // const tempCurrUsrData;
   getCurrentUserData().then((data) => {
@@ -88,13 +119,15 @@ document.querySelector('#user-profile').addEventListener('click', () => {
       }, (error) => {
         console.log(`Error in saving/updating user: ${error.toString()}`);
       });
-    });    
+    });
 
-    $('#closeBtn').click(() => {    
-      $( ".editProfileDiv" ).hide();      
+    $('#closeBtn').click(() => {
+      $( ".editProfileDiv" ).hide();
+      createDashboardView();
     });
   });
 });
+
 
 export function createTeamFormView() {
   const teamName = document.getElementById('team-name').value;
@@ -103,13 +136,25 @@ export function createTeamFormView() {
   if (teamName === '') {
     alert('Please provide a team name');
   } else {
-    const cTeamComp = createTeamComponent(teamName);
-    cTeamComp.querySelector('#form-submit-cancel').addEventListener('click', () => { createDashboardView(); });
-    cTeamComp.querySelector('#form-submit').addEventListener('click', () => {
-      submitTeamCreateForm();
-      createInvitationComponent();
-    });
-    $(`#${createTeamViewHolderId}`).empty().append(cTeamComp);
+      getTeam(teamName).then((response) => {
+        console.log(response);
+        if(response === null || response === "")
+        {
+          const cTeamComp = createTeamComponent(teamName);
+          cTeamComp.querySelector('#form-submit-cancel').addEventListener('click', () => { createDashboardView(); });
+          cTeamComp.querySelector('#form-submit').addEventListener('click', () => {
+            submitTeamCreateForm();
+            createInvitationComponent();
+          });
+          $(`#${createTeamViewHolderId}`).empty().append(cTeamComp);
+        }
+        else
+        {
+          alert("Team "+teamName+" already exists");
+        }
+      }, (error) => {
+        console.log(error);
+      });
   }
 }
 
@@ -171,9 +216,12 @@ export function userGitLogin() {
   const loggedUser = gitLogin();
   loggedUser.then((response) => {
     // console.log(response);
+
     createDashboardView();
 
     const userUID = response.user.uid;
+    store.dispatch({type: "LOGIN", value: response.user.uid});
+
     const userData = {
       username: response.additionalUserInfo.username,
       accessToken: response.credential.accessToken,
@@ -182,19 +230,74 @@ export function userGitLogin() {
       profilePicture: response.user.photoURL,
       phoneNumber: response.user.phoneNumber,
       gitURL: response.additionalUserInfo.profile.html_url,
-      teams: ['team-one', 'team-two'],
       status: 'active',
       permission: { write: false, read: true },
+      teams: []
     };
 
-    // Saving/updating current logged in user
-    saveUpdateUser(userUID, userData).then((res) => {
-      console.log(res);
-    }, (error) => {
-      console.log(`Error in saving/updating user: ${error.toString()}`);
-      gitLogout();
-      homeComponentView();
-    });
+    if (teamnameFromUrl != 'undefined' && teamnameFromUrl != "") {
+      console.log(`Adding to team: ${teamnameFromUrl}`);
+      let currentUserDetails = getCurrentUserDetails().then((response) => {
+        if(response === "")
+        {
+          console.log("New user");
+          userData.teams.push(teamnameFromUrl);
+        }
+        else
+        {
+          console.log("Updating user teams");
+          if(currentUserDetails.teams != 'undefined' && currentUserDetails.teams != "" && currentUserDetails.teams != null) {
+            userData.teams.push(...currentUserDetails.teams, teamnameFromUrl);
+          }else{
+            userData.teams.push(teamnameFromUrl);
+          }
+        }
+
+        let team = {};
+        getTeam(teamnameFromUrl).then((res) => {
+          if(res.users != 'undefined' && res.users != "" && res.users != null) {
+            team.users =  [...res.users, userUID];
+          }else{
+            team.users =  [userUID];
+          }
+
+          console.log(teamnameFromUrl);
+          console.log(team);
+          saveUpdateTeam(teamnameFromUrl, team).then((r) => {console.log(r)});
+        }, (error) => {
+          console.log(error);
+        });
+
+
+        //console.log(userData);
+        // Saving/updating current logged in user
+        saveUpdateUser(userUID, userData).then((res) => {
+          console.log(res);
+          getTeamsOfCurrentUser();
+        }, (error) => {
+          console.log(`Error in saving/updating user: ${error.toString()}`);
+          gitLogout();
+          homeComponentView();
+        });
+
+      }, (err) => {
+        console.log(err)
+      });
+    }
+    else
+    {
+      //console.log(userData);
+      // Saving/updating current logged in user
+      saveUpdateUser(userUID, userData).then((res) => {
+        console.log(res);
+      }, (error) => {
+        console.log(`Error in saving/updating user: ${error.toString()}`);
+        gitLogout();
+        homeComponentView();
+      });
+    }
+
+    window.history.pushState("object or string", "Slack", url.split("?")[0]);
   }, (error) => {
     console.log(error.toString());
     gitLogout();
@@ -203,6 +306,8 @@ export function userGitLogin() {
 }
 
 export function userGitLogout() {
+  localStorage.removeItem("current_user");
+  store.dispatch({type: "LOGOUT_USER", payload: {}});
   gitLogout();
   homeComponentView();
 }

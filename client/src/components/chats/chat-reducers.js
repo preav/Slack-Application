@@ -16,7 +16,8 @@ export function addToChat(state, action) {
         {
             messageText: action.message,
             date: action.currentDateTime,
-            sentBy: action.sentBy
+            sentBy: action.sentBy,
+            sentTo: action.sentTo
         }
     ]
 }
