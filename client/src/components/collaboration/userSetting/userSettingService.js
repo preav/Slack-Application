@@ -1,6 +1,6 @@
  import firebase from 'firebase';
 import '../../../../../firebase/firebase-config';
-import {clickChannel} from '../../../../src/components/chats/chat-service';
+import {clickChannel, clickUser} from '../../../../src/components/chats/chat-service';
 
 let database = firebase.database();
 const jQuery = require('jquery');
@@ -35,20 +35,17 @@ function getAllChannels() {
 }
 document.getElementById('userContacts').addEventListener('click', getAllChannels);
 
-// function clickChannel() {
-//   console.log('channel clicked');
-// }
 function getAllUsers() {
   const userContactref = database.ref('team-6').child('directMessages').child('users');
   userContactref.once('value', (snapshot) => {
     const getAllContactValue = Object.keys(snapshot.val());
-    let getAllContactHtml = '';
+    console.log(getAllContactValue);
     const abc = getAllContactValue.map((contactVal) => {
-      getAllContactHtml += `
+      let getContactHtml = `
         <div>
             <div class="buttom-panel text-center mt-1">
-                <div class="contactUser">${contactVal}</div>
-                <div userId='${contactVal}'>
+                <div Id='${contactVal}' class="contactUser">${contactVal}</div>
+                <div Id='${contactVal}User'>
                     <button type="button" class="muteUser">mute User</button>
                     <button type="button" class="unmuteUser">unmute User</buttob>
                     <button type="button" class="removeUser">remove User</button>
@@ -56,9 +53,11 @@ function getAllUsers() {
             </div>
         </div>
         `;
-      return getAllContactHtml;
+      //return getContactHtml;
+      jQuery('#showContactInformation').append(getContactHtml);
+      document.getElementById(`${contactVal}`).addEventListener('click', clickUser);
     });
-    jQuery('#showContactInformation').append(getAllContactHtml);
+    
   });
 }
 document.getElementById('userContacts').addEventListener('click', getAllUsers);
