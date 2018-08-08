@@ -43,7 +43,6 @@ import './onboarding/main';
 
 
 import './notifications/notification-controller';
-import './notifications/firebase';
 
 
 import '../components/search/controller';
