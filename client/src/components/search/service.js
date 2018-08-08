@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import viewHtml from './view';
 let globallist=[
     {
         channels:[],
@@ -12,23 +13,22 @@ let globallist=[
     {
         all:[]
     }
-]
-;
+];
+
 export function getAllChannels(teamId) {
-    const db = firebase.database().ref(teamId + '/channels');
+    const db = firebase.database().ref(teamId + '/channelMsg');
     db.on('value', (channelList) => {
         channelList.forEach((channelIndex) => {
-            channelIndex.forEach((channel)=>{
+            console.log("channel"+channelIndex.key);
                 let flag=true;
                 for(let i=0;i<globallist[0].channels.length;i++){
-                    if(globallist[0].channels[i]===channel.key)
+                    if(globallist[0].channels[i]===channelIndex.key)
                         flag=false;
                 }
                 if(flag===true){
-                    globallist[0].channels.push(channel.key);
-                    globallist[3].all.push(channel.key);
+                    globallist[0].channels.push(channelIndex.key);
+                    globallist[3].all.push(channelIndex.key);
                 }
-            });
         });
     });
 }
@@ -39,12 +39,12 @@ export function getAllUsers(teamId) {
         userList.forEach((user) => {
             let flag=true;
                 for(let i=0;i<globallist[1].users.length;i++){
-                    if(globallist[1].users[i]===user.child('name').val())
+                    if(globallist[1].users[i]===user.child('username').val())
                         flag=false;
                 }
                 if(flag===true){
-                    globallist[1].users.push(user.child('name').val());
-                    globallist[3].all.push(user.child('name').val());
+                    globallist[1].users.push(user.child('username').val());
+                    globallist[3].all.push(user.child('username').val());
                 }
         });
     });
@@ -127,10 +127,7 @@ export function searchAllChannels() {
               return false;
             }
           })
-          .autocomplete( "instance" )._renderItem = function( ul, item ) {
-            return $(`<li class="list-group-item"><a src="#"><i style="font-size:10px">ch-</i>${item.value}</a></li>`)
-              .appendTo( ul );
-          };
+          .autocomplete( "instance" )._renderItem = viewHtml(ul,item);
     });
 }
 
@@ -152,10 +149,7 @@ export function searchAllUsers() {
               return false;
             }
           })
-          .autocomplete( "instance" )._renderItem = function( ul, item ) {
-            return $(`<li class="list-group-item"><i style="font-size:10px">dm-</i>${item.value}</li>`)
-              .appendTo( ul );
-          };
+          .autocomplete( "instance" )._renderItem = viewHtml(ul,item);
     });
 }
 
@@ -177,10 +171,7 @@ export function searchAll(){
               return false;
             }
           })
-          .autocomplete( "instance" )._renderItem = function( ul, item ) {
-            return $(`<li class="list-group-item">${item.value}</li>`)
-              .appendTo( ul );
-          };
+          .autocomplete( "instance" )._renderItem = viewHtml(ul,item);
     });
 }
 
