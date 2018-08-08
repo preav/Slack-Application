@@ -3,7 +3,7 @@ import { dashboardComponent, dashboardViewHolderId } from './dashboard/dashboard
 import { createTeamViewHolderId, createTeamComponent } from './team-create/team-create-view';
 import { inivitationViewHolderId, invitationComponent, mailSentBody } from './invitation/invitation-view';
 import { Email } from './invitation/smtp';
-import { submitTeamCreateForm } from './team-create/team-create-service';
+import { submitTeamCreateForm, getTeam } from './team-create/team-create-service';
 import profileViewComponent from './profile/profileView';
 import { getCurrentUserData, saveUpdateUserProfile } from './profile/profileService';
 import { checkAuthStateChange, gitLogin, gitLogout } from '../../../../firebase/git-login';
@@ -109,20 +109,29 @@ document.querySelector('#user-profile').addEventListener('click', () => {
   });
 });
 
-export function createTeamFormView() {
+export async function createTeamFormView() {
   const teamName = document.getElementById('team-name').value;
   // console.log(`value:${teamName}`);
 
   if (teamName === '') {
     alert('Please provide a team name');
   } else {
-    const cTeamComp = createTeamComponent(teamName);
-    cTeamComp.querySelector('#form-submit-cancel').addEventListener('click', () => { createDashboardView(); });
-    cTeamComp.querySelector('#form-submit').addEventListener('click', () => {
-      submitTeamCreateForm();
-      createInvitationComponent();
-    });
-    $(`#${createTeamViewHolderId}`).empty().append(cTeamComp);
+    const teamDetails = await getTeam(teamName);
+    console.log(teamDetails);
+    if(teamDetails === null || teamDetails === "")
+    {
+      const cTeamComp = createTeamComponent(teamName);
+      cTeamComp.querySelector('#form-submit-cancel').addEventListener('click', () => { createDashboardView(); });
+      cTeamComp.querySelector('#form-submit').addEventListener('click', () => {
+        submitTeamCreateForm();
+        createInvitationComponent();
+      });
+      $(`#${createTeamViewHolderId}`).empty().append(cTeamComp);
+    }
+    else
+    {
+      alert("Team "+teamName+" already exists");
+    }
   }
 }
 
@@ -178,47 +187,52 @@ export function userGitLogin() {
   loggedUser.then((response) => {
     // console.log(response);
     createDashboardView();
-    const teamArray = [];
 
-        if (teamnameFromUrl !== undefined && teamnameFromUrl !== '') {
-          console.log('TEAM ASSIGNED');
-          teamArray.push(teamnameFromUrl);
-        }
     const userUID = response.user.uid;
-    let userData;
-    if(teamArray.length > 0){
-      console.log(`Data Array`);
-      userData = {
-         username: response.additionalUserInfo.username,
-         accessToken: response.credential.accessToken,
-         name: response.user.displayName,
-         email: response.user.email,
-         profilePicture: response.user.photoURL,
-         phoneNumber: response.user.phoneNumber,
-         gitURL: response.additionalUserInfo.profile.html_url,
-         status: 'active',
-         permission: { write: false, read: true },
-       };
-    }else{
-      console.log(`Empty Array`);
-      userData= {
-         username: response.additionalUserInfo.username,
-         accessToken: response.credential.accessToken,
-         name: response.user.displayName,
-         email: response.user.email,
-         profilePicture: response.user.photoURL,
-         phoneNumber: response.user.phoneNumber,
-         gitURL: response.additionalUserInfo.profile.html_url,
-         teams: teamArray,
-         status: 'active',
-         permission: { write: false, read: true },
-       };
+    let userData = {
+      username: response.additionalUserInfo.username,
+      accessToken: response.credential.accessToken,
+      name: response.user.displayName,
+      email: response.user.email,
+      profilePicture: response.user.photoURL,
+      phoneNumber: response.user.phoneNumber,
+      gitURL: response.additionalUserInfo.profile.html_url,
+      status: 'active',
+      permission: { write: false, read: true },
+    };
+
+    if (teamnameFromUrl != 'undefined' && teamnameFromUrl != "") {
+      console.log(`Adding to team: ${teamnameFromUrl}`);
+      let currentUserDetails = getCurrentUserDetails();
+
+      if(currentUserDetails.teams != 'undefined' &&
+        currentUserDetails.teams != "" &&
+        currentUserDetails.teams.length > 0) {
+        userData.teams =  [...currentUserDetails.teams, teamnameFromUrl];
+      }else{
+        userData.teams =  [teamnameFromUrl];
+      }
+
+      let team = {};
+      getTeam(teamnameFromUrl).then((res) => {
+        if(res.users != 'undefined' && res.users != "" && res.users > 0) {
+          team.users =  [...res.users, userUID];
+        }else{
+          team.users =  [userUID];
+        }
+
+        saveUpdateTeam(teamnameFromUrl, team);
+
+      }, (error) => {
+        console.log(error);
+      });
     }
 
-
+    console.log(userData);
     // Saving/updating current logged in user
     saveUpdateUser(userUID, userData).then((res) => {
       console.log(res);
+
     }, (error) => {
       console.log(`Error in saving/updating user: ${error.toString()}`);
       gitLogout();
