@@ -8,7 +8,7 @@ export function invitationComponent() {
   <div class="row h-500 justify-content-center align-items-center">
     <form id="formid" class="col-8">
       <div class="form-group container1">
-  <button class="add_button mt-3 btn btn-primary">Add New Field &nbsp; <span style="font-size:16px; font-weight:bold;">+ </span></button>
+  <button class="add_button mt-3 btn btn-primary">Add New Field &nbsp; <span style="font-size:16px; font-weight:bold;">+ </span></button><button class="skip_button ml-1 mt-3 btn btn-secondary">Skip</button>
   <div class="pt-3"><input type="text" class="form-control" placeholder="enter email id"></div>
   </div>
 <button id="submit" class="btn btn-outline-info mb-3">Submit</button></form>

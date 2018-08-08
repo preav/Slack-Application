@@ -13,23 +13,19 @@ const store = createStore(chat);
 // Log the initial state
 //console.log('initial Value',store.getState())
 
-let sentTo = 'Chaithu-123';
-let userDisplayName = 'Chaithu-123';
+let sentTo = '';
+let userDisplayName = '';
 let forChannel = false;
 
-// getCurrentUserDetails().then((response) => {
-//     console.log('userDetails', response);
-
-// });
-
 // Get Current User Details
-let currentUser = firebase.auth().currentUser;
+let currentUser = window.localStorage.getItem("current_user");
 console.log(currentUser);
 if (currentUser) {
-    userDisplayName = currentUser.displayName;
+    userDisplayName = JSON.parse(currentUser).data;
+    console.log('userDisplayName', userDisplayName);
 }
 else {
-    userDisplayName = 'Sskeet'
+    userDisplayName = 'anilkumar-bv';
 }
 
 // Get a reference to the database service
@@ -94,7 +90,21 @@ const btnSubmit = document.getElementById('enter');
 
 // Click event of "Send" button for Chat
 btnSubmit.addEventListener('click', evt => {
+
+    // Check if a User is selected to Chat with
+    if (sentTo === '') {
+        alert('Please select a User to Chat with');
+        return false;
+    }
+
     const rawMessage = document.querySelector('#enteredCommand').value;
+
+    // Check if empty Text is being sent
+    if(rawMessage.trim() === ''){
+        alert('Please provide input text for Chat');
+        return false;
+    }
+
     for (let elem of document.getElementsByClassName('emojionearea-editor')) {
         elem.innerText = ' ';
     }

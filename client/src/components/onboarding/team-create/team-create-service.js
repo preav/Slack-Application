@@ -34,7 +34,7 @@ export function submitTeamCreateForm() {
     // console.log(response);
     const teams=response.teams;
     let userData;
-    if(teams!==undefined&&teams!==""&&teams.length > 0){
+    if(teams != 'undefined' && teams != "" && teams != null){
       userData = {
         teams: [...response.teams, teamName],
       };
