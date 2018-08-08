@@ -1,4 +1,4 @@
-import 'firebase';
+import firebase from 'firebase';
 import {displayUserChat,displayChannelsChat} from './dateFilterView';
 import database from '../../../../firebase/firebase';
 
