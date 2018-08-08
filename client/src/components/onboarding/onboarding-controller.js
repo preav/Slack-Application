@@ -123,6 +123,7 @@ document.querySelector('#user-profile').addEventListener('click', () => {
 
     $('#closeBtn').click(() => {
       $( ".editProfileDiv" ).hide();
+      createDashboardView();
     });
   });
 });
