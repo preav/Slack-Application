@@ -27,6 +27,7 @@ body
    height: 100%;
    padding: 0;
    width: 100%;
+   overflow: auto;
 }
 
 
@@ -34,22 +35,13 @@ body
    padding: 0 5px 0 5px;
 }
 
-.containerWrapper {
-   padding: 0;
-   height: 91vh;
-}
 
 #messageBody{
     margin: 0;
     padding: 0;
-    height: 90%;
+    height: 94%;
     overflow-y: scroll;
 }
-
-#enteredCommand{
-    margin: 2px;
-}
-
 .container-fluid{
    padding: 0;
    text-align: center;
@@ -59,7 +51,8 @@ body
    width: 100%;
    text-align: center;
    padding: 0;
-   height: 80vh;
+   height: 93vh;
+   overflow: auto;
 }
 
 #enter{
@@ -326,7 +319,7 @@ label {
     padding-top: 8px;
 }
 
-.show-login, #searchContainer {
+.show-login, #searchContainer, #notificationFilter, #notificationCounter {
     display: none;
 }
 

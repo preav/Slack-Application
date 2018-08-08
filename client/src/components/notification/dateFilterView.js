@@ -29,7 +29,7 @@ function createHTMLElement(html) {
 
   export function chatDisplay()
   {      const createResultTemplateTxt = 
-    `<div class="d-flex flex-row mt-2" style="height:240px;width:440px;overflow:auto;">
+    `<div class="d-flex flex-row mt-2">
 	<ul class="nav nav-tabs nav-tabs--vertical nav-tabs--left sticky-offset" role="navigation">
     <li class="nav-item">
     <a href="#" role="tab" class="text-dark"><b>Channels</b></a>

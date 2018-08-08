@@ -38,15 +38,17 @@
                 <span class="sr-only">(current)</span>
               </a>
             </li>
-
-            <!-- <li class="nav-item">
-              <button id="user-profile" class="ml-1 nav-item btn btn-outline-success d-none"></button>
-            </li>
-            <li class="nav-item">
-              <button id="git-signout" class="ml-1 nav-item btn btn-outline-success d-none">Logout</button>
-            </li> -->
           </ul>
-
+          <!-- Date filter option -->
+          <span id="notificationFilter" class="mr-2">
+            <i data-toggle="modal" data-target="#myModal" class="fa fa-filter fa-2x text-white"></i>
+            <!-- <a class="btn pull-right text-white">Filter</a> -->
+          </span>
+          <button id="notificationCounter" type="button" class="btn mr-2" id="notib" data-toggle="modal" data-target="#Modal-large-demo"
+            style=" background-color: #343a40; color: white; border-color: dimgrey; ">
+            <i class="fa fa-bell"></i>
+            <span class="badge badge-light">4</span>
+          </button>
           <div id="searchContainer" class="mr-2">
             <button type="button" class="btn btn-light search text-left" data-toggle="modal" data-target="#searchModal" id="searchAll">
               <span class="fa fa-search"> Search</span>
@@ -77,15 +79,7 @@
               </div>
             </div>
           </div>
-          <!-- Date filter option -->
-          <span class="show-login">
-            <i data-toggle="modal" data-target="#myModal" class="fa fa-filter fa-2x text-white"></i>
-            <a class="btn pull-right text-white">Filter</a>
-          </span>
-          <button type="button" class="btn show-login" id="notib" data-toggle="modal" data-target="#Modal-large-demo" style=" background-color: #343a40; color: white; border-color: dimgrey; ">
-            <i class="fa fa-bell"></i>
-            <span class="badge badge-light">4</span>
-          </button>
+
 
           <div class="dropdown d-none" id="user-settings">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
@@ -101,8 +95,8 @@
 
           <!-- The Modal -->
           <div class="modal" id="myModal">
-            <div class="modal-dialog">
-              <div class="modal-content" style="height:100%;width:100%;overflow:auto;">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
                 <div class="modal-header">
                   <h4 class="modal-title w-100 font-weight-bold">Chat History</h4>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -111,7 +105,22 @@
                 </div>
                 <div class="modal-body mx-3">
                   <div class="md-form mb-5">
-                    <div>
+                    <form>
+                      <div class="form-group row">
+                        <label class="col-sm-2 col-form-label">Start Date</label>
+                        <div class="col-sm-10">
+                          <input class="form-control" type="date" id="start" name="trip" value="2018-07-22" min="2018-01-01" max="2018-12-31">
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                          <label class="col-sm-2 col-form-label">End Date</label>
+                          <div class="col-sm-10">
+                            <input class="form-control" type="date" id="end" name="trip" value="2018-07-29" min="2018-01-01" max="2018-12-31">
+                          </div>
+                        </div>
+                    </form>
+                    
+                    <!-- <div>
                       <label for="start">Start Date</label>
                       <input type="date" id="start" name="trip" value="2018-07-22" min="2018-01-01" max="2018-12-31" />
                     </div>
@@ -119,7 +128,7 @@
                     <div>
                       <label for="end">End Date</label>
                       <input type="date" id="end" name="trip" value="2018-07-29" min="2018-01-01" max="2018-12-31" />
-                    </div>
+                    </div> -->
                     <div class="d-flex justify-content-center">
                       <button class="btn btn-dark" id="ok">Submit</button>
                     </div>
@@ -127,19 +136,11 @@
                     <div class="md-form mb-2" id="chatResult">
 
                     </div>
-                    <div class="modal-footer d-flex justify-content-center">
-                      <button class="btn btn-dark" data-dismiss="modal">Ok</button>
-                    </div>
                   </div>
                 </div>
               </div>
-              <!-- Modal footer -->
-              <div class="modal-footer">
-                <button type="button" class="btn btn-dark" data-dismiss="modal" id="ok">OK</button>
-              </div>
             </div>
           </div>
-        </div>
       </nav>
     </header>
     <div id="noti"></div>
@@ -204,7 +205,7 @@
           <div id="messageBody"></div>
           <label for="enteredCommand" class="sr-only"> Text Message Area </label>
           <form id="add-msg-form" onsubmit="return false">
-            <div class="input-group mb-3">
+            <div class="input-group mb-2">
               <input type="text" class="form-control text-left" type="text" id="enteredCommand" placeholder="Message #channel...">
               <div class="input-group-append">
                 <input type="submit" id="enter" class="btn btn-success m-0" value="Send" />
