@@ -9,6 +9,7 @@ import { getCurrentUserData, saveUpdateUserProfile } from './profile/profileServ
 import { checkAuthStateChange, gitLogin, gitLogout } from '../../../../firebase/git-login';
 import { saveUpdateUser, getCurrentUserDetails } from '../../../../firebase/onboarding-db';
 import store from './profileReducer';
+import { getAllChannels, getAllUsers } from '../collaboration/userSetting/userSettingService';
 
 
 
@@ -16,6 +17,7 @@ store.subscribe(() =>{
   var currentState = store.getState();   
   localStorage["current_user"] = JSON.stringify(currentState);    
  });
+
 
 
 const getUrlParameter = function getUrlParameter(sParam) {
@@ -153,6 +155,8 @@ export function homeComponentView() {
   // document.querySelector('#git-signout').classList.add('d-none');
   // document.querySelector('#user-profile').classList.add('d-none');
   $("#user-settings").addClass('d-none');
+  $('#signupContainer').show();
+  $('#chatContainer, #searchContainer, #notificationFilter, #notificationCounter').hide();
 
   return homeComp;
 }
@@ -165,7 +169,7 @@ export function createDashboardView() {
   // document.querySelector('#git-signout').classList.remove('d-none');
   // document.querySelector('#user-profile').classList.remove('d-none');
   $("#user-settings").removeClass('d-none');
-
+  $("#searchContainer, #notificationFilter, #notificationCounter").show();
   getTeamsOfCurrentUser();
 
   return dashComponent;
@@ -189,7 +193,12 @@ export function getTeamsOfCurrentUser() {
 }
 
 $(document).on("click", ".team-link", function(){
-  alert($(this).data('team'));
+  var teamName = $(this).data('team');
+    $("#chatContainer").show();
+    $('#signupContainer').hide();
+    getAllChannels(teamName);
+    getAllUsers(teamName);
+  // alert($(this).data('team'));
 });
 
 export function userGitLogin() {
