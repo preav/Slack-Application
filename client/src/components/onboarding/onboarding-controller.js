@@ -8,6 +8,15 @@ import profileViewComponent from './profile/profileView';
 import { getCurrentUserData, saveUpdateUserProfile } from './profile/profileService';
 import { checkAuthStateChange, gitLogin, gitLogout } from '../../../../firebase/git-login';
 import { saveUpdateUser, getCurrentUserDetails } from '../../../../firebase/onboarding-db';
+import store from './profileReducer';
+
+
+
+store.subscribe(() =>{  
+  var currentState = store.getState();   
+  localStorage["current_user"] = JSON.stringify(currentState);    
+ });
+
 
 
 export function createInvitationComponent() {
@@ -95,6 +104,7 @@ document.querySelector('#user-profile').addEventListener('click', () => {
   });
 });
 
+
 export function createTeamFormView() {
   const teamName = document.getElementById('team-name').value;
   // console.log(`value:${teamName}`);
@@ -163,9 +173,12 @@ export function userGitLogin() {
   const loggedUser = gitLogin();
   loggedUser.then((response) => {
     // console.log(response);
+    
     createDashboardView();
 
     const userUID = response.user.uid;
+    store.dispatch({type: "LOGIN_USER", payload: response.user.uid});
+
     const userData = {
       username: response.additionalUserInfo.username,
       accessToken: response.credential.accessToken,
@@ -195,6 +208,8 @@ export function userGitLogin() {
 }
 
 export function userGitLogout() {
+  localStorage["current_user"] = '';  
+  store.dispatch({type: "LOGOUT_USER", payload: {}});
   gitLogout();
   homeComponentView();
 }
