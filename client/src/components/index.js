@@ -58,3 +58,16 @@ jQuery(document).ready(() => {
   getAllChannels();
   getAllUsers();
 });
+
+$("#enteredCommand").emojioneArea({
+  inline: false,
+  events: {
+      keypress: function (editor, event) {
+          if (event.which == 13) {
+              event.preventDefault();
+              var enteredValue = $('#enteredCommand').data("emojioneArea").getText();;
+              hitEnter(enteredValue);
+          }
+      }
+  }
+});
