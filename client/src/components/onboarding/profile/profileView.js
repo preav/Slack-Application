@@ -11,13 +11,13 @@ export default function profileViewComponent(data) {
   // const currUsrData = getCurrentUserData();
   // console.log(currUsrData);
   const profileView = createHTMLElement(
-    `<div class="container" >
+    `<div class="container editProfileDiv " id ="editProfileSection">
     <h1>Edit Profile</h1>
       <hr>
     <div class="row">     
       <div class="col-md-3">
         <div class="text-center">
-          <img src="./client/src//img/avatar.png" class="avatar" alt="avatar">        
+          <img src="${data.profilePicture}" class="avatar" alt="avatar">        
           
           <input type="file" class="form-control">
         </div>
@@ -61,7 +61,8 @@ export default function profileViewComponent(data) {
             <div class="col-md-8">
               <input type="button" class="btn btn-primary updateUserDataBtn" value="Save Changes" id="updateUserDataBtn">
               <span></span>
-              <input type="reset" class="btn btn-default" value="Cancel">
+              <input type="reset" class="btn btn-default"  id="closeBtn" value="Cancel">
+              
             </div>
           </div>
         </form>
