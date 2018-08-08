@@ -1,6 +1,6 @@
 import createHTMLElement from '../onboarding-service';
 
-export const dashboardViewHolderId = 'playGround';
+export const dashboardViewHolderId = 'signupContainer';
 
 export function dashboardComponent() {
   const dashboardElement = createHTMLElement(
@@ -13,7 +13,7 @@ export function dashboardComponent() {
                     <p>To make a workspace from scratch, please confirm your email address.</p>
                     <div class="d-flex justify-content-center flex-row">
                         <input type="text" class="form-control mr-3" placeholder="your-team-name"  id="team-name" /> 
-                        <button class="btn btn-outline-success" id="create-team">Create Team</button>
+                        <button class="btn btn-outline-success m-0" id="create-team">Create Team</button>
                     </div>
                 </div>
             </div>

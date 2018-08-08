@@ -38,30 +38,26 @@
                 <span class="sr-only">(current)</span>
               </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">About</a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-                Portfolio
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Portfolio-1</a>
-                <a class="dropdown-item" href="#">Portfolio-2</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Other Portfolio</a>
-              </div>
-            </li>
-            <li class="nav-item">
-              <button id="user-profile" class="ml-1 nav-item btn btn-outline-success d-none">Profile</button>
+
+            <!-- <li class="nav-item">
+              <button id="user-profile" class="ml-1 nav-item btn btn-outline-success d-none"></button>
             </li>
             <li class="nav-item">
               <button id="git-signout" class="ml-1 nav-item btn btn-outline-success d-none">Logout</button>
-            </li>
+            </li> -->
           </ul>
+
+          <div class="dropdown d-none" id="user-settings">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-cog"></i>
+              </button>
+              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" id="user-profile">Edit Profile</a>
+                <a class="dropdown-item" id="git-signout">Logout</a>
+              </div>
+            </div>
           <!-- Date filter option -->
-          <span>
+          <span class="show-login">
             <i data-toggle="modal" data-target="#myModal" class="fa fa-filter fa-2x text-white"></i>
             <a class="btn pull-right text-white">Filter</a>
           </span>
@@ -110,117 +106,117 @@
             </div>
           </div>
 
-          <button type="button" class="btn" id="notib" data-toggle="modal" data-target="#Modal-large-demo" style=" background-color: #343a40; color: white; border-color: dimgrey; ">
+          <button type="button" class="btn show-login" id="notib" data-toggle="modal" data-target="#Modal-large-demo" style=" background-color: #343a40; color: white; border-color: dimgrey; ">
             <i class="fa fa-bell"></i>
             <span class="badge badge-light">4</span>
           </button>
-          <div class="container">
-              <button type="button" class="btn btn-light search" data-toggle="modal" data-target="#searchModal" id="searchAll">
-                <span class="fa fa-search" style="float: left;">Search</span>
-              </button>
-              <button class="btn btn-light search" type="submit" data-toggle="modal" data-target="#searchModal" id="searchChannel">Channels</button>
-              <button class="btn btn-light search" type="submit" data-toggle="modal" data-target="#searchModal" id="searchPeople">Direct Messages</button>
-              <div id="searchContainer">
-                <div class="modal" id="searchModal">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-    
-                      <div class="modal-header" id="seachHeader">
-                        <span class="fa fa-search" style="padding: 0.8rem;"></span>
-                        <div class="form-group">
-                          <input type="text" class="form-control" id="tags" placeholder="search">
-                        </div>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <div class="container show-login">
+            <button type="button" class="btn btn-light search" data-toggle="modal" data-target="#searchModal" id="searchAll">
+              <span class="fa fa-search" style="float: left;">Search</span>
+            </button>
+            <button class="btn btn-light search" type="submit" data-toggle="modal" data-target="#searchModal" id="searchChannel">Channels</button>
+            <button class="btn btn-light search" type="submit" data-toggle="modal" data-target="#searchModal" id="searchPeople">Direct Messages</button>
+            <div id="searchContainer">
+              <div class="modal" id="searchModal">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+
+                    <div class="modal-header" id="seachHeader">
+                      <span class="fa fa-search" style="padding: 0.8rem;"></span>
+                      <div class="form-group">
+                        <input type="text" class="form-control" id="tags" placeholder="search">
                       </div>
-    
-                      <div class="modal-body" id="searchResult">
-    
-                      </div>
-    
-                      <div class="modal-footer" id="searchFooter">
-                        <span id="footerContent">
-                          <strong>↑</strong>
-                          <strong>↓</strong>&nbsp;to navigate
-                          <strong aria-label="Return">↵</strong>&nbsp;to select
-                          <strong aria-label="Escape Character">
-                            <kbd>esc</kbd>
-                          </strong>&nbsp;to dismiss</span>
-                      </div>
-    
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
+
+                    <div class="modal-body" id="searchResult">
+
+                    </div>
+
+                    <div class="modal-footer" id="searchFooter">
+                      <span id="footerContent">
+                        <strong>↑</strong>
+                        <strong>↓</strong>&nbsp;to navigate
+                        <strong aria-label="Return">↵</strong>&nbsp;to select
+                        <strong aria-label="Escape Character">
+                          <kbd>esc</kbd>
+                        </strong>&nbsp;to dismiss</span>
+                    </div>
+
                   </div>
                 </div>
               </div>
             </div>
+          </div>
         </div>
       </nav>
     </header>
     <div id="noti"></div>
-    <div class="container">
 
-      <div class="container">
-        <button id="muteChannel" class="btn btn-success">Mute Channel</button>
-        <button id="unmuteChannel" class="btn btn-success">unMute Channel</button>
-        <!-- <button id="createChannel">Create Channel</button> -->
-        <button id="addmember" class="btn btn-success">Add Member</button>
-        <button id="removemember" class="btn btn-success">Remove Member</button>
-        <button id="leaveChannel" class="btn btn-success">Leave Channel</button>
-        <button id="deleteChannel" class="btn btn-success">Delete Channel</button>
-      </div>
+    <div class="container show-login">
+      <button id="muteChannel" class="btn btn-success">Mute Channel</button>
+      <button id="unmuteChannel" class="btn btn-success">unMute Channel</button>
+      <!-- <button id="createChannel">Create Channel</button> -->
+      <button id="addmember" class="btn btn-success">Add Member</button>
+      <button id="removemember" class="btn btn-success">Remove Member</button>
+      <button id="leaveChannel" class="btn btn-success">Leave Channel</button>
+      <button id="deleteChannel" class="btn btn-success">Delete Channel</button>
+    </div>
 
-      <div class="container" id="UserSettings">
-        <button id="userContacts" class="btn btn-success">userContacts</button>
-       
-      </div>
-      <button onclick="getUserChatHistory('userId')" class="btn btn-success"> Chat History </button>
+    <div class="container show-login" id="UserSettings">
+      <button id="userContacts" class="btn btn-success">userContacts</button>
 
-      <div class="container" id="adminSettings">
-        <div class="modal fade" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header text-center">
-                <h4 class="modal-title w-100 font-weight-bold">Channel Details</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body mx-3">
-                <div class="md-form mb-5">
-                  <label>Channel name</label>
-                  <input type="text" id="channelName" class="form-control validate">
-                </div>
+    </div>
+    <button onclick="getUserChatHistory('userId')" class="btn btn-success show-login"> Chat History </button>
 
-                <div class="md-form mb-4">
-                  <label>Channel id</label>
-                  <input type="text" id="channelId" class="form-control validate">
-                </div>
-
-                <div class="md-form mb-4">
-                  <label for="channelType">Channel Type</label>
-                  <select class="form-control" id="channelType">
-                    <option value="privateChannel" id="privateChannel">Private</option>
-                    <option value="publicChannel" id="publicChannel">Public</option>
-                  </select>
-                </div>
+    <div class="container" id="adminSettings">
+      <div class="modal fade" id="modalSubscriptionForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header text-center">
+              <h4 class="modal-title w-100 font-weight-bold">Channel Details</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body mx-3">
+              <div class="md-form mb-5">
+                <label>Channel name</label>
+                <input type="text" id="channelName" class="form-control validate">
               </div>
 
-              <div class="modal-footer d-flex justify-content-center">
-                <button class="btn btn-warning" id="createChannel">Create Channel
-                  <i class="fa fa-paper-plane-o ml-1"></i>
-                </button>
+              <div class="md-form mb-4">
+                <label>Channel id</label>
+                <input type="text" id="channelId" class="form-control validate">
               </div>
+
+              <div class="md-form mb-4">
+                <label for="channelType">Channel Type</label>
+                <select class="form-control" id="channelType">
+                  <option value="privateChannel" id="privateChannel">Private</option>
+                  <option value="publicChannel" id="publicChannel">Public</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="modal-footer d-flex justify-content-center">
+              <button class="btn btn-warning" id="createChannel">Create Channel
+                <i class="fa fa-paper-plane-o ml-1"></i>
+              </button>
             </div>
           </div>
         </div>
-
-        <div class="text-center">
-          <button id="createChannel" class="btn btn-primary btn-rounded mb-4" data-toggle="modal" data-target="#modalSubscriptionForm">Create Channel</button>
-        </div>
-      </div>
-      <div class="container">
-        <div id="playGround"></div>
       </div>
 
+      <div class="text-center show-login">
+        <button id="createChannel" class="btn btn-primary btn-rounded mb-4" data-toggle="modal" data-target="#modalSubscriptionForm">Create Channel</button>
+      </div>
+    </div>
+    <div class="container-fluid">
+      <div id="signupContainer"></div>
+      <div id="playGround show-login"></div>
+    </div>
+    <div class="show-login">
       <div class="container-fluid d-flex text-left containerWrapper">
         <section id="chatLists" class="col-xs-5 col-sm-3">
           <div id="showContactInformation">

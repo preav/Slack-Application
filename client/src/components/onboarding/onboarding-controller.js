@@ -117,8 +117,9 @@ export function homeComponentView() {
   $(`#${homeViewHolderId}`).empty().append(homeComp);
   document.querySelector('#git-login').addEventListener('click', () => { userGitLogin(); });
   document.querySelector('#git-login').disabled = false;
-  document.querySelector('#git-signout').classList.add('d-none');
-  document.querySelector('#user-profile').classList.add('d-none');
+  // document.querySelector('#git-signout').classList.add('d-none');
+  // document.querySelector('#user-profile').classList.add('d-none');
+  $("#user-settings").addClass('d-none');
 
   return homeComp;
 }
@@ -128,8 +129,9 @@ export function createDashboardView() {
   $(`#${dashboardViewHolderId}`).empty().append(dashComponent);
   document.querySelector('#create-team').addEventListener('click', () => { createTeamFormView(); });
   document.querySelector('#git-signout').addEventListener('click', () => { userGitLogout(); });
-  document.querySelector('#git-signout').classList.remove('d-none');
-  document.querySelector('#user-profile').classList.remove('d-none');
+  // document.querySelector('#git-signout').classList.remove('d-none');
+  // document.querySelector('#user-profile').classList.remove('d-none');
+  $("#user-settings").removeClass('d-none');
 
   getTeamsOfCurrentUser();
 
@@ -143,14 +145,19 @@ export function getTeamsOfCurrentUser() {
       $('#teamsDisplayHeader').empty().append("You're already a member of these Slack workspaces:");
       $('#teamsDisplay').empty();
       $.each(response.teams, (k, v) => {
-        $('#teamsDisplay').append(`<a class="team-link" href="javascript:void(0)">${v}</a>`);
+        $('#teamsDisplay').append(`<a class="team-link" data-team="${v}">${v}</a>`);
       });
+
     }
   }, (error) => {
     console.log(error);
     $('#teamsDisplayHeader').empty().append("You're not of part of any Slack workspace yet.");
   });
 }
+
+$(document).on("click", ".team-link", function(){
+  alert($(this).data('team'));
+});
 
 export function userGitLogin() {
   const loggedUser = gitLogin();

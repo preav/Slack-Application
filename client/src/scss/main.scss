@@ -213,10 +213,6 @@ body
     margin: 30px 70px 30px 70px;
 }
 
-.btn {
-    margin: 10px;
-}
-
 #close {
     float: right;
     display:inline-block;
@@ -349,4 +345,8 @@ label {
     min-height: 36px;
     max-height: 36px;
     padding-top: 8px;
+}
+
+.show-login {
+    display: none;
 }
