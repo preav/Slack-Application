@@ -6,7 +6,8 @@ let database = firebase.database();
 const jQuery = require('jquery');
 
 function getAllChannels(teamName) {
-  let getAllContactHtml = `<ul class="side-list"><li>Channels
+  let getAllContactHtml = `<ul class="side-list"><li>
+  <a data-toggle="modal" data-target="#searchModal" data-teamID=${teamName} id="searchChannel">Channels</a>
     <span><a id="createChannel" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-circle"></i></a></span>
     </li>`
   const userContactref = database.ref('team-6').child('channels');
@@ -35,11 +36,11 @@ function getAllChannels(teamName) {
 }
 document.getElementById('userContacts').addEventListener('click', getAllChannels);
 
-function getAllUsers() {
+function getAllUsers(teamName) {
   const userContactref = database.ref('team-6').child('directMessages').child('users');
   userContactref.on('value', (snapshot) => {
     const getAllContactValue = Object.keys(snapshot.val());
-    let getAllContactHtml = '<ul class="side-list"><li>Direct Messages</li>';
+    let getAllContactHtml = `<ul class="side-list"><li data-toggle="modal" data-teamID=${teamName} data-target="#searchModal" id="searchPeople">Direct Messages</li>`;
     const abc = getAllContactValue.map((contactVal) => {
       getAllContactHtml += `
       <li class="contactUser">

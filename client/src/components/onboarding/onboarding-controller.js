@@ -122,7 +122,7 @@ export function homeComponentView() {
   // document.querySelector('#user-profile').classList.add('d-none');
   $("#user-settings").addClass('d-none');
   $('#signupContainer').show();
-  $('#chatContainer').hide();
+  $('#chatContainer, #searchContainer').hide();
 
   return homeComp;
 }
@@ -135,7 +135,7 @@ export function createDashboardView() {
   // document.querySelector('#git-signout').classList.remove('d-none');
   // document.querySelector('#user-profile').classList.remove('d-none');
   $("#user-settings").removeClass('d-none');
-
+  $("#searchContainer").show();
   getTeamsOfCurrentUser();
 
   return dashComponent;

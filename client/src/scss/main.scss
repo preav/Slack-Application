@@ -127,10 +127,7 @@ body
  }
 
 .search{
-    border: groove;
     width: 20rem;
-    margin-top: 1rem;
-    font-family: cursive;
     font-weight: 200;
     border: 1px solid #919193;
 }
@@ -141,14 +138,6 @@ body
 
 #searchItem{
     border-color: white;
-}
-
-#seachHeader{
-    padding: 0rem;
-}
-
-.modal-header .close {
-    padding: 1.7rem;
 }
 
 #footerContent{
@@ -167,11 +156,6 @@ body
 .modal-footer{
     border-radius: 0.8rem;
     border-top:none;
-}
-
-
-.form-control{
-border: 1px solid white;
 }
 
 #searchResult {
@@ -342,7 +326,7 @@ label {
     padding-top: 8px;
 }
 
-.show-login {
+.show-login, #searchContainer {
     display: none;
 }
 
