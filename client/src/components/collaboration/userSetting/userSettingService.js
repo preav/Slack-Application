@@ -5,7 +5,7 @@ import { clickChannel } from '../../../../src/components/chats/chat-service';
 let database = firebase.database();
 const jQuery = require('jquery');
 
-function getAllChannels(teamName) {
+function getAllChannels() {
   let getAllContactHtml = `<ul class="side-list"><li>Channels
     <span><a id="createChannel" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-circle"></i></a></span>
     </li>`
@@ -17,16 +17,17 @@ function getAllChannels(teamName) {
 
     const abc = getAllContactValue.map((contactVal) => {
       // const conName = Object.keys(contactVal);
+      console.log("contactVal",contactVal)
       getAllContactHtml += `
-        <li id=${contactVal} class="channels">
+        <li channelId=${contactVal} class="channels">
         ${contactVal}
-        <span id="${contactVal}channel">
+        <span channelId="${contactVal}">
           <a class="muteChannel"><i class="fa fa-microphone-slash"></i></a>
           <a class="unmuteChannel"><i class="fa fa-microphone"></i></a>
           <a class="removeChannel"><i class="fa fa-times-circle-o"></i></a>
         </span>
         </li>`;
-      //return getAllContactHtml;
+      return getAllContactHtml;
     });
   });
   getAllContactHtml += "</ul>";
@@ -35,18 +36,16 @@ function getAllChannels(teamName) {
 }
 document.getElementById('userContacts').addEventListener('click', getAllChannels);
 
-// function clickChannel() {
-//   console.log('channel clicked');
-// }
 function getAllUsers() {
   const userContactref = database.ref('team-6').child('directMessages').child('users');
   userContactref.on('value', (snapshot) => {
     const getAllContactValue = Object.keys(snapshot.val());
+    console.log("getAllContactValue",getAllContactValue)
     let getAllContactHtml = '<ul class="side-list"><li>Direct Messages</li>';
     const abc = getAllContactValue.map((contactVal) => {
       getAllContactHtml += `
       <li class="contactUser">
-        ${contactVal}
+       ${contactVal}
         <span userId = ${contactVal}>
           <a class="muteUser"><i class="fa fa-microphone-slash"></i></a>
           <a class="unmuteUser"><i class="fa fa-microphone"></i></a>
@@ -60,22 +59,6 @@ function getAllUsers() {
   });
 }
 document.getElementById('userContacts').addEventListener('click', getAllUsers);
-
-
-function fnAddMember(status, userName) {
-  const memberRef = database.ref('team001/users/').push({
-    status: 'active',
-    userName: 'sasasas',
-  }, (error) => {
-    if (error) {
-      console.log(error, 'There is error while saving data into firebase...');
-    } else {
-      console.log('saved successfully...');
-    }
-  });
-}
-
-// document.getElementById('addmember').addEventListener('click', fnAddMember);
 
 // functionality for updating something in firebase via
 function muteUsers(userId) {
@@ -115,14 +98,15 @@ jQuery(document).on('click', '.unmuteUser', (e) => {
 
 function deleteUsers(userId) {
   const removeUserRef = database.ref(`team-6/directMessages/users/${userId}`).remove();
-  getAllUsers();
 }
 
 
-jQuery(document).on('click', '.removeUser', (e) => {
-  const userId = e.target.parentElement.getAttribute('userId');
-  console.log('User Removed');
+jQuery(document).on('click', '.removeUser', function(){
+  // const userId = e.target.parentElement.parentElement.getAttribute('userId');
+  const userId = jQuery(this).parents('span').attr('userId');
+  console.log('User Removed',userId);
   deleteUsers(userId);
+  $(this).parents('li').remove();
 });
 
 //= =====================================================================
@@ -159,26 +143,25 @@ function unMuteChannel(channelId) {
 }
 
 jQuery(document).on('click', '.unmuteChannel', (e) => {
-  const channelId = e.target.parentElement.getAttribute('channelId');
+  const channelId = e.target.getAttribute('channelId');
   unMuteChannel(channelId);
 });
 
 function removeChannel(channelId) {
   const newPostKey = database.ref('team-6').child('channels').child(`${channelId}`)
     .remove();
-  getAllChannels();
 }
 
 
-jQuery(document).on('click', '.removeChannel', (e) => {
-  const channelId = e.target.parentElement.getAttribute('channelId');
-  console.log('Channel Removed');
+$(document).on('click', '.removeChannel', function(){
+  const channelId = $(this).parents('span').attr('channelId');
+  // console.log(channelId);
   removeChannel(channelId);
+  $(this).parents('li').remove();
 });
 
 
 export {
-  fnAddMember,
   muteUsers,
   deleteUsers,
   unMuteUsers,
