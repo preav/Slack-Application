@@ -2,11 +2,14 @@ import { createStore } from 'redux';
 
 // Reducers
 function userReducer(state = {}, action) {
-  switch (action.type) {
-    case 'LOGIN_USER': 
-      return [state, action.payload]; 
+  switch (action.type) {   
       case 'LOGOUT_USER': 
-      return [state, action.payload];   
+      return {};  
+      case 'LOGIN':
+      return {
+        state,
+        data: action.value
+    }      
     default:
       return state;
   }

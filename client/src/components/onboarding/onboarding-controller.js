@@ -177,7 +177,7 @@ export function userGitLogin() {
     createDashboardView();
 
     const userUID = response.user.uid;
-    store.dispatch({type: "LOGIN_USER", payload: response.user.uid});
+    store.dispatch({type: "LOGIN", value: response.user.uid});
 
     const userData = {
       username: response.additionalUserInfo.username,
@@ -208,7 +208,7 @@ export function userGitLogin() {
 }
 
 export function userGitLogout() {
-  localStorage["current_user"] = '';  
+  localStorage.removeItem("current_user");  
   store.dispatch({type: "LOGOUT_USER", payload: {}});
   gitLogout();
   homeComponentView();
