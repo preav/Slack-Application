@@ -1,19 +1,20 @@
- import firebase from 'firebase';
+import firebase from 'firebase';
 import '../../../../../firebase/firebase-config';
-import {clickChannel} from '../../../../src/components/chats/chat-service';
+import { clickChannel } from '../../../../src/components/chats/chat-service';
 
 let database = firebase.database();
 const jQuery = require('jquery');
 
 function getAllChannels(teamName) {
+  let getAllContactHtml = `<ul class="side-list"><li>Channels
+    <span><a id="createChannel" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-circle"></i></a></span>
+    </li>`
   const userContactref = database.ref('team-6').child('channels');
   userContactref.on('value', (snapshot) => {
     // const getAllContactValue = Object.values(snapshot.val());
     // const getAllContactValue = Object.keys(snapshot.val());
     const getAllContactValue = Object.keys(snapshot.val());
-    let getAllContactHtml = `<ul class="side-list"><li>Channels
-    <span><a id="createChannel" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-circle"></i></a></span>
-    </li>`
+
     const abc = getAllContactValue.map((contactVal) => {
       // const conName = Object.keys(contactVal);
       getAllContactHtml += `
@@ -27,10 +28,10 @@ function getAllChannels(teamName) {
         </li>`;
       //return getAllContactHtml;
     });
-    getAllContactHtml += "</ul>";
-    jQuery('#showContactInformation').append(getAllContactHtml);
-    // document.getElementById(`${contactVal}`).addEventListener('click', clickChannel);
   });
+  getAllContactHtml += "</ul>";
+  jQuery('#showContactInformation').append(getAllContactHtml);
+  // document.getElementById(`${contactVal}`).addEventListener('click', clickChannel);
 }
 document.getElementById('userContacts').addEventListener('click', getAllChannels);
 
