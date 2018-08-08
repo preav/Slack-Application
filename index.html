@@ -153,16 +153,6 @@
     </header>
     <div id="noti"></div>
 
-    <div class="container show-login">
-      <button id="muteChannel" class="btn btn-success">Mute Channel</button>
-      <button id="unmuteChannel" class="btn btn-success">unMute Channel</button>
-      <!-- <button id="createChannel">Create Channel</button> -->
-      <button id="addmember" class="btn btn-success">Add Member</button>
-      <button id="removemember" class="btn btn-success">Remove Member</button>
-      <button id="leaveChannel" class="btn btn-success">Leave Channel</button>
-      <button id="deleteChannel" class="btn btn-success">Delete Channel</button>
-    </div>
-
     <div class="container show-login" id="UserSettings">
       <button id="userContacts" class="btn btn-success">userContacts</button>
 
@@ -186,11 +176,6 @@
               </div>
 
               <div class="md-form mb-4">
-                <label>Channel id</label>
-                <input type="text" id="channelId" class="form-control validate">
-              </div>
-
-              <div class="md-form mb-4">
                 <label for="channelType">Channel Type</label>
                 <select class="form-control" id="channelType">
                   <option value="privateChannel" id="privateChannel">Private</option>
@@ -207,16 +192,12 @@
           </div>
         </div>
       </div>
-
-      <div class="text-center show-login">
-        <button id="createChannel" class="btn btn-primary btn-rounded mb-4" data-toggle="modal" data-target="#modalSubscriptionForm">Create Channel</button>
-      </div>
     </div>
     <div class="container-fluid">
       <div id="signupContainer"></div>
       <div id="playGround show-login"></div>
     </div>
-    <div class="show-login">
+    <div class="show-login" id="chatContainer">
       <div class="container-fluid d-flex text-left containerWrapper">
         <section id="chatLists" class="col-xs-5 col-sm-3">
           <div id="showContactInformation">

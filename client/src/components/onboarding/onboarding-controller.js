@@ -8,6 +8,7 @@ import profileViewComponent from './profile/profileView';
 import { getCurrentUserData, saveUpdateUserProfile } from './profile/profileService';
 import { checkAuthStateChange, gitLogin, gitLogout } from '../../../../firebase/git-login';
 import { saveUpdateUser, getCurrentUserDetails } from '../../../../firebase/onboarding-db';
+import { getAllChannels, getAllUsers } from '../collaboration/userSetting/userSettingService';
 
 
 export function createInvitationComponent() {
@@ -120,6 +121,8 @@ export function homeComponentView() {
   // document.querySelector('#git-signout').classList.add('d-none');
   // document.querySelector('#user-profile').classList.add('d-none');
   $("#user-settings").addClass('d-none');
+  $('#signupContainer').show();
+  $('#chatContainer').hide();
 
   return homeComp;
 }
@@ -156,7 +159,12 @@ export function getTeamsOfCurrentUser() {
 }
 
 $(document).on("click", ".team-link", function(){
-  alert($(this).data('team'));
+  var teamName = $(this).data('team');
+    $("#chatContainer").show();
+    $('#signupContainer').hide();
+    getAllChannels(teamName);
+    getAllUsers(teamName);
+  // alert($(this).data('team'));
 });
 
 export function userGitLogin() {
