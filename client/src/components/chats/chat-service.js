@@ -34,11 +34,11 @@ let receiverRef = firebase.database().ref('team-6').child('channels').child('chn
 let senderRef = null;
 
 // Following function is called when a Channel is clicked upon to retrieve the Messages
-export function clickChannel(e) {
+export function openChatDetailsForChannel(channelId) {
     console.log('channel clicked');
     forChannel = true;
-    console.log(e.target.id);
-    sentTo = e.target.id;
+    console.log(channelId);
+    sentTo = channelId;
     //renderChatHistory();
 
     console.log(sentTo);
@@ -61,8 +61,8 @@ export function clickChannel(e) {
     });
 }
 
-export function clickUser(e) {
-    sentTo = e.target.id;
+export function openChatDetailsForUser(userId) {
+    sentTo = userId;
     console.log(sentTo);
     //renderChatHistory();
     let receiverRef = firebase.database().ref('team-6').child('directMessages').child('users').child(sentTo).child('messages');
