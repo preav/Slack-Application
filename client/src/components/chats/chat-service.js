@@ -13,8 +13,8 @@ const store = createStore(chat);
 // Log the initial state
 //console.log('initial Value',store.getState())
 
-let sentTo = 'userID_triveni';
-let userDisplayName = 'userID_saket';
+let sentTo = 'Chaithu-123';
+let userDisplayName = 'Chaithu-123';
 let forChannel = false;
 
 // getCurrentUserDetails().then((response) => {
@@ -29,7 +29,7 @@ if (currentUser) {
     userDisplayName = currentUser.displayName;
 }
 else {
-    userDisplayName = 'userID_saket'
+    userDisplayName = 'Sskeet'
 }
 
 // Get a reference to the database service
