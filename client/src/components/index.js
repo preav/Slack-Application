@@ -39,7 +39,6 @@ import '../components/search/controller';
 
 import '../../../firebase/firebase';
 import { hitEnter } from './slackbot/command-line';
-
 require('font-awesome/css/font-awesome.css');
 
 $("#enteredCommand").emojioneArea({

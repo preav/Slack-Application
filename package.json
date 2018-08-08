@@ -21,6 +21,7 @@
     "bootstrap": "^4.1.2",
     "cors": "^2.8.4",
     "css-loader": "^1.0.0",
+    "dropbox": "^4.0.9",
     "emojione": "^3.1.7",
     "emojionearea": "^3.4.1",
     "eslint": "^5.2.0",

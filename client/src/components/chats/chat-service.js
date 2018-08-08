@@ -7,8 +7,11 @@ var markdown = require("markdown").markdown;
 import '../../../../firebase/firebase-config';
 import firebase from 'firebase';
 import { getCurrentUserDetails } from '../../../../firebase/onboarding-db'
-
+//import { filesDownload } from '../collaborator/addFiles';
+var dropbox =  require('dropbox').Dropbox;
 const store = createStore(chat);
+
+//document.getElementById('addMedia').addEventListener('click', getFile);
 
 // Log the initial state
 //console.log('initial Value',store.getState())
@@ -100,7 +103,7 @@ btnSubmit.addEventListener('click', evt => {
     const rawMessage = document.querySelector('#enteredCommand').value;
 
     // Check if empty Text is being sent
-    if(rawMessage.trim() === ''){
+    if (rawMessage.trim() === '') {
         alert('Please provide input text for Chat');
         return false;
     }
@@ -144,29 +147,7 @@ btnSubmit.addEventListener('click', evt => {
         });
     }
     else { // If it's Direct Messages, store message under both the Sender and Receiver nodes
-        senderRef = firebase.database().ref('team-6').child('directMessages').child('users').child(userDisplayName).child('messages');
-        receiverRef = firebase.database().ref('team-6').child('directMessages').child('users').child(sentTo).child('messages');
-        senderRef.push(msg);
-        receiverRef.push(msg);
-
-        // Render the Messages
-        receiverRef.on('value', function (snapshot) {
-            let chatBox = document.getElementById('messageBody');
-            console.log(snapshot.val());
-            chatBox.innerHTML = '';
-            snapshot.forEach(function (childSnapshot) {
-                let childData = childSnapshot.val();
-                console.log(childData);
-                if ((childData.sentBy === sentTo || childData.sentTo === sentTo) &&
-                    (childData.sentBy === userDisplayName || childData.sentTo === userDisplayName)) {
-                    const paraElement = document.createElement('p');
-                    const formattedTime = moment(childSnapshot.val().date).fromNow();
-                    paraElement.innerHTML = `<strong>${childSnapshot.val().sentBy}</strong> - ${formattedTime}<br>
-                                            ${childSnapshot.val().messageText}`;
-                    chatBox.appendChild(paraElement);
-                }
-            });
-        });
+        pushMessagesForUser(msg);
     }
 
     // push a copy of the message to "Messages" collection on DB
@@ -176,6 +157,39 @@ btnSubmit.addEventListener('click', evt => {
     // Add this to State of store
     store.dispatch(addChatToStore(message, currentDateTime, userDisplayName, sentTo));
 });
+
+function pushMessagesForUser(msg) {
+    senderRef = firebase.database().ref('team-6').child('directMessages').child('users').child(userDisplayName).child('messages');
+    receiverRef = firebase.database().ref('team-6').child('directMessages').child('users').child(sentTo).child('messages');
+    senderRef.push(msg);
+    receiverRef.push(msg);
+
+    // Render the Messages
+    receiverRef.on('value', function (snapshot) {
+    
+        let chatBox = document.getElementById('messageBody');
+        console.log(snapshot.val());
+        chatBox.innerHTML = '';
+        snapshot.forEach(function (childSnapshot) {
+            // if(childSnapshot.val().messageText.indexOf('Sent a media file ') > -1){
+            //     var index = "Sent a media file ".length;
+            //     var fileName = childSnapshot.val().messageText.substring(index)
+            //     fileName = "/"+fileName;
+            //     filesDownload(fileName);
+            // }
+            let childData = childSnapshot.val();
+            console.log(childData);
+            if ((childData.sentBy === sentTo || childData.sentTo === sentTo) &&
+                (childData.sentBy === userDisplayName || childData.sentTo === userDisplayName)) {
+                const paraElement = document.createElement('p');
+                const formattedTime = moment(childSnapshot.val().date).fromNow();
+                paraElement.innerHTML = `<strong>${childSnapshot.val().sentBy}</strong> - ${formattedTime}<br>
+                                            ${childSnapshot.val().messageText}`;
+                chatBox.appendChild(paraElement);
+            }
+        });
+    });
+}
 
 // get the Initial data from the Chat
 database.ref('messages').once('value', dataSnapshot => {
@@ -231,4 +245,63 @@ store.subscribe(() => {
 //                                         ${message.messageText}`;
 //     let chatBox = document.getElementById('messageBody');
 //     chatBox.appendChild(paraElement);
+// }
+
+
+// export function getFileName(fileName, fileId) {
+//     var scrubbedFileName = fileName.substr(1);
+//     console.log(scrubbedFileName);
+//     // Build the Message entity
+//     let msg = {};
+//     var message = "Sent a media file "+scrubbedFileName+" "+fileId;
+//     msg.messageText = message
+//     msg.date = Date.now();
+//     msg.sentTo = sentTo;
+//     msg.sentBy = userDisplayName;
+//     pushMessagesForUser(msg);
+// }
+
+// function getFile(event) {
+//     $('#imgupload').trigger('click');
+//     $('#imgupload').change(function(e) {
+//            var files = e.target.files; 
+//        for (var i = 0, file; file = files[i]; i++) {
+//          var fileName = "/"+file.name;
+//          filesUpload(event, file, fileName);
+//        }
+//      });
+//  }
+ 
+//  function filesUpload(event, fileValue, fileName) {
+//      var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
+//      $.ajax({
+//          url: 'https://content.dropboxapi.com/2/files/upload',
+//          type: 'post',
+//          data: fileValue,
+//          processData: false,
+//          contentType: 'application/octet-stream',
+//          headers: {
+//              "Authorization": "Bearer " + ACCESS_TOKEN,
+//              "Dropbox-API-Arg": `{"path": "${fileName}", "mode": "add", "autorename": true, "mute": false}`
+//          },
+//          success: function (data) {
+//              getFileName(data.path_display, data.id);
+//              //console.log(data)
+//          }
+//      })
+//  }
+
+//  function filesDownload(fileName) {
+// 	var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
+//  	var dbx = new dropbox({accessToken: ACCESS_TOKEN});
+//         dbx.filesDownload({ path: fileName})// here i mentioned the shareable link rather then I want to specify path
+//             .then(function (data) {
+//                 var downloadUrl = URL.createObjectURL(data.fileBlob);
+//                 var template = `<a href=${downloadUrl} download=${data.name}>Download here </a>`;
+//                 document.getElementById('messageBody').innerHTML += template;
+//             })
+//             .catch(function (error) {
+//                 console.error(error);
+//             });
+//         return
 // }
