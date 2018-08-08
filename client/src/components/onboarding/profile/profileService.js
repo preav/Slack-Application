@@ -47,16 +47,16 @@ export function updateUserData(name, email) {
 }
 
 
-export function saveUpdateUser(updated_name, updated_email) {
+export function saveUpdateUserProfile(updated_name, updated_email) {
   // Return a new promise.
   const userId = firebase.auth().currentUser.uid;
   console.log(`https://us-central1-slackcollaboration-fa323.cloudfunctions.net/saveUpdateUser?userId=${userId}`);
   //console.log(userData);
+
   return new Promise((resolve, reject) => {
     $.ajax({
       url: `https://us-central1-slackcollaboration-fa323.cloudfunctions.net/saveUpdateUser?userId=${userId}`,
-      type: 'POST',
-      // data: userData,
+      type: 'POST',      
       data: JSON.stringify({ name: updated_name,
       email : updated_email }),
       contentType: 'application/json;charset=UTF-8',

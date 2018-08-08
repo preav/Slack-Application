@@ -5,7 +5,9 @@ import { inivitationViewHolderId, invitationComponent, mailSentBody } from './in
 import { Email } from './invitation/smtp';
 import { submitTeamCreateForm } from './team-create/team-create-service';
 import profileViewComponent from './profile/profileView';
-import { getCurrentUserData, saveUpdateUser } from './profile/profileService';
+import { getCurrentUserData, saveUpdateUserProfile } from './profile/profileService';
+import { checkAuthStateChange, gitLogin, gitLogout } from '../../../../firebase/git-login';
+import { saveUpdateUser, getCurrentUserDetails } from '../../../../firebase/onboarding-db';
 
 
 export function createInvitationComponent() {
@@ -71,29 +73,25 @@ document.querySelector('#user-profile').addEventListener('click', () => {
   // const tempCurrUsrData;
   getCurrentUserData().then((data) => {
     // const tempCurrUsrData = data;
-    console.log(`user data >>>>>>>>>>>>>>>>>>>>>${data.email}`);
+    console.log(`user data >>>>>>>>>>>>>>>>>>>>>${data.profilePicture}`);
     $(`#${dashboardViewHolderId}`).empty().append(profileViewComponent(data));
 
     $('#updateUserDataBtn').click(() => {
       const userName = document.getElementById('userName').value;
       const email = document.getElementById('mailId').value;
       console.log("calling update>>>>"+userName+"-----"+email);
-      //saveUpdateUser(userName, email);
+      //saveUpdateUserProfile(userName, email);
 
-      saveUpdateUser(userName, email).then((response) => {
+      saveUpdateUserProfile(userName, email).then((response) => {
         console.log(response);
       }, (error) => {
         console.log(`Error in saving/updating user: ${error.toString()}`);
       });
+    });    
 
+    $('#closeBtn').click(() => {    
+      $( ".editProfileDiv" ).hide();      
     });
-
-    $('#closeBtn').click(() => {
-      alert("test");
-      window.history.go(-1);
-     // window.history.back();
-    });
-    
   });
 });
 
@@ -105,8 +103,7 @@ export function createTeamFormView() {
     alert('Please provide a team name');
   } else {
     const cTeamComp = createTeamComponent(teamName);
-    // cTeamComp.querySelector('#form-submit-cancel').
-    // addEventListener('click', () => { createDashboardView(); });
+    cTeamComp.querySelector('#form-submit-cancel').addEventListener('click', () => { createDashboardView(); });
     cTeamComp.querySelector('#form-submit').addEventListener('click', () => {
       submitTeamCreateForm();
       createInvitationComponent();
@@ -117,15 +114,96 @@ export function createTeamFormView() {
 
 export function homeComponentView() {
   const homeComp = homePageComponent();
-  // homeComp.querySelector('#git-login').addEventListener('click', () => { gitLogin(); });
   $(`#${homeViewHolderId}`).empty().append(homeComp);
+  document.querySelector('#git-login').addEventListener('click', () => { userGitLogin(); });
+  document.querySelector('#git-login').disabled = false;
+  document.querySelector('#git-signout').classList.add('d-none');
+  document.querySelector('#user-profile').classList.add('d-none');
+
   return homeComp;
 }
 
 export function createDashboardView() {
   const dashComponent = dashboardComponent();
-  // dashComponent.querySelector('#git-signout').addEventListener('click', () => { gitLogout(); });
-  dashComponent.querySelector('#create-team').addEventListener('click', () => { createTeamFormView(); });
   $(`#${dashboardViewHolderId}`).empty().append(dashComponent);
+  document.querySelector('#create-team').addEventListener('click', () => { createTeamFormView(); });
+  document.querySelector('#git-signout').addEventListener('click', () => { userGitLogout(); });
+  document.querySelector('#git-signout').classList.remove('d-none');
+  document.querySelector('#user-profile').classList.remove('d-none');
+
+  getTeamsOfCurrentUser();
+
   return dashComponent;
 }
+
+export function getTeamsOfCurrentUser() {
+  const currentUser = getCurrentUserDetails();
+  currentUser.then((response) => {
+    if (response.teams != null && response.teams.length > 0) {
+      $('#teamsDisplayHeader').empty().append("You're already a member of these Slack workspaces:");
+      $('#teamsDisplay').empty();
+      $.each(response.teams, (k, v) => {
+        $('#teamsDisplay').append(`<a class="team-link" href="javascript:void(0)">${v}</a>`);
+      });
+    }
+  }, (error) => {
+    console.log(error);
+    $('#teamsDisplayHeader').empty().append("You're not of part of any Slack workspace yet.");
+  });
+}
+
+export function userGitLogin() {
+  const loggedUser = gitLogin();
+  loggedUser.then((response) => {
+    // console.log(response);
+    createDashboardView();
+
+    const userUID = response.user.uid;
+    const userData = {
+      username: response.additionalUserInfo.username,
+      accessToken: response.credential.accessToken,
+      name: response.user.displayName,
+      email: response.user.email,
+      profilePicture: response.user.photoURL,
+      phoneNumber: response.user.phoneNumber,
+      gitURL: response.additionalUserInfo.profile.html_url,
+      teams: ['team-one', 'team-two'],
+      status: 'active',
+      permission: { write: false, read: true },
+    };
+
+    // Saving/updating current logged in user
+    saveUpdateUser(userUID, userData).then((res) => {
+      console.log(res);
+    }, (error) => {
+      console.log(`Error in saving/updating user: ${error.toString()}`);
+      gitLogout();
+      homeComponentView();
+    });
+  }, (error) => {
+    console.log(error.toString());
+    gitLogout();
+    homeComponentView();
+  });
+}
+
+export function userGitLogout() {
+  gitLogout();
+  homeComponentView();
+}
+export function userLoginStatus() {
+  const u = checkAuthStateChange();
+  u.then((response) => {
+    console.log(response);
+    createDashboardView();
+  }, (error) => {
+    console.log(error.toString());
+    homeComponentView();
+  });
+}
+
+export function init() {
+  userLoginStatus();
+}
+
+window.onload = init;
