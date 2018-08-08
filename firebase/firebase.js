@@ -17,7 +17,7 @@ var config = {
   messagingSenderId: "906342147667"
 };
 firebase.initializeApp(config);
-const rootRef = firebase.database().ref('team-6');
+const database = firebase.database();
 
 
-export default rootRef;
+export default database;
