@@ -35,9 +35,6 @@ function getAllChannels(teamName) {
 }
 document.getElementById('userContacts').addEventListener('click', getAllChannels);
 
-// function clickChannel() {
-//   console.log('channel clicked');
-// }
 function getAllUsers() {
   const userContactref = database.ref('team-6').child('directMessages').child('users');
   userContactref.on('value', (snapshot) => {
