@@ -112,6 +112,11 @@ body
     border-radius: 4px;
 }
 
+#create-team-form .form-group
+{
+    text-align:left;
+}
+
 .avatar{
     border-radius: 50%;
     width: 80%;
@@ -310,7 +315,7 @@ $border-radius: .25rem;
 label {
     display: inline-block;
     text-align: right;
-    width: 20%;
+    //width: 20%;
 }
 
 .emojionearea .emojionearea-editor {
