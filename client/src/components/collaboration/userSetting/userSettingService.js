@@ -1,63 +1,60 @@
- import firebase from 'firebase';
+import firebase from 'firebase';
 import '../../../../../firebase/firebase-config';
-import {clickChannel, clickUser} from '../../../../src/components/chats/chat-service';
+import { clickChannel } from '../../../../src/components/chats/chat-service';
 
 let database = firebase.database();
 const jQuery = require('jquery');
 
-function getAllChannels() {
+function getAllChannels(teamName) {
+  let getAllContactHtml = `<ul class="side-list"><li>
+  <a data-toggle="modal" data-target="#searchModal" data-teamID=${teamName} id="searchChannel">Channels</a>
+    <span><a id="createChannel" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-circle"></i></a></span>
+    </li>`
   const userContactref = database.ref('team-6').child('channels');
-  userContactref.once('value', (snapshot) => {
-    const getAllContactValue = Object.values(snapshot.val());
+  userContactref.on('value', (snapshot) => {
+    // const getAllContactValue = Object.values(snapshot.val());
+    // const getAllContactValue = Object.keys(snapshot.val());
+    const getAllContactValue = Object.keys(snapshot.val());
 
-    console.log('get something', getAllContactValue);
-    let getAllContactHtml = '';
     const abc = getAllContactValue.map((contactVal) => {
-      const conName = Object.keys(contactVal);
-      getAllContactHtml = `
-        <div>
-            <div class="buttom-panel text-center mt-1">
-              <div id=${conName} class="channels">${conName}</div>
-                  <div id="${conName}channel">
-                      <button type="button" class="muteChannel">mute Channel</button>
-                      <button type="button" class="unmuteChannel">unmute Channel</buttob>
-                      <button type="button" class="removeChannel">remove Channel</button>
-                  </div>
-                </form>
-            </div>
-        </div>
-        `;
+      // const conName = Object.keys(contactVal);
+      getAllContactHtml += `
+        <li id=${contactVal} class="channels">
+        ${contactVal}
+        <span id="${contactVal}channel">
+          <a class="muteChannel"><i class="fa fa-microphone-slash"></i></a>
+          <a class="unmuteChannel"><i class="fa fa-microphone"></i></a>
+          <a class="removeChannel"><i class="fa fa-times-circle-o"></i></a>
+        </span>
+        </li>`;
       //return getAllContactHtml;
-      jQuery('#showContactInformation').append(getAllContactHtml);
-      document.getElementById(`${conName}`).addEventListener('click', clickChannel);
     });
   });
+  getAllContactHtml += "</ul>";
+  jQuery('#showContactInformation').append(getAllContactHtml);
+  // document.getElementById(`${contactVal}`).addEventListener('click', clickChannel);
 }
 document.getElementById('userContacts').addEventListener('click', getAllChannels);
 
-function getAllUsers() {
+function getAllUsers(teamName) {
   const userContactref = database.ref('team-6').child('directMessages').child('users');
-  userContactref.once('value', (snapshot) => {
+  userContactref.on('value', (snapshot) => {
     const getAllContactValue = Object.keys(snapshot.val());
-    console.log(getAllContactValue);
+    let getAllContactHtml = `<ul class="side-list"><li data-toggle="modal" data-teamID=${teamName} data-target="#searchModal" id="searchPeople">Direct Messages</li>`;
     const abc = getAllContactValue.map((contactVal) => {
-      let getContactHtml = `
-        <div>
-            <div class="buttom-panel text-center mt-1">
-                <div Id='${contactVal}' class="contactUser">${contactVal}</div>
-                <div Id='${contactVal}User'>
-                    <button type="button" class="muteUser">mute User</button>
-                    <button type="button" class="unmuteUser">unmute User</buttob>
-                    <button type="button" class="removeUser">remove User</button>
-                </div>
-            </div>
-        </div>
-        `;
-      //return getContactHtml;
-      jQuery('#showContactInformation').append(getContactHtml);
-      document.getElementById(`${contactVal}`).addEventListener('click', clickUser);
+      getAllContactHtml += `
+      <li class="contactUser">
+        ${contactVal}
+        <span userId = ${contactVal}>
+          <a class="muteUser"><i class="fa fa-microphone-slash"></i></a>
+          <a class="unmuteUser"><i class="fa fa-microphone"></i></a>
+          <a class="removeUser"><i class="fa fa-times-circle-o"></i></a>
+        </span>
+        </li>`;
+      return getAllContactHtml;
     });
-    
+    getAllContactHtml += "</ul>";
+    jQuery('#showContactInformation').append(getAllContactHtml);
   });
 }
 document.getElementById('userContacts').addEventListener('click', getAllUsers);
@@ -76,7 +73,7 @@ function fnAddMember(status, userName) {
   });
 }
 
-document.getElementById('addmember').addEventListener('click', fnAddMember);
+// document.getElementById('addmember').addEventListener('click', fnAddMember);
 
 // functionality for updating something in firebase via
 function muteUsers(userId) {

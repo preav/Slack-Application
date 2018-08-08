@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import viewHtml from './view';
 let globallist=[
     {
         channels:[],
@@ -12,23 +13,22 @@ let globallist=[
     {
         all:[]
     }
-]
-;
+];
+
 export function getAllChannels(teamId) {
-    const db = firebase.database().ref(teamId + '/channels');
+    const db = firebase.database().ref(teamId + '/channelMsg');
     db.on('value', (channelList) => {
         channelList.forEach((channelIndex) => {
-            channelIndex.forEach((channel)=>{
+            console.log("channel"+channelIndex.key);
                 let flag=true;
                 for(let i=0;i<globallist[0].channels.length;i++){
-                    if(globallist[0].channels[i]===channel.key)
+                    if(globallist[0].channels[i]===channelIndex.key)
                         flag=false;
                 }
                 if(flag===true){
-                    globallist[0].channels.push(channel.key);
-                    globallist[3].all.push(channel.key);
+                    globallist[0].channels.push(channelIndex.key);
+                    globallist[3].all.push(channelIndex.key);
                 }
-            });
         });
     });
 }
@@ -39,58 +39,65 @@ export function getAllUsers(teamId) {
         userList.forEach((user) => {
             let flag=true;
                 for(let i=0;i<globallist[1].users.length;i++){
-                    if(globallist[1].users[i]===user.child('name').val())
+                    if(globallist[1].users[i]===user.child('username').val())
                         flag=false;
                 }
                 if(flag===true){
-                    globallist[1].users.push(user.child('name').val());
-                    globallist[3].all.push(user.child('name').val());
+                    globallist[1].users.push(user.child('username').val());
+                    globallist[3].all.push(user.child('username').val());
                 }
         });
     });
 }
 
 function getDirectMessages(){
-    const db=firebase.database().ref('/team-6/directMessages/users');
-    db.on('value',(userList)=>{
-        userList.forEach((id)=>{
-            let prnt=id.child('messages');
-            id.forEach((msg)=>{
-                let message=msg.child('messageText').val();
-                let rcvDate=msg.child("date").val();
-                let by=msg.child("sentBy").val();
-                let msgId=msg.child("messageId").val();
-                let data={
-                    text: message,
-                    date: rcvDate,
-                    sentby: by,
-                    id: msgId 
-                }
-                globallist[2].messages.push(data);
-                globallist[3].all.push(message);
+    const users = firebase.database().ref('/team-6/directMessages/users');
+    users.on('value', (snapshot) => {
+        const getAllUserIds = Object.values(snapshot.val());
+        const abc = getAllUserIds.map((msgVal) => {
+            Object.entries(msgVal).forEach(([key, value]) => {
+                const msgsList = value;
+                Object.entries(msgsList).forEach(([key, value]) => {
+                    const msgData = value;
+                    let message=msgData.messageText;
+                    let rcvDate=msgData.date;
+                    let by=msgData.sentBy;
+                    let msgId=msgData.messageId;
+                    let data={
+                        text: message,
+                        date: rcvDate,
+                        sentby: by,
+                        id: msgId 
+                    }
+                    globallist[2].messages.push(data);
+                    globallist[3].all.push(message);
+                });
             });
         });
     });
 }
 
-function getChannelMessages(){
-    const db=firebase.database().ref('/team-6/channels/0/chn001/users');
-    db.on ('value',(userList)=>{
-        userList.forEach((userId)=>{
-            userId.forEach((user)=>{
-                user.forEach((msg)=>{
-                let message=msg.child('messageText').val();
-                let rcvDate=msg.child("date").val();
-                let by=msg.child("sentBy").val();
-                let msgId=msg.child("messageId").val();
-                let data={
-                    text: message,
-                    date: rcvDate,
-                    sentby: by,
-                    id: msgId 
-                }
-                globallist[2].messages.push(data);
-                globallist[3].all.push(message);            
+function getChannelMessages() {
+    const channelMsg = firebase.database().ref('/team-6/channelMsg/');
+    channelMsg.on('value', (snapshot) => {
+        const getAllChannelValue = Object.values(snapshot.val());
+        const abc = getAllChannelValue.map((chnVal) => {
+            Object.entries(chnVal).forEach(([key, value]) => {
+                const msgsList = value;
+                Object.entries(msgsList).forEach(([key, value]) => {
+                    const msgData = value;
+                    let message=msgData.messageText;
+                    let rcvDate=msgData.date;
+                    let by=msgData.sentBy;
+                    let msgId=msgData.messageId;
+                    let data={
+                        text: message,
+                        date: rcvDate,
+                        sentby: by,
+                        id: msgId 
+                    }
+                    globallist[2].messages.push(data);
+                    globallist[3].all.push(message);
                 });
             });
         });
@@ -120,10 +127,7 @@ export function searchAllChannels() {
               return false;
             }
           })
-          .autocomplete( "instance" )._renderItem = function( ul, item ) {
-            return $(`<li class="list-group-item"><i style="font-size:10px">ch-</i>${item.value}</li>`)
-              .appendTo( ul );
-          };
+          .autocomplete( "instance" )._renderItem = viewHtml(ul,item);
     });
 }
 
@@ -145,10 +149,7 @@ export function searchAllUsers() {
               return false;
             }
           })
-          .autocomplete( "instance" )._renderItem = function( ul, item ) {
-            return $(`<li class="list-group-item"><i style="font-size:10px">dm-</i>${item.value}</li>`)
-              .appendTo( ul );
-          };
+          .autocomplete( "instance" )._renderItem = viewHtml(ul,item);
     });
 }
 
@@ -170,10 +171,7 @@ export function searchAll(){
               return false;
             }
           })
-          .autocomplete( "instance" )._renderItem = function( ul, item ) {
-            return $(`<li class="list-group-item">${item.value}</li>`)
-              .appendTo( ul );
-          };
+          .autocomplete( "instance" )._renderItem = viewHtml(ul,item);
     });
 }
 

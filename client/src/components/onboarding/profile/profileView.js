@@ -2,7 +2,7 @@ import createHTMLElement from '../onboarding-service';
 // import updateUserData from './profile/profileService';
 
 
-// export const profileViewHolderId = 'playGround';
+// export const profileViewHolderId = 'signupContainer';
 
 
 export default function profileViewComponent(data) {

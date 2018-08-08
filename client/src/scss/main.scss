@@ -17,7 +17,7 @@ body
 
 //////////////////////////////////////////////////////////////////////////////////////////////
 #chatLists{
-    background-color: #6B6E94;
+    background-color: #343a40 ;
    box-sizing: border-box;
    width: 100%;
    height: 100%;
@@ -27,33 +27,21 @@ body
    height: 100%;
    padding: 0;
    width: 100%;
+   overflow: auto;
 }
 
-#chatLists{
-   background-color: #6B6E94;
-   overflow-y: scroll;
-}
 
 #chatArea{
    padding: 0 5px 0 5px;
 }
 
-.containerWrapper {
-   padding: 0;
-   height: 91vh;
-}
 
 #messageBody{
     margin: 0;
     padding: 0;
-    height: 90%;
+    height: 94%;
     overflow-y: scroll;
 }
-
-#enteredCommand{
-    margin: 2px;
-}
-
 .container-fluid{
    padding: 0;
    text-align: center;
@@ -63,7 +51,8 @@ body
    width: 100%;
    text-align: center;
    padding: 0;
-   height: 80vh;
+   height: 93vh;
+   overflow: auto;
 }
 
 #enter{
@@ -131,10 +120,7 @@ body
  }
 
 .search{
-    border: groove;
     width: 20rem;
-    margin-top: 1rem;
-    font-family: cursive;
     font-weight: 200;
     border: 1px solid #919193;
 }
@@ -145,14 +131,6 @@ body
 
 #searchItem{
     border-color: white;
-}
-
-#seachHeader{
-    padding: 0rem;
-}
-
-.modal-header .close {
-    padding: 1.7rem;
 }
 
 #footerContent{
@@ -172,12 +150,6 @@ body
     border-radius: 0.8rem;
     border-top:none;
 }
-
-.form-control:focus{
-    border-color: white;
-    box-shadow:unset;
-}
-
 
 #searchResult {
     ul {
@@ -211,10 +183,6 @@ body
 
 .panComponents {
     margin: 30px 70px 30px 70px;
-}
-
-.btn {
-    margin: 10px;
 }
 
 #close {
@@ -349,4 +317,40 @@ label {
     min-height: 36px;
     max-height: 36px;
     padding-top: 8px;
+}
+
+.show-login, #searchContainer, #notificationFilter, #notificationCounter {
+    display: none;
+}
+
+.side-list {
+    margin: 0;
+    padding: 0;
+
+    li {
+        padding: 5px 10px;
+        list-style: none;
+        color: #fff;
+
+        &:first-child {
+            font-weight: bold;
+            border-bottom: 1px solid #000;
+            border-top: 1px solid #000;
+        }
+
+        span {
+            float: right;
+
+            .fa {
+                font-size: 16px;
+                padding-left: 5px;
+                color: #666;
+                cursor: pointer;
+
+                &:hover {
+                    color: #999;
+                }
+            }
+        }
+    }
 }
