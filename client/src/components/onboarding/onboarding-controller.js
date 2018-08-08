@@ -127,22 +127,25 @@ export function createTeamFormView() {
   if (teamName === '') {
     alert('Please provide a team name');
   } else {
-    const teamDetails = await getTeam(teamName);
-    console.log(teamDetails);
-    if(teamDetails === null || teamDetails === "")
-    {
-      const cTeamComp = createTeamComponent(teamName);
-      cTeamComp.querySelector('#form-submit-cancel').addEventListener('click', () => { createDashboardView(); });
-      cTeamComp.querySelector('#form-submit').addEventListener('click', () => {
-        submitTeamCreateForm();
-        createInvitationComponent();
+      getTeam(teamName).then((response) => {
+        console.log(response);
+        if(response === null || response === "")
+        {
+          const cTeamComp = createTeamComponent(teamName);
+          cTeamComp.querySelector('#form-submit-cancel').addEventListener('click', () => { createDashboardView(); });
+          cTeamComp.querySelector('#form-submit').addEventListener('click', () => {
+            submitTeamCreateForm();
+            createInvitationComponent();
+          });
+          $(`#${createTeamViewHolderId}`).empty().append(cTeamComp);
+        }
+        else
+        {
+          alert("Team "+teamName+" already exists");
+        }
+      }, (error) => {
+        console.log(error);
       });
-      $(`#${createTeamViewHolderId}`).empty().append(cTeamComp);
-    }
-    else
-    {
-      alert("Team "+teamName+" already exists");
-    }
   }
 }
 
