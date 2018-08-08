@@ -2,7 +2,7 @@ import {searchAllChannels, searchAllUsers,getAllChannels,getAllUsers, searchAll,
 import globallist from './service';
 
 $(document).on("click", "#searchChannel", function () {
-    let teamId = $(this).data('teamID').toString();
+    let teamId = $(this).data('teamid').toString();
     $("#searchTitle").html("Search Channel");
     getAllChannels(teamId);
     searchAllChannels();
