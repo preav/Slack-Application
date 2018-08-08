@@ -1,13 +1,14 @@
 import 'jquery';
 import 'jquery-ui/ui/widgets/sortable';
+
+import 'jquery-ui/ui/widgets/autocomplete';
+
 import 'popper.js';
 import 'bootstrap';
 import 'jquery-ui/ui/disable-selection';
 import '../scss/main.scss';
 import firebase from 'firebase';
-import {
-  getAllChannels, getAllUsers,
-} from './collaboration/userSetting/userSettingService';
+
 import {
   fnCreateChannel,
 } from './collaboration/adminSetting/adminSettingService';
@@ -45,10 +46,22 @@ import './notifications/notification-controller';
 import './notifications/firebase';
 
 
+import '../components/search/controller';
+
+import '../../../firebase/firebase';
+import { hitEnter } from './slackbot/command-line';
+
 require('font-awesome/css/font-awesome.css');
 
-
-jQuery(document).ready(() => {
-  getAllChannels();
-  getAllUsers();
+$("#enteredCommand").emojioneArea({
+  inline: false,
+  events: {
+      keypress: function (editor, event) {
+          if (event.which == 13) {
+              event.preventDefault();
+              var enteredValue = $('#enteredCommand').data("emojioneArea").getText();;
+              hitEnter(enteredValue);
+          }
+      }
+  }
 });

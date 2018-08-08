@@ -1,6 +1,15 @@
 const assert = require('chai').assert;
 const app = require('../app');
+const notification = require('./components/notification/dateFilterTestcontroller');
 
+describe('notification', function () {
+        it('its return type string', function () {
+            let result = notification.notificationDateFilter('03/04/3018','08/09/2013');
+            assert.typeOf(result, 'string');
+        });
+  
+
+});
 describe('App', function () {
     describe('sayHello', function () {
         it('app should return hello', function () {

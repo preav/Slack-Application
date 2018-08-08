@@ -3,18 +3,45 @@ import { dashboardComponent, dashboardViewHolderId } from './dashboard/dashboard
 import { createTeamViewHolderId, createTeamComponent } from './team-create/team-create-view';
 import { inivitationViewHolderId, invitationComponent, mailSentBody } from './invitation/invitation-view';
 import { Email } from './invitation/smtp';
-import { submitTeamCreateForm } from './team-create/team-create-service';
+import { submitTeamCreateForm, getTeam } from './team-create/team-create-service';
 import profileViewComponent from './profile/profileView';
-import { getCurrentUserData, updateUserData } from './profile/profileService';
+import { getCurrentUserData, saveUpdateUserProfile } from './profile/profileService';
+import { checkAuthStateChange, gitLogin, gitLogout } from '../../../../firebase/git-login';
+import { saveUpdateUser, getCurrentUserDetails } from '../../../../firebase/onboarding-db';
+import store from './profileReducer';
+import { getAllChannels, getAllUsers } from '../collaboration/userSetting/userSettingService';
 
 
+
+store.subscribe(() =>{  
+  var currentState = store.getState();   
+  localStorage["current_user"] = JSON.stringify(currentState);    
+ });
+
+
+
+const getUrlParameter = function getUrlParameter(sParam) {
+  const sPageURL = decodeURIComponent(window.location.search.substring(1));
+  const sURLVariables = sPageURL.split('&');
+  let sParameterName;
+  let i;
+  for (i = 0; i < sURLVariables.length; i += 1) {
+    sParameterName = sURLVariables[i].split('=');
+
+    if (sParameterName[0] === sParam) {
+      return sParameterName[1] === undefined ? true : sParameterName[1];
+    }
+  }
+  return undefined;
+};
+const teamnameFromUrl = decodeURIComponent(getUrlParameter('teamname'));
 export function createInvitationComponent() {
   const form = document.getElementById('create-team-form');
   let teamName;
   Array.from(form.elements).forEach((element) => {
     // console.log(element.nodeName);
     // console.log(`${element.name}=${element.value}`);
-    if (element.nodeName.toLowerCase() === 'input') {
+    if (element.id.toString() === 'teamName') {
       teamName = element.value;
       console.log(`teamname-${teamName}`);
     }
@@ -45,7 +72,8 @@ export function createInvitationComponent() {
       if (reciever !== '' && reciever !== undefined) {
         console.log(`dfdf-${reciever}`);
         recieverarr.push(reciever);
-        const redireURL = `https://www.asdf.com?teamname=${teamName}&useremail=${reciever}`;
+        const appUrl = window.location.href;
+        const redireURL = `${appUrl}?teamname=${teamName}`;// &useremail=${reciever}`;
         const output = `<p>Please click on the below provided link to join Slack</p><br/><a href="${redireURL}">Join Slack</a>`;
         Email.send('slackmailing@gmail.com',
           reciever,
@@ -66,23 +94,32 @@ export function createInvitationComponent() {
   return invitComponent;
 }
 
-
 document.querySelector('#user-profile').addEventListener('click', () => {
   // const tempCurrUsrData;
   getCurrentUserData().then((data) => {
     // const tempCurrUsrData = data;
-    console.log(`user data >>>>>>>>>>>>>>>>>>>>>${data.email}`);
+    console.log(`user data >>>>>>>>>>>>>>>>>>>>>${data.profilePicture}`);
     $(`#${dashboardViewHolderId}`).empty().append(profileViewComponent(data));
 
     $('#updateUserDataBtn').click(() => {
       const userName = document.getElementById('userName').value;
       const email = document.getElementById('mailId').value;
       console.log("calling update>>>>"+userName+"-----"+email);
-      updateUserData(userName, email);
-      console.log(data);
+      //saveUpdateUserProfile(userName, email);
+
+      saveUpdateUserProfile(userName, email).then((response) => {
+        console.log(response);
+      }, (error) => {
+        console.log(`Error in saving/updating user: ${error.toString()}`);
+      });
+    });
+
+    $('#closeBtn').click(() => {
+      $( ".editProfileDiv" ).hide();
     });
   });
 });
+
 
 export function createTeamFormView() {
   const teamName = document.getElementById('team-name').value;
@@ -91,28 +128,164 @@ export function createTeamFormView() {
   if (teamName === '') {
     alert('Please provide a team name');
   } else {
-    const cTeamComp = createTeamComponent(teamName);
-    // cTeamComp.querySelector('#form-submit-cancel').
-    // addEventListener('click', () => { createDashboardView(); });
-    cTeamComp.querySelector('#form-submit').addEventListener('click', () => {
-      submitTeamCreateForm();
-      createInvitationComponent();
-    });
-    $(`#${createTeamViewHolderId}`).empty().append(cTeamComp);
+    const teamDetails = await getTeam(teamName);
+    console.log(teamDetails);
+    if(teamDetails === null || teamDetails === "")
+    {
+      const cTeamComp = createTeamComponent(teamName);
+      cTeamComp.querySelector('#form-submit-cancel').addEventListener('click', () => { createDashboardView(); });
+      cTeamComp.querySelector('#form-submit').addEventListener('click', () => {
+        submitTeamCreateForm();
+        createInvitationComponent();
+      });
+      $(`#${createTeamViewHolderId}`).empty().append(cTeamComp);
+    }
+    else
+    {
+      alert("Team "+teamName+" already exists");
+    }
   }
 }
 
 export function homeComponentView() {
   const homeComp = homePageComponent();
-  // homeComp.querySelector('#git-login').addEventListener('click', () => { gitLogin(); });
   $(`#${homeViewHolderId}`).empty().append(homeComp);
+  document.querySelector('#git-login').addEventListener('click', () => { userGitLogin(); });
+  document.querySelector('#git-login').disabled = false;
+  // document.querySelector('#git-signout').classList.add('d-none');
+  // document.querySelector('#user-profile').classList.add('d-none');
+  $("#user-settings").addClass('d-none');
+  $('#signupContainer').show();
+  $('#chatContainer, #searchContainer, #notificationFilter, #notificationCounter').hide();
+
   return homeComp;
 }
 
 export function createDashboardView() {
   const dashComponent = dashboardComponent();
-  // dashComponent.querySelector('#git-signout').addEventListener('click', () => { gitLogout(); });
-  dashComponent.querySelector('#create-team').addEventListener('click', () => { createTeamFormView(); });
   $(`#${dashboardViewHolderId}`).empty().append(dashComponent);
+  document.querySelector('#create-team').addEventListener('click', () => { createTeamFormView(); });
+  document.querySelector('#git-signout').addEventListener('click', () => { userGitLogout(); });
+  // document.querySelector('#git-signout').classList.remove('d-none');
+  // document.querySelector('#user-profile').classList.remove('d-none');
+  $("#user-settings").removeClass('d-none');
+  $("#searchContainer, #notificationFilter, #notificationCounter").show();
+  getTeamsOfCurrentUser();
+
   return dashComponent;
 }
+
+export function getTeamsOfCurrentUser() {
+  const currentUser = getCurrentUserDetails();
+  currentUser.then((response) => {
+    if (response.teams != null && response.teams.length > 0) {
+      $('#teamsDisplayHeader').empty().append("You're already a member of these Slack workspaces:");
+      $('#teamsDisplay').empty();
+      $.each(response.teams, (k, v) => {
+        $('#teamsDisplay').append(`<a class="team-link" data-team="${v}">${v}</a>`);
+      });
+
+    }
+  }, (error) => {
+    console.log(error);
+    $('#teamsDisplayHeader').empty().append("You're not of part of any Slack workspace yet.");
+  });
+}
+
+$(document).on("click", ".team-link", function(){
+  var teamName = $(this).data('team');
+    $("#chatContainer").show();
+    $('#signupContainer').hide();
+    getAllChannels(teamName);
+    getAllUsers(teamName);
+  // alert($(this).data('team'));
+});
+
+export function userGitLogin() {
+  const loggedUser = gitLogin();
+  loggedUser.then((response) => {
+    // console.log(response);
+    
+    createDashboardView();
+
+    const userUID = response.user.uid;
+    store.dispatch({type: "LOGIN", value: response.user.uid});
+
+    const userData = {
+      username: response.additionalUserInfo.username,
+      accessToken: response.credential.accessToken,
+      name: response.user.displayName,
+      email: response.user.email,
+      profilePicture: response.user.photoURL,
+      phoneNumber: response.user.phoneNumber,
+      gitURL: response.additionalUserInfo.profile.html_url,
+      status: 'active',
+      permission: { write: false, read: true },
+    };
+
+    if (teamnameFromUrl != 'undefined' && teamnameFromUrl != "") {
+      console.log(`Adding to team: ${teamnameFromUrl}`);
+      let currentUserDetails = getCurrentUserDetails();
+
+      if(currentUserDetails.teams != 'undefined' &&
+        currentUserDetails.teams != "" &&
+        currentUserDetails.teams.length > 0) {
+        userData.teams =  [...currentUserDetails.teams, teamnameFromUrl];
+      }else{
+        userData.teams =  [teamnameFromUrl];
+      }
+
+      let team = {};
+      getTeam(teamnameFromUrl).then((res) => {
+        if(res.users != 'undefined' && res.users != "" && res.users > 0) {
+          team.users =  [...res.users, userUID];
+        }else{
+          team.users =  [userUID];
+        }
+
+        saveUpdateTeam(teamnameFromUrl, team);
+
+      }, (error) => {
+        console.log(error);
+      });
+    }
+
+    console.log(userData);
+    // Saving/updating current logged in user
+    saveUpdateUser(userUID, userData).then((res) => {
+      console.log(res);
+
+    }, (error) => {
+      console.log(`Error in saving/updating user: ${error.toString()}`);
+      gitLogout();
+      homeComponentView();
+    });
+  }, (error) => {
+    console.log(error.toString());
+    gitLogout();
+    homeComponentView();
+  });
+}
+
+export function userGitLogout() {
+  localStorage.removeItem("current_user");  
+  store.dispatch({type: "LOGOUT_USER", payload: {}});
+  gitLogout();
+  homeComponentView();
+}
+export function userLoginStatus() {
+  const u = checkAuthStateChange();
+  u.then((response) => {
+    console.log(response);
+    createDashboardView();
+  }, (error) => {
+    console.log(error.toString());
+    homeComponentView();
+  });
+}
+
+export function init() {
+  userLoginStatus();
+}
+
+window.onload = init;

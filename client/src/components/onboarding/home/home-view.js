@@ -1,6 +1,6 @@
 import createHTMLElement from '../onboarding-service';
 
-export const homeViewHolderId = 'playGround';
+export const homeViewHolderId = 'signupContainer';
 
 export function homePageComponent() {
   const homeComponent = createHTMLElement(

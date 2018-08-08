@@ -1,6 +1,6 @@
 import createHTMLElement from '../onboarding-service';
 
-export const createTeamViewHolderId = 'playGround';
+export const createTeamViewHolderId = 'signupContainer';
 
 export function createTeamComponent(teamName) {
   const createTeamElement = createHTMLElement(

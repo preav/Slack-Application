@@ -1,6 +1,6 @@
 import createHTMLElement from '../onboarding-service';
 
-export const inivitationViewHolderId = 'playGround';
+export const inivitationViewHolderId = 'signupContainer';
 
 export function invitationComponent() {
   const invitationElement = createHTMLElement(

@@ -1,24 +1,10 @@
-import { updateSlackBotTodolistResponse, createTodolistService } from './todolist-service';
-import { todolistCreateMsg } from './todolist-view';
-
-
-$(document).ready(() => {
-  $('.todoListItemsAction').on('click', function () {
-    const action = $(this).data('action');
-    if (action === 'checked') {
-      // check
-      $(this).toggleClass('fa-check-square-o text-success fa-square-o text-secondary').data('action', 'unchecked');
-      $(this).parents('li.list-group-item').removeClass('bg-light');
-    } else if (action === 'remove') {
-      // remove
-      $(this).parents('li.list-group-item').remove();
-    } else if (action === 'unchecked') {
-      // uncheck
-      $(this).toggleClass('fa-check-square-o text-success fa-square-o text-secondary').data('action', 'checked');
-      $(this).parents('li.list-group-item').addClass('bg-light');
-    }
-  });
-});
+import { 
+  updateSlackBotTodolistResponse, 
+  createTodolistService, 
+  getTodolistForUserService,
+  markOrUnmarkOrDelete
+} from './todolist-service';
+import { todolistCreateMsg, openTodolistView, newTodolistItemView } from './todolist-view';
 
 // function to create task in todolist
 export const createTodolistTask = function (widgetData) {
@@ -50,3 +36,62 @@ export const createTodolistTask = function (widgetData) {
     console.log(err, 'Error occured while creating reminder in firebase database..');
   });
 };
+
+// function to open todolist modal
+export const openTodolist = function (openWidgetType) {
+  const createWidgetEle = document.getElementById('playGround');
+  // calling service function to get todolist data from firebase database
+  getTodolistForUserService(openWidgetType.userId).then((todolistData) => {
+    // converting object to array
+    const todolistDataArray = Object.keys(todolistData).map(i => todolistData[i])
+    if (todolistDataArray.length != 0) {
+      const newRepowidget = document.createElement('div');
+      newRepowidget.innerHTML = openTodolistView();
+      createWidgetEle.appendChild(newRepowidget);
+
+      //to remove old todolist value from modal                
+      var oldDOMtodolist = document.getElementById('todolistElementsItem');
+      while(oldDOMtodolist.firstChild){
+        oldDOMtodolist.removeChild(oldDOMtodolist.firstChild);
+      }
+
+      // add each todolist task elements in modal list
+      for(var i = 0; i < todolistDataArray.length; i++){
+        const todolistElementsItem = document.getElementById('todolistElementsItem');
+        const newTodolistItem = document.createElement('div');
+        newTodolistItem.innerHTML = newTodolistItemView(todolistDataArray[i], openWidgetType.userId);
+        todolistElementsItem.appendChild(newTodolistItem);
+      }
+      $('#todolistModal').modal('show'); 
+    }
+  }).catch((err) => {
+    console.log(err, 'Error occured while retrieving chat history from firebase database..');
+  });
+};
+
+// action performed on todolist
+$(document).on('click', '.todoListItemsAction', function () {
+  const action = $(this).data('action');
+  if (action === 'checked') {
+    // check
+    // calling firebase database update
+    //console.log('oooooo', markOrUnmarkOrDelete(action, $(this).data('value'), $(this).data('userid')));
+    markOrUnmarkOrDelete(action, $(this).data('value'), $(this).data('userid'));
+
+
+    $(this).toggleClass('fa-check-square-o text-success fa-square-o text-secondary').data('action', 'unchecked');
+    $(this).parents('li.list-group-item').removeClass('bg-light');
+  } else if (action === 'remove') {
+    // remove
+    // calling firebase database update
+    markOrUnmarkOrDelete(action, $(this).data('value'), $(this).data('userid'));
+    $(this).parents('li.list-group-item').remove();
+  } else if (action === 'unchecked') {
+    // uncheck
+    // calling firebase database update
+    //console.log('hhhhh', markOrUnmarkOrDelete(action, $(this).data('value'), $(this).data('userid')) );
+    markOrUnmarkOrDelete(action, $(this).data('value'), $(this).data('userid'));
+    $(this).toggleClass('fa-check-square-o text-success fa-square-o text-secondary').data('action', 'checked');
+    $(this).parents('li.list-group-item').addClass('bg-light');
+  }
+});

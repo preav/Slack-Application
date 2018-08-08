@@ -1,4 +1,5 @@
 @import '~bootstrap/scss/bootstrap';
+@import '~jquery-ui/themes/base/autocomplete';
 @import '~emojionearea/dist/emojionearea.css';
 
 html
@@ -10,9 +11,54 @@ body
 {
    min-height:100%;
    background-color:#F4F9FA;
+   width: 100%;
+   box-sizing: border-box;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
+#chatLists{
+    background-color: #343a40 ;
+   box-sizing: border-box;
+   width: 100%;
+   height: 100%;
+}
+
+#chatLists, #chatArea{
+   height: 100%;
+   padding: 0;
+   width: 100%;
+   overflow: auto;
+}
+
+
+#chatArea{
+   padding: 0 5px 0 5px;
+}
+
+
+#messageBody{
+    margin: 0;
+    padding: 0;
+    height: 94%;
+    overflow-y: scroll;
+}
+.container-fluid{
+   padding: 0;
+   text-align: center;
+}
+
+.containerWrapper {
+   width: 100%;
+   text-align: center;
+   padding: 0;
+   height: 93vh;
+   overflow: auto;
+}
+
+#enter{
+   font-size: 0.8rem;
+}
+
 
 #container-root
 {            
@@ -69,17 +115,67 @@ body
 .avatar{
     border-radius: 50%;
     width: 80%;
-}
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-.footer {
-    position: fixed;
-    margin: auto;
-    bottom: 20px;
-    width: 80%;
     color: white;
     text-align: center;
  }
+
+.search{
+    width: 20rem;
+    font-weight: 200;
+    border: 1px solid #919193;
+}
+
+#contentHolder{
+    border-radius: 0.7rem;
+}
+
+#searchItem{
+    border-color: white;
+}
+
+#footerContent{
+    font-size: 11.84px;
+    color: rgb(102, 100, 100);
+}
+
+#searchFooter{
+    background-color: #f9f9f9;
+}
+
+.modal-content{
+    border-radius: 0.8rem;
+}
+
+.modal-footer{
+    border-radius: 0.8rem;
+    border-top:none;
+}
+
+#searchResult {
+    ul {
+        position: static !important;
+        margin: 0;
+        padding: 0;
+        border: 1px solid #ccc;
+
+        li {
+            list-style: none;
+            border-bottom: 1px solid #ccc;
+            padding: 5px 10px;
+            cursor: pointer;
+
+            &:hover {
+                background: #666;
+                color: #fff;
+            }
+        }
+    }
+}
+
+.ui-helper-hidden-accessible {
+    display: none;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
 
  .panBackground {
     background: wheat;
@@ -89,12 +185,8 @@ body
     margin: 30px 70px 30px 70px;
 }
 
-.btn {
-    margin: 10px;
-}
-
 #close {
-    float:right;
+    float: right;
     display:inline-block;
     padding:2px 5px;
 }
@@ -111,27 +203,6 @@ body
     height: 50px;
 }
 
-#playGround {
-    display: block;
-    border: 1px solid rgba(0,0,0,.15);
-    border-radius: 4px;
-    color: #333;
-    word-wrap: break-word;
-    margin: .5rem 0 .2rem;
-    font-size: .75rem;
-    line-height: 1.15rem;
-    background: #f9f9f9;
-    font-family: Monaco,Menlo,Consolas,"Courier New",monospace!important;
-    padding: .5rem;
-    -webkit-font-variant-ligatures: none;
-    font-variant-ligatures: none;
-    word-break: normal;
-    tab-size: 4;
-    float:left;
-    width:80%;
-    overflow-y: auto;
-    height: 600px;
-}
 
 .playGroungDiv-bot{
     background: wheat;
@@ -236,12 +307,50 @@ $border-radius: .25rem;
     margin: 0 auto;
 }
 
-input {
-    margin: .4rem;
-}
-
 label {
     display: inline-block;
     text-align: right;
     width: 20%;
+}
+
+.emojionearea .emojionearea-editor {
+    min-height: 36px;
+    max-height: 36px;
+    padding-top: 8px;
+}
+
+.show-login, #searchContainer, #notificationFilter, #notificationCounter {
+    display: none;
+}
+
+.side-list {
+    margin: 0;
+    padding: 0;
+
+    li {
+        padding: 5px 10px;
+        list-style: none;
+        color: #fff;
+
+        &:first-child {
+            font-weight: bold;
+            border-bottom: 1px solid #000;
+            border-top: 1px solid #000;
+        }
+
+        span {
+            float: right;
+
+            .fa {
+                font-size: 16px;
+                padding-left: 5px;
+                color: #666;
+                cursor: pointer;
+
+                &:hover {
+                    color: #999;
+                }
+            }
+        }
+    }
 }

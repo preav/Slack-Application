@@ -1,8 +1,10 @@
+import { database } from '../../../../../firebase/firebase';
 const firebase = require('firebase');
 
 // function to save calendar event into firebase database -- firebase
 export const createCalendarEventService = widgetData => new Promise((resolve, reject) => {
-  const collectionKey = firebase.database().ref('SlackXT/slackbot/calendar').push({
+  const collectionKey = database
+  .ref(`SlackXT/slackbot/${widgetData.userId}/calendar`).push({
     id: widgetData.id,
     commandEntered: widgetData.commandEntered,
     widgetName: widgetData.widgetName,
@@ -10,6 +12,7 @@ export const createCalendarEventService = widgetData => new Promise((resolve, re
     userId: widgetData.userId,
     creatDate: widgetData.creatDate,
     creatTime: widgetData.creatTime,
+    currentdateTime: widgetData.currentdateTime,
     botResponse: widgetData.botResponse,
   }).getKey();
 
@@ -30,6 +33,22 @@ export const updateSlackBotCalendarResponse = (widgetData, botResponse) => {
   widgetData.botResponse = botResponse;
   const updateCollectionKey = widgetData.id;
   const updates = {};
-  updates[`SlackXT/slackbot/calendar/${updateCollectionKey}`] = widgetData;
-  return firebase.database().ref().update(updates);
+  updates[`SlackXT/slackbot/${widgetData.userId}/calendar/${updateCollectionKey}`] = widgetData;
+  return database.ref().update(updates);
 };
+
+// function to get user's calendar list from firebase database -- firebase
+export const getCalendarForUserService = userId => new Promise((resolve, reject) => {
+  database.ref(`SlackXT/slackbot/${userId}/calendar`).once('value')
+  .then((snapshot) => {
+    const calendarListData = snapshot.val();
+    if (calendarListData !== '') {
+      console.log('calendar list retrieved successfully...', calendarListData);
+      resolve(calendarListData);
+    } else {
+      reject(new Error(`Error occured while retrieving calendar list for 
+        userId: ${userId} from firebase database.`));
+      console.log('There is error while retrieving calendar list from firebase database...');
+    }
+  });
+});

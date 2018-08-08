@@ -1,20 +1,19 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
-var config = {
-    entry: ['./client/src/components/notifications/notification-main.js',
-        'jquery', 'babel-polyfill',
-        './client/src/components/index.js',
-        './client/src/scss/main.scss'
-
-    ],
-    output: {
-        path: __dirname + '/dist',
-        filename: 'bundle.js'
-    },
-    module: {
-        rules: [
-            /*{
+const config = {
+  entry: ['./client/src/components/notifications/notification-main.js',
+  'jquery', 'babel-polyfill',
+    './client/src/components/index.js',
+    './client/src/scss/main.scss'
+  ],
+  output: {
+    path: __dirname + '/dist',
+    filename: 'bundle.js'
+  },
+  module: {
+    rules: [
+      /*{
         enforce: 'pre',
         test: /\.js?$/,
         exclude: [/node_modules/],
