@@ -1,6 +1,6 @@
 // import firebase from 'firebase';
-import appConfig from './appConfig';
-import { firebase, database } from '../../../../firebase/firebase';
+// import appConfig from './appConfig';
+// import { firebase, database } from '../../../../firebase/firebase';
 
 
 // const ref = firebase.database().ref('team001');
@@ -17,20 +17,20 @@ import { firebase, database } from '../../../../firebase/firebase';
 
 
 // firebase.initializeApp(appConfig);
-const rootRef = database.ref('team6');
-const newRoot = rootRef.child('channels');
+// const rootRef = database.ref('team6');
+// const newRoot = rootRef.child('channels');
 
 
-newRoot.on('value', (snapshot) => {
-    snapshot.forEach((_child) => {
-        const society = _child.key;
-        if (society === 'text') {
-            const soc = _child.val();
-            // console.log(society);
-            console.log(soc);
-        }
-    });
-});
+// newRoot.on('value', (snapshot) => {
+//     snapshot.forEach((_child) => {
+//         const society = _child.key;
+//         if (society === 'text') {
+//             const soc = _child.val();
+//             // console.log(society);
+//             console.log(soc);
+//         }
+//     });
+// });
 
 // return document.querySelectorAll('#mes')[0];
 // export default func();
