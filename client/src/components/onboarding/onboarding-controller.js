@@ -64,7 +64,7 @@ export function createInvitationComponent() {
   });
   invitComponent.querySelector('.skip_button').addEventListener('click', (e) => {
     e.preventDefault();
-    proceedNext(teamName);
+    proceedNext(teamName,`Skipped inivitation for team ${teamName}`);
   });
   invitComponent.querySelector('#submit').addEventListener('click', (e) => {
     e.preventDefault();
@@ -91,14 +91,14 @@ export function createInvitationComponent() {
       console.log(recieverarr);
       //const sentmailComponent = mailSentBody();
       //$(`#${inivitationViewHolderId}`).empty().append(sentmailComponent);
-      proceedNext(`Inivitation for team ${teamName} sent to all the recipients`);
+      proceedNext(teamName,`Inivitation for team ${teamName} sent to all the recipients`);
     }
   });
   $(`#${inivitationViewHolderId}`).empty().append(invitComponent);
   return invitComponent;
 }
-export function proceedNext(input) {
-  alert(input);
+export function proceedNext(teamName,inputmessage) {
+  alert(inputmessage);
   //do next
 }
 document.querySelector('#user-profile').addEventListener('click', () => {
