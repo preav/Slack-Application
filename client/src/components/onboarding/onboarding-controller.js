@@ -7,18 +7,14 @@ import { submitTeamCreateForm, getTeam } from './team-create/team-create-service
 import profileViewComponent from './profile/profileView';
 import { getCurrentUserData, saveUpdateUserProfile } from './profile/profileService';
 import { checkAuthStateChange, gitLogin, gitLogout } from '../../../../firebase/git-login';
-import { saveUpdateUser, getCurrentUserDetails } from '../../../../firebase/onboarding-db';
-import store from './profileReducer';
+import { saveUpdateUser, getCurrentUserDetails, saveUpdateTeam } from '../../../../firebase/onboarding-db';
 import { getAllChannels, getAllUsers } from '../collaboration/userSetting/userSettingService';
-
-
+import store from './profileReducer';
 
 store.subscribe(() =>{  
   var currentState = store.getState();   
   localStorage["current_user"] = JSON.stringify(currentState);    
  });
-
-
 
 const getUrlParameter = function getUrlParameter(sParam) {
   const sPageURL = decodeURIComponent(window.location.search.substring(1));
@@ -35,6 +31,9 @@ const getUrlParameter = function getUrlParameter(sParam) {
   return undefined;
 };
 const teamnameFromUrl = decodeURIComponent(getUrlParameter('teamname'));
+const url = window.location.href;
+console.log(teamnameFromUrl);
+
 export function createInvitationComponent() {
   const form = document.getElementById('create-team-form');
   let teamName;
@@ -128,22 +127,25 @@ export function createTeamFormView() {
   if (teamName === '') {
     alert('Please provide a team name');
   } else {
-    const teamDetails = await getTeam(teamName);
-    console.log(teamDetails);
-    if(teamDetails === null || teamDetails === "")
-    {
-      const cTeamComp = createTeamComponent(teamName);
-      cTeamComp.querySelector('#form-submit-cancel').addEventListener('click', () => { createDashboardView(); });
-      cTeamComp.querySelector('#form-submit').addEventListener('click', () => {
-        submitTeamCreateForm();
-        createInvitationComponent();
+      getTeam(teamName).then((response) => {
+        console.log(response);
+        if(response === null || response === "")
+        {
+          const cTeamComp = createTeamComponent(teamName);
+          cTeamComp.querySelector('#form-submit-cancel').addEventListener('click', () => { createDashboardView(); });
+          cTeamComp.querySelector('#form-submit').addEventListener('click', () => {
+            submitTeamCreateForm();
+            createInvitationComponent();
+          });
+          $(`#${createTeamViewHolderId}`).empty().append(cTeamComp);
+        }
+        else
+        {
+          alert("Team "+teamName+" already exists");
+        }
+      }, (error) => {
+        console.log(error);
       });
-      $(`#${createTeamViewHolderId}`).empty().append(cTeamComp);
-    }
-    else
-    {
-      alert("Team "+teamName+" already exists");
-    }
   }
 }
 
@@ -221,45 +223,72 @@ export function userGitLogin() {
       gitURL: response.additionalUserInfo.profile.html_url,
       status: 'active',
       permission: { write: false, read: true },
+      teams: []
     };
 
     if (teamnameFromUrl != 'undefined' && teamnameFromUrl != "") {
       console.log(`Adding to team: ${teamnameFromUrl}`);
-      let currentUserDetails = getCurrentUserDetails();
-
-      if(currentUserDetails.teams != 'undefined' &&
-        currentUserDetails.teams != "" &&
-        currentUserDetails.teams.length > 0) {
-        userData.teams =  [...currentUserDetails.teams, teamnameFromUrl];
-      }else{
-        userData.teams =  [teamnameFromUrl];
-      }
-
-      let team = {};
-      getTeam(teamnameFromUrl).then((res) => {
-        if(res.users != 'undefined' && res.users != "" && res.users > 0) {
-          team.users =  [...res.users, userUID];
-        }else{
-          team.users =  [userUID];
+      let currentUserDetails = getCurrentUserDetails().then((response) => {
+        if(response === "")
+        {
+          console.log("New user");
+          userData.teams.push(teamnameFromUrl);
+        }
+        else
+        {
+          console.log("Updating user teams");
+          if(currentUserDetails.teams != 'undefined' && currentUserDetails.teams != "" && currentUserDetails.teams != null) {
+            userData.teams.push(...currentUserDetails.teams, teamnameFromUrl);
+          }else{
+            userData.teams.push(teamnameFromUrl);
+          }
         }
 
-        saveUpdateTeam(teamnameFromUrl, team);
+        let team = {};
+        getTeam(teamnameFromUrl).then((res) => {
+          if(res.users != 'undefined' && res.users != "" && res.users != null) {
+            team.users =  [...res.users, userUID];
+          }else{
+            team.users =  [userUID];
+          }
+  
+          console.log(teamnameFromUrl);
+          console.log(team);
+          saveUpdateTeam(teamnameFromUrl, team).then((r) => {console.log(r)});
+        }, (error) => {
+          console.log(error);
+        });
 
+
+        //console.log(userData);
+        // Saving/updating current logged in user
+        saveUpdateUser(userUID, userData).then((res) => {
+          console.log(res);
+          getTeamsOfCurrentUser();
+        }, (error) => {
+          console.log(`Error in saving/updating user: ${error.toString()}`);
+          gitLogout();
+          homeComponentView();
+        });
+        
+      }, (err) => {
+        console.log(err)
+      });
+    }
+    else
+    {
+      //console.log(userData);
+      // Saving/updating current logged in user
+      saveUpdateUser(userUID, userData).then((res) => {
+        console.log(res);
       }, (error) => {
-        console.log(error);
+        console.log(`Error in saving/updating user: ${error.toString()}`);
+        gitLogout();
+        homeComponentView();
       });
     }
 
-    console.log(userData);
-    // Saving/updating current logged in user
-    saveUpdateUser(userUID, userData).then((res) => {
-      console.log(res);
-
-    }, (error) => {
-      console.log(`Error in saving/updating user: ${error.toString()}`);
-      gitLogout();
-      homeComponentView();
-    });
+    window.history.pushState("object or string", "Slack", url.split("?")[0]);
   }, (error) => {
     console.log(error.toString());
     gitLogout();
