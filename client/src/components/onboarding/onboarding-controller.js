@@ -5,6 +5,7 @@ import { inivitationViewHolderId, invitationComponent, mailSentBody } from './in
 import { Email } from './invitation/smtp';
 import { submitTeamCreateForm } from './team-create/team-create-service';
 import profileViewComponent from './profile/profileView';
+import { getCurrentUserData, updateUserData } from './profile/profileService';
 
 
 export function createInvitationComponent() {
@@ -64,11 +65,24 @@ export function createInvitationComponent() {
   $(`#${inivitationViewHolderId}`).empty().append(invitComponent);
   return invitComponent;
 }
-document.querySelector('#user-profile').addEventListener('click', () => {
-  $(`#${dashboardViewHolderId}`).empty().append(profileViewComponent());
-  // getUserInfo();
-});
 
+
+document.querySelector('#user-profile').addEventListener('click', () => {
+  // const tempCurrUsrData;
+  getCurrentUserData().then((data) => {
+    // const tempCurrUsrData = data;
+    console.log(`user data >>>>>>>>>>>>>>>>>>>>>${data.email}`);
+    $(`#${dashboardViewHolderId}`).empty().append(profileViewComponent(data));
+
+    $('#updateUserDataBtn').click(() => {
+      const userName = document.getElementById('userName').value;
+      const email = document.getElementById('mailId').value;
+      console.log("calling update>>>>"+userName+"-----"+email);
+      updateUserData(userName, email);
+      console.log(data);
+    });
+  });
+});
 
 export function createTeamFormView() {
   const teamName = document.getElementById('team-name').value;
