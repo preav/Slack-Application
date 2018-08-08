@@ -11,9 +11,9 @@ import { saveUpdateUser, getCurrentUserDetails, saveUpdateTeam } from '../../../
 import { getAllChannels, getAllUsers } from '../collaboration/userSetting/userSettingService';
 import store from './profileReducer';
 
-store.subscribe(() =>{  
-  var currentState = store.getState();   
-  localStorage["current_user"] = JSON.stringify(currentState);    
+store.subscribe(() =>{
+  var currentState = store.getState();
+  localStorage["current_user"] = JSON.stringify(currentState);
  });
 
 const getUrlParameter = function getUrlParameter(sParam) {
@@ -62,6 +62,10 @@ export function createInvitationComponent() {
       $(this).parent('div').remove(); x -= 1;
     });
   });
+  invitComponent.querySelector('.skip_button').addEventListener('click', (e) => {
+    e.preventDefault();
+    proceedNext(teamName,`Skipped inivitation for team ${teamName}`);
+  });
   invitComponent.querySelector('#submit').addEventListener('click', (e) => {
     e.preventDefault();
     const recieverarr = [];
@@ -85,14 +89,18 @@ export function createInvitationComponent() {
     });
     if (typeof recieverarr !== 'undefined' && recieverarr.length > 0) {
       console.log(recieverarr);
-      const sentmailComponent = mailSentBody();
-      $(`#${inivitationViewHolderId}`).empty().append(sentmailComponent);
+      //const sentmailComponent = mailSentBody();
+      //$(`#${inivitationViewHolderId}`).empty().append(sentmailComponent);
+      proceedNext(teamName,`Inivitation for team ${teamName} sent to all the recipients`);
     }
   });
   $(`#${inivitationViewHolderId}`).empty().append(invitComponent);
   return invitComponent;
 }
-
+export function proceedNext(teamName,inputmessage) {
+  alert(inputmessage);
+  //do next
+}
 document.querySelector('#user-profile').addEventListener('click', () => {
   // const tempCurrUsrData;
   getCurrentUserData().then((data) => {
@@ -207,7 +215,7 @@ export function userGitLogin() {
   const loggedUser = gitLogin();
   loggedUser.then((response) => {
     // console.log(response);
-    
+
     createDashboardView();
 
     const userUID = response.user.uid;
@@ -251,7 +259,7 @@ export function userGitLogin() {
           }else{
             team.users =  [userUID];
           }
-  
+
           console.log(teamnameFromUrl);
           console.log(team);
           saveUpdateTeam(teamnameFromUrl, team).then((r) => {console.log(r)});
@@ -270,7 +278,7 @@ export function userGitLogin() {
           gitLogout();
           homeComponentView();
         });
-        
+
       }, (err) => {
         console.log(err)
       });
@@ -297,7 +305,7 @@ export function userGitLogin() {
 }
 
 export function userGitLogout() {
-  localStorage.removeItem("current_user");  
+  localStorage.removeItem("current_user");
   store.dispatch({type: "LOGOUT_USER", payload: {}});
   gitLogout();
   homeComponentView();
