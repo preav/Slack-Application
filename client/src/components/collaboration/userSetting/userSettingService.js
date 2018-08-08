@@ -1,5 +1,8 @@
- import {firebase, database} from '../../../../../firebase/firebase';
+ import firebase from 'firebase';
+import '../../../../../firebase/firebase-config';
+import {clickChannel} from '../../../../src/components/chats/chat-service';
 
+let database = firebase.database();
 const jQuery = require('jquery');
 
 function getAllChannels() {
@@ -11,11 +14,11 @@ function getAllChannels() {
     let getAllContactHtml = '';
     const abc = getAllContactValue.map((contactVal) => {
       const conName = Object.keys(contactVal);
-      getAllContactHtml += `
+      getAllContactHtml = `
         <div>
             <div class="buttom-panel text-center mt-1">
-              <div id="contactDetails">${conName}</div>
-                  <div channelId='${conName}'>
+              <div id=${conName} class="channels">${conName}</div>
+                  <div id="${conName}channel">
                       <button type="button" class="muteChannel">mute Channel</button>
                       <button type="button" class="unmuteChannel">unmute Channel</buttob>
                       <button type="button" class="removeChannel">remove Channel</button>
@@ -24,13 +27,17 @@ function getAllChannels() {
             </div>
         </div>
         `;
-      return getAllContactHtml;
+      //return getAllContactHtml;
+      jQuery('#showContactInformation').append(getAllContactHtml);
+      document.getElementById(`${conName}`).addEventListener('click', clickChannel);
     });
-    jQuery('#showContactInformation').append(getAllContactHtml);
   });
 }
 document.getElementById('userContacts').addEventListener('click', getAllChannels);
 
+// function clickChannel() {
+//   console.log('channel clicked');
+// }
 function getAllUsers() {
   const userContactref = database.ref('team-6').child('directMessages').child('users');
   userContactref.once('value', (snapshot) => {

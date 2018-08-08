@@ -1,4 +1,6 @@
 @import '~bootstrap/scss/bootstrap';
+@import '~jquery-ui/themes/base/autocomplete';
+@import '~emojionearea/dist/emojionearea.css';
 
 html
 {
@@ -9,9 +11,65 @@ body
 {
    min-height:100%;
    background-color:#F4F9FA;
+   width: 100%;
+   box-sizing: border-box;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
+#chatLists{
+    background-color: #6B6E94;
+   box-sizing: border-box;
+   width: 100%;
+   height: 100%;
+}
+
+#chatLists, #chatArea{
+   height: 100%;
+   padding: 0;
+   width: 100%;
+}
+
+#chatLists{
+   background-color: #6B6E94;
+   overflow-y: scroll;
+}
+
+#chatArea{
+   padding: 0 5px 0 5px;
+}
+
+.containerWrapper {
+   padding: 0;
+   height: 91vh;
+}
+
+#messageBody{
+    margin: 0;
+    padding: 0;
+    height: 90%;
+    overflow-y: scroll;
+}
+
+#enteredCommand{
+    margin: 2px;
+}
+
+.container-fluid{
+   padding: 0;
+   text-align: center;
+}
+
+.containerWrapper {
+   width: 100%;
+   text-align: center;
+   padding: 0;
+   height: 80vh;
+}
+
+#enter{
+   font-size: 0.8rem;
+}
+
 
 #container-root
 {            
@@ -68,18 +126,84 @@ body
 .avatar{
     border-radius: 50%;
     width: 80%;
-}
-//////////////////////////////////////////////////////////////////////////////////////////////
-
-.footer {
-    position: fixed;
-    margin: auto;
-    bottom: 20px;
-    width: 80%;
     color: white;
     text-align: center;
  }
 
+.search{
+    border: groove;
+    width: 20rem;
+    margin-top: 1rem;
+    font-family: cursive;
+    font-weight: 200;
+    border: 1px solid #919193;
+}
+
+#contentHolder{
+    border-radius: 0.7rem;
+}
+
+#searchItem{
+    border-color: white;
+}
+
+#seachHeader{
+    padding: 0rem;
+}
+
+.modal-header .close {
+    padding: 1.7rem;
+}
+
+#footerContent{
+    font-size: 11.84px;
+    color: rgb(102, 100, 100);
+}
+
+#searchFooter{
+    background-color: #f9f9f9;
+}
+
+.modal-content{
+    border-radius: 0.8rem;
+}
+
+.modal-footer{
+    border-radius: 0.8rem;
+    border-top:none;
+}
+
+.form-control:focus{
+    border-color: white;
+    box-shadow:unset;
+}
+
+
+#searchResult {
+    ul {
+        position: static !important;
+        margin: 0;
+        padding: 0;
+        border: 1px solid #ccc;
+
+        li {
+            list-style: none;
+            border-bottom: 1px solid #ccc;
+            padding: 5px 10px;
+            cursor: pointer;
+
+            &:hover {
+                background: #666;
+                color: #fff;
+            }
+        }
+    }
+}
+
+.ui-helper-hidden-accessible {
+    display: none;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////
 
  .panBackground {
     background: wheat;
@@ -94,7 +218,7 @@ body
 }
 
 #close {
-    float:right;
+    float: right;
     display:inline-block;
     padding:2px 5px;
 }
@@ -111,27 +235,6 @@ body
     height: 50px;
 }
 
-#playGround {
-    display: block;
-    border: 1px solid rgba(0,0,0,.15);
-    border-radius: 4px;
-    color: #333;
-    word-wrap: break-word;
-    margin: .5rem 0 .2rem;
-    font-size: .75rem;
-    line-height: 1.15rem;
-    background: #f9f9f9;
-    font-family: Monaco,Menlo,Consolas,"Courier New",monospace!important;
-    padding: .5rem;
-    -webkit-font-variant-ligatures: none;
-    font-variant-ligatures: none;
-    word-break: normal;
-    tab-size: 4;
-    float:left;
-    width:80%;
-    overflow-y: auto;
-    height: 600px;
-}
 
 .playGroungDiv-bot{
     background: wheat;
@@ -236,12 +339,14 @@ $border-radius: .25rem;
     margin: 0 auto;
 }
 
-input {
-    margin: .4rem;
-}
-
 label {
     display: inline-block;
     text-align: right;
     width: 20%;
+}
+
+.emojionearea .emojionearea-editor {
+    min-height: 36px;
+    max-height: 36px;
+    padding-top: 8px;
 }
