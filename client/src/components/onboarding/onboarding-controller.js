@@ -9,14 +9,28 @@ import { getCurrentUserData, saveUpdateUserProfile } from './profile/profileServ
 import { checkAuthStateChange, gitLogin, gitLogout } from '../../../../firebase/git-login';
 import { saveUpdateUser, getCurrentUserDetails } from '../../../../firebase/onboarding-db';
 
+const getUrlParameter = function getUrlParameter(sParam) {
+  const sPageURL = decodeURIComponent(window.location.search.substring(1));
+  const sURLVariables = sPageURL.split('&');
+  let sParameterName;
+  let i;
+  for (i = 0; i < sURLVariables.length; i += 1) {
+    sParameterName = sURLVariables[i].split('=');
 
+    if (sParameterName[0] === sParam) {
+      return sParameterName[1] === undefined ? true : sParameterName[1];
+    }
+  }
+  return undefined;
+};
+const teamnameFromUrl = decodeURIComponent(getUrlParameter('teamname'));
 export function createInvitationComponent() {
   const form = document.getElementById('create-team-form');
   let teamName;
   Array.from(form.elements).forEach((element) => {
     // console.log(element.nodeName);
     // console.log(`${element.name}=${element.value}`);
-    if (element.nodeName.toLowerCase() === 'input') {
+    if (element.id.toString() === 'teamName') {
       teamName = element.value;
       console.log(`teamname-${teamName}`);
     }
@@ -47,7 +61,8 @@ export function createInvitationComponent() {
       if (reciever !== '' && reciever !== undefined) {
         console.log(`dfdf-${reciever}`);
         recieverarr.push(reciever);
-        const redireURL = `https://www.asdf.com?teamname=${teamName}&useremail=${reciever}`;
+        const appUrl = window.location.href;
+        const redireURL = `${appUrl}?teamname=${teamName}`;// &useremail=${reciever}`;
         const output = `<p>Please click on the below provided link to join Slack</p><br/><a href="${redireURL}">Join Slack</a>`;
         Email.send('slackmailing@gmail.com',
           reciever,
@@ -68,7 +83,6 @@ export function createInvitationComponent() {
   return invitComponent;
 }
 
-
 document.querySelector('#user-profile').addEventListener('click', () => {
   // const tempCurrUsrData;
   getCurrentUserData().then((data) => {
@@ -87,10 +101,10 @@ document.querySelector('#user-profile').addEventListener('click', () => {
       }, (error) => {
         console.log(`Error in saving/updating user: ${error.toString()}`);
       });
-    });    
+    });
 
-    $('#closeBtn').click(() => {    
-      $( ".editProfileDiv" ).hide();      
+    $('#closeBtn').click(() => {
+      $( ".editProfileDiv" ).hide();
     });
   });
 });
@@ -164,20 +178,43 @@ export function userGitLogin() {
   loggedUser.then((response) => {
     // console.log(response);
     createDashboardView();
+    const teamArray = [];
 
+        if (teamnameFromUrl !== undefined && teamnameFromUrl !== '') {
+          console.log('TEAM ASSIGNED');
+          teamArray.push(teamnameFromUrl);
+        }
     const userUID = response.user.uid;
-    const userData = {
-      username: response.additionalUserInfo.username,
-      accessToken: response.credential.accessToken,
-      name: response.user.displayName,
-      email: response.user.email,
-      profilePicture: response.user.photoURL,
-      phoneNumber: response.user.phoneNumber,
-      gitURL: response.additionalUserInfo.profile.html_url,
-      teams: ['team-one', 'team-two'],
-      status: 'active',
-      permission: { write: false, read: true },
-    };
+    let userData;
+    if(teamArray.length > 0){
+      console.log(`Data Array`);
+      userData = {
+         username: response.additionalUserInfo.username,
+         accessToken: response.credential.accessToken,
+         name: response.user.displayName,
+         email: response.user.email,
+         profilePicture: response.user.photoURL,
+         phoneNumber: response.user.phoneNumber,
+         gitURL: response.additionalUserInfo.profile.html_url,
+         status: 'active',
+         permission: { write: false, read: true },
+       };
+    }else{
+      console.log(`Empty Array`);
+      userData= {
+         username: response.additionalUserInfo.username,
+         accessToken: response.credential.accessToken,
+         name: response.user.displayName,
+         email: response.user.email,
+         profilePicture: response.user.photoURL,
+         phoneNumber: response.user.phoneNumber,
+         gitURL: response.additionalUserInfo.profile.html_url,
+         teams: teamArray,
+         status: 'active',
+         permission: { write: false, read: true },
+       };
+    }
+
 
     // Saving/updating current logged in user
     saveUpdateUser(userUID, userData).then((res) => {

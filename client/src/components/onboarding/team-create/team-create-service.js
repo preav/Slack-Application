@@ -32,9 +32,18 @@ export function submitTeamCreateForm() {
 
   getCurrentUserDetails().then((response) => {
     // console.log(response);
-    const userData = {
-      teams: [...response.teams, teamName],
-    };
+    const teams=response.teams;
+    let userData;
+    if(teams!==undefined&&teams!==""&&teams.length > 0){
+      userData = {
+        teams: [...response.teams, teamName],
+      };
+    }else{
+      userData = {
+        teams: [teamName],
+      };
+    }
+
     saveUpdateUser(userUID, userData).then((res) => {
       console.log(res);
     }, (err) => {
