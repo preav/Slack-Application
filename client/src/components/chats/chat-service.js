@@ -6,6 +6,7 @@ import moment from 'moment';
 var markdown = require("markdown").markdown;
 import '../../../../firebase/firebase-config';
 import firebase from 'firebase';
+import { getCurrentUserDetails } from '../../../../firebase/onboarding-db'
 
 const store = createStore(chat);
 
@@ -15,6 +16,11 @@ const store = createStore(chat);
 let sentTo = 'userID_triveni';
 let userDisplayName = 'userID_saket';
 let forChannel = false;
+
+// getCurrentUserDetails().then((response) => {
+//     console.log('userDetails', response);
+
+// });
 
 // Get Current User Details
 let currentUser = firebase.auth().currentUser;
@@ -37,13 +43,50 @@ export function clickChannel(e) {
     forChannel = true;
     console.log(e.target.id);
     sentTo = e.target.id;
-    renderChatHistory();
+    //renderChatHistory();
+
+    console.log(sentTo);
+    receiverRef = firebase.database().ref('team-6').child('channels').child(sentTo).child('messages');
+    receiverRef.on('value', function (snapshot) {
+        let chatBox = document.getElementById('messageBody');
+        console.log(snapshot.val());
+        chatBox.innerHTML = '';
+        snapshot.forEach(function (childSnapshot) {
+            let childData = childSnapshot.val();
+            console.log(childData);
+            if (childData.sentTo === sentTo) {
+                const paraElement = document.createElement('p');
+                const formattedTime = moment(childData.date).fromNow();
+                paraElement.innerHTML = `<strong>${childData.sentBy}</strong> - ${formattedTime}<br>
+                                         ${childData.messageText}`;
+                chatBox.appendChild(paraElement);
+            }
+        });
+    });
 }
 
 export function clickUser(e) {
     sentTo = e.target.id;
     console.log(sentTo);
-    renderChatHistory();
+    //renderChatHistory();
+    let receiverRef = firebase.database().ref('team-6').child('directMessages').child('users').child(sentTo).child('messages');
+    receiverRef.on('value', function (snapshot) {
+        let chatBox = document.getElementById('messageBody');
+        console.log(snapshot.val());
+        chatBox.innerHTML = '';
+        snapshot.forEach(function (childSnapshot) {
+            let childData = childSnapshot.val();
+            console.log(childData);
+            if ((childData.sentBy === sentTo || childData.sentTo === sentTo) &&
+                (childData.sentBy === userDisplayName || childData.sentTo === userDisplayName)) {
+                const paraElement = document.createElement('p');
+                const formattedTime = moment(childSnapshot.val().date).fromNow();
+                paraElement.innerHTML = `<strong>${childSnapshot.val().sentBy}</strong> - ${formattedTime}<br>
+                                        ${childSnapshot.val().messageText}`;
+                chatBox.appendChild(paraElement);
+            }
+        });
+    });
 }
 
 // get Send Button
@@ -68,13 +111,52 @@ btnSubmit.addEventListener('click', evt => {
     // If message is sent to a Channel, store message only under the Channel
     if (forChannel) {
         receiverRef = firebase.database().ref('team-6').child('channels').child(sentTo).child('messages');
+
+        // push Message to DB
         receiverRef.push(msg);
+
+        // Render the Messages
+        receiverRef.on('value', function (snapshot) {
+            let chatBox = document.getElementById('messageBody');
+            console.log(snapshot.val());
+            chatBox.innerHTML = '';
+            snapshot.forEach(function (childSnapshot) {
+                let childData = childSnapshot.val();
+                console.log(childData);
+                if (childData.sentTo === sentTo) {
+                    const paraElement = document.createElement('p');
+                    const formattedTime = moment(childData.date).fromNow();
+                    paraElement.innerHTML = `<strong>${childData.sentBy}</strong> - ${formattedTime}<br>
+                                             ${childData.messageText}`;
+                    chatBox.appendChild(paraElement);
+                }
+            });
+        });
     }
     else { // If it's Direct Messages, store message under both the Sender and Receiver nodes
         senderRef = firebase.database().ref('team-6').child('directMessages').child('users').child(userDisplayName).child('messages');
         receiverRef = firebase.database().ref('team-6').child('directMessages').child('users').child(sentTo).child('messages');
         senderRef.push(msg);
         receiverRef.push(msg);
+
+        // Render the Messages
+        receiverRef.on('value', function (snapshot) {
+            let chatBox = document.getElementById('messageBody');
+            console.log(snapshot.val());
+            chatBox.innerHTML = '';
+            snapshot.forEach(function (childSnapshot) {
+                let childData = childSnapshot.val();
+                console.log(childData);
+                if ((childData.sentBy === sentTo || childData.sentTo === sentTo) &&
+                    (childData.sentBy === userDisplayName || childData.sentTo === userDisplayName)) {
+                    const paraElement = document.createElement('p');
+                    const formattedTime = moment(childSnapshot.val().date).fromNow();
+                    paraElement.innerHTML = `<strong>${childSnapshot.val().sentBy}</strong> - ${formattedTime}<br>
+                                            ${childSnapshot.val().messageText}`;
+                    chatBox.appendChild(paraElement);
+                }
+            });
+        });
     }
 
     // push a copy of the message to "Messages" collection on DB
@@ -103,38 +185,40 @@ database.ref('messages').once('value', dataSnapshot => {
 });
 
 // Render Chat history using subscribe method
-store.subscribe(renderChatHistory);
+store.subscribe(() => {
+    console.log(store.getState());
+});
 
 // function to pull messages from State and Render them
-function renderChatHistory() {
-    console.log(store.getState());
-    console.log('in subscribe method');
+// function renderChatHistory() {
+//     console.log(store.getState());
+//     console.log('in subscribe method');
 
-    // Clear the HTML content
-    document.getElementById('messageBody').innerHTML = '';
+//     // Clear the HTML content
+//     document.getElementById('messageBody').innerHTML = '';
 
-    // Get all the Messages and display relevant ones
-    const messages = store.getState();
-    for (let message of messages) {
-        if (forChannel) {
-            if (message.sentTo === sentTo) {
-                renderMessage(message);
-            }
-        }
-        else { // Direct Messages
-            if ((message.sentBy === sentTo || message.sentTo === sentTo) &&
-                (message.sentBy === userDisplayName || message.sentTo === userDisplayName)) {
-                renderMessage(message);
-            }
-        }
-    }
-}
+//     // Get all the Messages and display relevant ones
+//     const messages = store.getState();
+//     for (let message of messages) {
+//         if (forChannel) {
+//             if (message.sentTo === sentTo) {
+//                 renderMessage(message);
+//             }
+//         }
+//         else { // Direct Messages
+//             if ((message.sentBy === sentTo || message.sentTo === sentTo) &&
+//                 (message.sentBy === userDisplayName || message.sentTo === userDisplayName)) {
+//                 renderMessage(message);
+//             }
+//         }
+//     }
+// }
 
-function renderMessage(message) {
-    const paraElement = document.createElement('p');
-    const formattedTime = moment(message.date).fromNow();
-    paraElement.innerHTML = `<strong>${message.sentBy}</strong> - ${formattedTime}<br>
-                                        ${message.messageText}`;
-    let chatBox = document.getElementById('messageBody');
-    chatBox.appendChild(paraElement);
-}
+// function renderMessage(message) {
+//     const paraElement = document.createElement('p');
+//     const formattedTime = moment(message.date).fromNow();
+//     paraElement.innerHTML = `<strong>${message.sentBy}</strong> - ${formattedTime}<br>
+//                                         ${message.messageText}`;
+//     let chatBox = document.getElementById('messageBody');
+//     chatBox.appendChild(paraElement);
+// }
