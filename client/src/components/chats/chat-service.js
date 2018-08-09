@@ -23,32 +23,29 @@ let forChannel = false;
 
 // Get Current User Details
 let currentUser = window.localStorage.getItem("current_user");
-console.log(currentUser );
 if (currentUser && currentUser.user !== 'undefined') {
     userName = JSON.parse(currentUser).user.userName;
-    console.log('userName', userName);
+    userDisplayName = getDisplayNameFrom(userName);
 }
 else {
     // initialize to one of the User
     userName = 'anilkumar-bv';
 }
 
-function getDisplayNameFrom(userName) {
+function getDisplayNameFrom(userNameInput) {
     //get the User Name from userName
     let userDisplayNameLocal = '';
     let usersDbRef = firebase.database().ref('users');
     usersDbRef.once('value', (dataSnapshot) => {
         dataSnapshot.forEach(childSnapshot => {
-            console.log(childSnapshot.val());
-            if (childSnapshot.val().username === userName) {
+            if (childSnapshot.val().username === userNameInput) {
                 // Check if name field is available. If not, return the userName itself
                 if (childSnapshot.val().name == null) {
-                    userDisplayNameLocal = userName;
+                    userDisplayNameLocal = userNameInput;
                 }
                 else {
                     userDisplayNameLocal = childSnapshot.val().name;
                 }
-                console.log('userDisplayName', userDisplayName);
             }
         });
     })
@@ -64,23 +61,16 @@ let teamId = '';
 
 // Following function is called when a Channel is clicked upon to retrieve the Messages
 export function openChatDetailsForChannel(channelId, teamID) {
-    console.log('channel clicked');
     teamId = teamID;
     forChannel = true;
-    console.log(channelId);
-    console.log(teamId);
-
     sentToUserName = channelId;
 
-    console.log(sentTo);
-    receiverRef = firebase.database().ref(teamId).child('channels').child(sentToUserName).child('messages');
+    receiverRef = firebase.database().ref('teams').child(teamId).child('channels').child(sentToUserName).child('messages');
     receiverRef.on('value', function (snapshot) {
         let chatBox = document.getElementById('messageBody');
-        console.log(snapshot.val());
         chatBox.innerHTML = '';
         snapshot.forEach(function (childSnapshot) {
             let childData = childSnapshot.val();
-            console.log(childData);
             if (childData.sentToUserName === sentToUserName) {
                 const paraElement = document.createElement('p');
                 const formattedTime = moment(childData.date).fromNow();
@@ -93,23 +83,20 @@ export function openChatDetailsForChannel(channelId, teamID) {
 }
 
 export function openChatDetailsForUser(userId, teamID) {
-    console.log("teamid-" + teamID)
     teamId = teamID;
     sentToUserName = userId;
-    console.log(sentToUserName);
 
-    // Get the Name to display
-    sentToDisplayName = getDisplayNameFrom(sentToUserName);
+    // Get the Names to display, for Receiver and Sender
+    sentToDisplayName = getDisplayNameFrom(sentToUserName); // Receiver Display Name
+    userDisplayName = getDisplayNameFrom(userName); // Sender Display Name
 
     //renderChatHistory();
-    let receiverRef = firebase.database().ref(teamId).child('directMessages').child('users').child(sentToUserName).child('messages');
+    let receiverRef = firebase.database().ref('teams').child(teamID).child('directMessages').child('users').child(sentToUserName).child('messages');
     receiverRef.on('value', function (snapshot) {
         let chatBox = document.getElementById('messageBody');
-        console.log(snapshot.val());
         chatBox.innerHTML = '';
         snapshot.forEach(function (childSnapshot) {
             let childData = childSnapshot.val();
-            console.log(childData);
             if ((childData.sentByUserName === sentToUserName || childData.sentToUserName === sentToUserName) &&
                 (childData.sentByUserName === userName || childData.sentToUserName === userName)) {
                 const paraElement = document.createElement('p');
@@ -152,8 +139,14 @@ function buildMessageEntity(message) {
         msg.sentToDisplayName = sentToUserName;
     else
         msg.sentToDisplayName = sentToDisplayName;
+
     msg.sentByUserName = userName;
-    msg.sentByDisplayName = userDisplayName;
+
+
+    if (userDisplayName == null)
+        msg.sentByDisplayName = userName;
+    else
+        msg.sentByDisplayName = userDisplayName;
 
     return msg;
 }
@@ -190,11 +183,11 @@ btnSubmit.addEventListener('click', evt => {
     messagesRef.push(msg);
 
     // Add this to State of store
-    store.dispatch(addChatToStore(message, currentDateTime, userDisplayName, sentTo));
+    store.dispatch(addChatToStore(message, currentDateTime, userName, sentToUserName, userDisplayName, sentToDisplayName));
 });
 
 function pushMessagesForChannel(msg) {
-    receiverRef = firebase.database().ref(teamId).child('channels').child(sentToUserName).child('messages');
+    receiverRef = firebase.database().ref('teams').child(teamId).child('channels').child(sentToUserName).child('messages');
 
     // push Message to DB
     receiverRef.push(msg);
@@ -202,11 +195,9 @@ function pushMessagesForChannel(msg) {
     // Render the Messages
     receiverRef.on('value', function (snapshot) {
         let chatBox = document.getElementById('messageBody');
-        console.log(snapshot.val());
         chatBox.innerHTML = '';
         snapshot.forEach(function (childSnapshot) {
             let childData = childSnapshot.val();
-            console.log(childData);
             if (childData.sentToUserName === sentToUserName) {
                 const paraElement = document.createElement('p');
                 const formattedTime = moment(childData.date).fromNow();
@@ -219,8 +210,8 @@ function pushMessagesForChannel(msg) {
 }
 
 function pushMessagesForUser(msg) {
-    senderRef = firebase.database().ref(teamId).child('directMessages').child('users').child(userName).child('messages');
-    receiverRef = firebase.database().ref(teamId).child('directMessages').child('users').child(sentToUserName).child('messages');
+    senderRef = firebase.database().ref('teams').child(teamId).child('directMessages').child('users').child(userName).child('messages');
+    receiverRef = firebase.database().ref('teams').child(teamId).child('directMessages').child('users').child(sentToUserName).child('messages');
     senderRef.push(msg);
     receiverRef.push(msg);
 
@@ -228,7 +219,6 @@ function pushMessagesForUser(msg) {
     receiverRef.on('value', function (snapshot) {
 
         let chatBox = document.getElementById('messageBody');
-        console.log(snapshot.val());
         chatBox.innerHTML = '';
         snapshot.forEach(function (childSnapshot) {
             // if(childSnapshot.val().messageText.indexOf('Sent a media file ') > -1){
@@ -238,7 +228,6 @@ function pushMessagesForUser(msg) {
             //     filesDownload(fileName);
             // }
             let childData = childSnapshot.val();
-            console.log(childData);
             if ((childData.sentByUserName === sentToUserName || childData.sentToUserName === sentToUserName) &&
                 (childData.sentByUserName === userName || childData.sentToUserName === userName)) {
                 const paraElement = document.createElement('p');
@@ -265,9 +254,7 @@ database.ref('messages').once('value', dataSnapshot => {
         stateArray.push(chatInstance);
     });
 
-    console.log(stateArray);
     //state = createStore(chat, stateArray)
-    //console.log('State After populating', state.getState());
 });
 
 // Render Chat history using subscribe method
