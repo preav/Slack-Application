@@ -7,7 +7,7 @@ const jQuery = require('jquery');
 
 function getAllChannels(teamName) {
   const checkChannelRef = database.ref('teams/' + teamName);
-  let getAllContactHtml = `<ul class="side-list"><li>Channels
+  let getAllContactHtml = `<ul class="side-list"><li><strong data-toggle="modal" data-target="#searchModal" id="searchChannel">Channels</strong>
     <span><a id="createChannel" data-teamid="${teamName}" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-circle"></i></a></span>
     </li></ul><ul class="side-list side-list-body" id="channelList"></ul>`;
   $('#showContactInformation').append(getAllContactHtml);
@@ -21,7 +21,7 @@ function getAllChannels(teamName) {
           let channelID = childSnapshot.key;
           let channelName = childSnapshot.val().channelName;
           var channelListHTML = `
-                <li data-channelid="${channelID}" data-channelname="${channelName}" class="channels">
+                <li data-channelid="${channelID}" data-teamid="${teamName}" data-channelname="${channelName}" class="channels">
                 ${channelName}
                 <span data-channelid="${channelID}" data-teamid="${teamName}">
                 <!--<a class="muteChannel"><i class="fa fa-microphone-slash"></i></a>
@@ -37,9 +37,15 @@ function getAllChannels(teamName) {
   });
 }
 
+$(document).on("click", '.channels', function(){
+  const teamID = $(this).data('teamid');
+  const channelId = $(this).data('channelname');
+  openChatDetailsForChannel(channelId, teamID);
+});
+
 function getAllUsers(teamName) {
   const checkUserRef = database.ref('teams/' + teamName);
-  let getAllContactHtml = `<ul class="side-list"><li>Direct Messages
+  let getAllContactHtml = `<ul class="side-list"><li data-toggle="modal" data-target="#searchModal" id="searchPeople">Direct Messages
     </li></ul><ul class="side-list side-list-body" id="usersList"></ul>`;
   $('#showContactInformation').append(getAllContactHtml);
   checkUserRef.on('value', (snapshot) => {
@@ -54,7 +60,7 @@ function getAllUsers(teamName) {
           let user = getUserName(userID);
           // console.log("UN-"+userName);
           var userListHTML = `
-                <li data-userid="${userID}" data-username="${user.userName}" class="users">
+                <li data-userid="${userID}" data-teamid="${teamName}" data-username="${user.userName}" class="users">
                 ${user.displayName}
                 <span data-usernode="${userNode}" data-teamid="${teamName}">
                 <!--<a class="muteUser"><i class="fa fa-microphone-slash"></i></a>
@@ -68,6 +74,13 @@ function getAllUsers(teamName) {
     }
   });
 }
+
+// Get the UserId of the person who is selected for chatting
+$(document).on("click", '.users', function(){
+  const teamID = $(this).data('teamid');
+  const userId = $(this).data('userid');
+  openChatDetailsForUser(userId, teamID);
+});
 
 function getUserName(userID) {
   let user = {};
