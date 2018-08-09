@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import {displayUserChat,displayChannelsChat} from './dateFilterView';
 import database from '../../../../firebase/firebase';
+console.log("Database", database);
 
 const userID='Triveni';
 const teamId='team-6';
@@ -96,5 +97,3 @@ function dateConverter(recorddate, startDate, endDate){
         });
     });
    }
-
-  

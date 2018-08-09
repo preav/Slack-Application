@@ -184,7 +184,7 @@ body
 //////////////////////////////////////////////////////////////////////////////////////////////
 
  .panBackground {
-    background: wheat;
+    background: rgb(255, 255, 255);
 }
 
 .panComponents {
@@ -199,14 +199,14 @@ body
 
 
 .playGroungDiv-bot{
-    background: wheat;
+    background: rgb(223, 223, 223);
     padding: 10px;
     margin: 2px;
     text-align: right;
     border-radius: 10px;
 }
 .playGroungDiv-you{
-    background: rgb(232, 248, 140);
+    background: rgb(223, 223, 223);
     padding: 10px;
     margin: 2px;
     text-align: left;
@@ -342,3 +342,12 @@ $border-radius: .25rem;
         }
     }
 }
+
+//for file upload cursor to change
+#addMedia:hover {
+    cursor: pointer;
+ }
+
+ .contactUser:hover {
+    cursor: pointer;
+ }

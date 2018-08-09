@@ -1,12 +1,12 @@
-import { config } from '../../../../../firebase/firebase-config';
+import database from '../../../../../firebase/firebase';
 
 const firebase = require('firebase');
 
-// firebase.initializeApp(config);
+//firebase.initializeApp(config);
 
 // function to retrieve chat history for a user from firebase database -- firebase
 export const getChatHistoryForUserService = userId => new Promise((resolve, reject) => {
-  firebase.database().ref(`SlackXT/slackbot/${userId}`).once('value')
+  database.ref(`SlackXT/slackbot/${userId}`).once('value')
   .then((snapshot) => {
     const chathistory = snapshot.val();
     if (chathistory !== '') {
@@ -19,3 +19,20 @@ export const getChatHistoryForUserService = userId => new Promise((resolve, reje
     }
   });
 });
+
+// function to retrieve Reminder List for a user from firebase database -- firebase
+export const getReminderForUserService = userId => new Promise((resolve, reject) => {
+  database.ref(`SlackXT/slackbot/${userId}/remindersent`).once('value')
+  .then((snapshot) => {
+    const userReminderList = snapshot.val();
+    if (userReminderList !== '') {
+      console.log('user Reminder List retrieved successfully...', userReminderList);
+      resolve(userReminderList);
+    } else {
+      reject(new Error(`Error while retrieving Reminder List for 
+        userId: ${userId} from firebase database.`));
+      console.log('There is error while retrieving user Reminder List from firebase database...');
+    }
+  });
+});
+

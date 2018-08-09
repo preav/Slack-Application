@@ -1,7 +1,14 @@
 import { 
-  updateSlackBotReminderResponse, createReminderService, getReminderForUserService
+  updateSlackBotReminderResponse,
+  createReminderService, 
+  getReminderForUserService,
+  getReminderForAllUsersService,
+  saveReminderSent
  } from './reminder-service';
-import { reminderCreateMsg, openReminderView, newReminderlistItemView } from './reminder-view';
+import { reminderCreateMsg, 
+  openReminderView, 
+  newReminderlistItemView,
+  showUserReminderBeforeSave } from './reminder-view';
 
 // function to create reminder
 export const createReminder = function (widgetData) {
@@ -13,9 +20,7 @@ export const createReminder = function (widgetData) {
       const newRepowidget = document.createElement('div');
       newRepowidget.innerHTML = reminderCreateMsg(
         `Sure, I will remind (<a href='#'>${widgetData.remindeeUser}</a>)
-         at ${widgetData.reminderDate} ${widgetData.reminderTime}`,
-        widgetData.id, widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered,
-      );
+         at ${widgetData.reminderDate} ${widgetData.reminderTime}`, widgetData);
       createRepoWidgetEle.appendChild(newRepowidget);
       createRepoWidgetEle.scrollTop = createRepoWidgetEle.scrollHeight;
       // update firebase database with slackbot response for reminder
@@ -24,7 +29,7 @@ export const createReminder = function (widgetData) {
       at ${widgetData.reminderDate} ${widgetData.reminderTime}`);
     } else {
       errorOrSuccDiv.innerHTML = reminderCreateMsg('Reminder cannot be set due to technical issue.',
-        widgetData.id, widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered);
+      widgetData);
       createRepoWidgetEle.appendChild(errorOrSuccDiv);
       createRepoWidgetEle.scrollTop = createRepoWidgetEle.scrollHeight;
       // update firebase database with slackbot response for reminder
@@ -65,5 +70,34 @@ export const openReminder = function (openWidgetType) {
     }
   }).catch((err) => {
     console.log(err, 'Error occured while reminder list from firebase database..');
+  });
+};
+
+// function to send reminder meaage if time arrieved
+export const sendReminderMeaageOnTime = function () {
+  const createWidgetEle = document.getElementById('playGround');
+  getReminderForAllUsersService().then( (reminderMsgListObject) => {
+    const reminderMsgListArray = Object.keys(reminderMsgListObject).map(i => reminderMsgListObject[i])
+    for(var k = 1; k <= reminderMsgListArray.length - 1; k++){//loop for each users
+      var reminderMsgListArrayObj =reminderMsgListArray[k].reminder;
+      const allReminderMsgListArray = Object.keys(reminderMsgListArrayObj).map(i => reminderMsgListArrayObj[i])
+      for(var j = 0; j <= allReminderMsgListArray.length - 1; j++){ // loop for each reminder for a user
+        console.log('Reminder ', allReminderMsgListArray[j].commandEntered);
+        if(((Date.parse(allReminderMsgListArray[j].reminderTime) - (new Date())) < 0) 
+        &&  (allReminderMsgListArray[j].reminderSent === 'No')) {
+           // once reminder time arrive
+          console.log('time reached to send reminder!!');
+          const newRepowidget = document.createElement('div');
+          newRepowidget.innerHTML = showUserReminderBeforeSave(allReminderMsgListArray[j]);
+          createWidgetEle.appendChild(newRepowidget);
+          createWidgetEle.scrollTop = createWidgetEle.scrollHeight;
+          
+          // save reminder sent to firebase database
+          saveReminderSent(allReminderMsgListArray[j])
+
+        }
+      }
+    }
+    
   });
 };
