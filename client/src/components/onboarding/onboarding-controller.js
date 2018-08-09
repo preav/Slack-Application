@@ -9,7 +9,7 @@ import { getCurrentUserData, saveUpdateUserProfile } from './profile/profileServ
 import { checkAuthStateChange, gitLogin, gitLogout } from '../../../../firebase/git-login';
 import { saveUpdateUser, getCurrentUserDetails, saveUpdateTeam } from '../../../../firebase/onboarding-db';
 import { getAllChannels, getAllUsers } from '../collaboration/userSetting/userSettingService';
-import store from './profileReducer';
+import { store } from './profileReducer';
 
 store.subscribe(() =>{
   var currentState = store.getState();
@@ -64,6 +64,7 @@ export function createInvitationComponent() {
   });
   invitComponent.querySelector('.skip_button').addEventListener('click', (e) => {
     e.preventDefault();
+    $('form#formid').find('input:text').val('');
     proceedNext(teamName,`Skipped inivitation for team ${teamName}`);
   });
   invitComponent.querySelector('#submit').addEventListener('click', (e) => {
@@ -91,7 +92,8 @@ export function createInvitationComponent() {
       console.log(recieverarr);
       //const sentmailComponent = mailSentBody();
       //$(`#${inivitationViewHolderId}`).empty().append(sentmailComponent);
-      proceedNext(teamName,`Inivitation for team ${teamName} sent to all the recipients`);
+      $('form#formid').find('input:text').val('');
+      proceedNext(teamName,`Inivitation for team ${teamName}`);
     }
   });
   $(`#${inivitationViewHolderId}`).empty().append(invitComponent);
@@ -129,7 +131,7 @@ document.querySelector('#user-profile').addEventListener('click', () => {
 });
 
 
-export function createTeamFormView() {
+export async function createTeamFormView() {
   const teamName = document.getElementById('team-name').value;
   // console.log(`value:${teamName}`);
 
@@ -207,6 +209,12 @@ $(document).on("click", ".team-link", function(){
   var teamName = $(this).data('team');
     $("#chatContainer").show();
     $('#signupContainer').hide();
+
+    const obj = store.getState();
+    obj.user.currentTeam.teamName = teamName;
+    console.log("***************************"+JSON.stringify(obj));
+    store.dispatch({type: "LOGIN", obj});
+
     getAllChannels(teamName);
     getAllUsers(teamName);
   // alert($(this).data('team'));
@@ -219,8 +227,6 @@ export function userGitLogin() {
 
     createDashboardView();
 
-    const userUID = response.user.uid;
-    store.dispatch({type: "LOGIN", value: response.user.uid});
 
     const userData = {
       username: response.additionalUserInfo.username,
@@ -231,9 +237,21 @@ export function userGitLogin() {
       phoneNumber: response.user.phoneNumber,
       gitURL: response.additionalUserInfo.profile.html_url,
       status: 'active',
-      permission: { write: false, read: true },
-      teams: []
+      permission: { write: false, read: true }
     };
+
+    const userUID = response.user.uid;
+
+    const obj =  {
+      "user": {
+        "userName": userData.username,
+        "currentTeam": {
+          "teamName": "",
+          "channals": []
+        },
+        "teams": []
+      }};
+      store.dispatch({type: "LOGIN", obj});
 
     if (teamnameFromUrl != 'undefined' && teamnameFromUrl != "") {
       console.log(`Adding to team: ${teamnameFromUrl}`);
@@ -263,6 +281,11 @@ export function userGitLogin() {
 
           console.log(teamnameFromUrl);
           console.log(team);
+
+       // const currentUsrData = callCurrentUserData(userUID,userData,null);
+       // console.log("curret user val>>>>>>>>>>>>>>>>>"+currentUsrData);
+       // store.dispatch({type: "LOGIN", currentUsrData});
+
           saveUpdateTeam(teamnameFromUrl, team).then((r) => {console.log(r)});
         }, (error) => {
           console.log(error);
@@ -272,6 +295,8 @@ export function userGitLogin() {
         //console.log(userData);
         // Saving/updating current logged in user
         saveUpdateUser(userUID, userData).then((res) => {
+
+
           console.log(res);
           getTeamsOfCurrentUser();
         }, (error) => {
@@ -289,6 +314,11 @@ export function userGitLogin() {
       //console.log(userData);
       // Saving/updating current logged in user
       saveUpdateUser(userUID, userData).then((res) => {
+
+       // const currentUsrData = callCurrentUserData(userUID,userData,null);
+       // console.log("curret user val>>>>>>>>>>>>>>>>>"+currentUsrData);
+       // store.dispatch({type: "LOGIN", currentUsrData});
+
         console.log(res);
       }, (error) => {
         console.log(`Error in saving/updating user: ${error.toString()}`);
@@ -307,7 +337,7 @@ export function userGitLogin() {
 
 export function userGitLogout() {
   localStorage.removeItem("current_user");
-  store.dispatch({type: "LOGOUT_USER", payload: {}});
+  store.dispatch({type: "LOGOUT_USER", payload: null});
   gitLogout();
   homeComponentView();
 }

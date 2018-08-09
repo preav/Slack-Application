@@ -1,5 +1,5 @@
-import { database } from '../../../../../firebase/firebase';
 const firebase = require('firebase');
+import database from '../../../../../firebase/firebase';
 
 // function to save otherbot into firebase database -- firebase
 export const createOtherbotService = widgetData => new Promise((resolve, reject) => {

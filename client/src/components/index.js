@@ -19,6 +19,7 @@ import 'emojione';
 import 'emojionearea';
 
 // import for slackbot main.js
+import 'datejs';
 import './slackbot/main';
 
 import './chats/chat-service';
@@ -39,7 +40,6 @@ import '../components/search/controller';
 
 import '../../../firebase/firebase';
 import { hitEnter } from './slackbot/command-line';
-
 require('font-awesome/css/font-awesome.css');
 
 $("#enteredCommand").emojioneArea({
@@ -48,7 +48,8 @@ $("#enteredCommand").emojioneArea({
       keypress: function (editor, event) {
           if (event.which == 13) {
               event.preventDefault();
-              var enteredValue = $('#enteredCommand').data("emojioneArea").getText();;
+              var enteredValue = $('#enteredCommand').data("emojioneArea").getText();
+              $('#enteredCommand').val('');
               hitEnter(enteredValue);
           }
       }

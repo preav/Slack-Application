@@ -10,9 +10,7 @@ export const createOtherbot = function (widgetData) {
     if (firebaseTodolistdRes.id !== '') {
       const newRepowidget = document.createElement('div');
       newRepowidget.innerHTML = otherbotCreateMsg(
-        `I have sent an acceptance request to (${widgetData.targetUser}).`,
-        widgetData.id, widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered,
-      );
+        `I have sent an acceptance request to (${widgetData.targetUser}).`,widgetData);
       createWidgetEle.appendChild(newRepowidget);
       createWidgetEle.scrollTop = createWidgetEle.scrollHeight;
       // update firebase database with slackbot response for creating otherbot.
@@ -20,9 +18,7 @@ export const createOtherbot = function (widgetData) {
         `I have sent an acceptance request to (${widgetData.targetUser}).`);
     } else {
       errorOrSuccDiv.innerHTML = otherbotCreateMsg(
-        'Your request did not process due to technical issue, please try after some time.',
-        widgetData.id, widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered,
-      );
+'Your request did not process due to technical issue, please try after some time.', widgetData);
       createWidgetEle.appendChild(errorOrSuccDiv);
       createWidgetEle.scrollTop = createWidgetEle.scrollHeight;
       // update firebase database with slackbot response for creating otherbot.

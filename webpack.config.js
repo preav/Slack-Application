@@ -13,7 +13,7 @@ const config = {
   },
   module: {
     rules: [
-      /*{
+      {
         enforce: 'pre',
         test: /\.js?$/,
         exclude: [/node_modules/],
@@ -21,7 +21,7 @@ const config = {
         options: {
           fix: true,
         },
-  },*/
+      },
             {
                 test: /\.js?$/,
                 exclude: [/node_modules/],
@@ -63,6 +63,15 @@ const config = {
             }, {
                 test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
                 loader: "url-loader?limit=10000&mimetype=image/svg+xml"
+            }, {
+                test: require.resolve('jquery'),
+                 use: [{
+                    loader: 'expose-loader',
+                    options: 'jQuery'
+                },{
+                    loader: 'expose-loader',
+                    options: '$'
+                }]
             }
         ]
     },

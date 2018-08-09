@@ -1,13 +1,15 @@
 export const ADD_CHAT = 'ADD_CHAT';
 
 //action creators
-export function addChatToStore(message, currentDateTime, sentBy, sentTo) {
+export function addChatToStore(message, currentDateTime, sentByUserName, sentToUserName, sentByDisplayName, sentToDisplayName) {
     return {
         type: ADD_CHAT,
         message,
         currentDateTime,
-        sentBy,
-        sentTo
+        sentByUserName,
+        sentToUserName,
+        sentByDisplayName,
+        sentToDisplayName
     }
 }
 
