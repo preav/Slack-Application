@@ -28,7 +28,7 @@ export const hitEnter = function (e) {
           userId: 'testUser1',
           creatDate: creatDate,
           creatTime: creatTime,
-          currentdateTime: currentdateTime,
+          currentdateTime: currentdateTime.toString(),
           botResponse: '',
         };
 
@@ -45,7 +45,7 @@ export const hitEnter = function (e) {
           userId: 'testUser1',
           creatDate: creatDate,
           creatTime: creatTime,
-          currentdateTime: currentdateTime,
+          currentdateTime: currentdateTime.toString(),
           botResponse: '',
         };
         // save createIssue widget state to database code --> calling gitbot-controller
@@ -62,7 +62,7 @@ export const hitEnter = function (e) {
           userId: 'testUser1',
           creatDate: creatDate,
           creatTime: creatTime,
-          currentdateTime: currentdateTime,
+          currentdateTime: currentdateTime.toString(),
           botResponse: '',
           reminderSent: 'No',
         };
@@ -78,7 +78,7 @@ export const hitEnter = function (e) {
           userId: 'testUser1',
           creatDate: creatDate,
           creatTime: creatTime,
-          currentdateTime: currentdateTime,
+          currentdateTime: currentdateTime.toString(),
           botResponse: '',
           taskCompleted: 'unchecked',
         };
@@ -94,7 +94,7 @@ export const hitEnter = function (e) {
           userId: 'testUser1',
           creatDate: creatDate,
           creatTime: creatTime,
-          currentdateTime: currentdateTime,
+          currentdateTime: currentdateTime.toString(),
           botResponse: '',
         };
         // save calendar-schedule widget state to database code --> calling calendar-controller
@@ -110,7 +110,7 @@ export const hitEnter = function (e) {
           userId: 'testUser1',
           creatDate: creatDate,
           creatTime: creatTime,
-          currentdateTime: currentdateTime,
+          currentdateTime: currentdateTime.toString(),
           botResponse: '',
         };
         // save calendar-schedule widget state to database code --> calling calendar-controller

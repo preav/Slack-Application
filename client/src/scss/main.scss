@@ -341,6 +341,14 @@ $border-radius: .25rem;
             }
         }
     }
+    &.side-list-body {
+        li {
+            &:first-child {
+            font-weight: normal;
+            border-width: 0;
+            }
+        }
+    }
 }
 
 //for file upload cursor to change
