@@ -5,7 +5,6 @@ import moment from 'moment';
 var markdown = require("markdown").markdown;
 import '../../../../firebase/firebase-config';
 import firebase from 'firebase';
-import { getCurrentUserDetails } from '../../../../firebase/onboarding-db'
 //import { filesDownload } from '../collaborator/addFiles';
 var dropbox =  require('dropbox').Dropbox;
 
@@ -34,19 +33,22 @@ else {
 
 // Get a reference to the database service
 var database = firebase.database();
-let receiverRef = firebase.database().ref('team-6').child('channels').child('chn001').child('users').child(userDisplayName);
+let receiverRef = firebase.database().ref(teamId).child('channels').child('chn001').child('users').child(userDisplayName);
 let senderRef = null;
+let teamId = '';
 
 // Following function is called when a Channel is clicked upon to retrieve the Messages
-export function openChatDetailsForChannel(channelId) {
+export function openChatDetailsForChannel(channelId, teamID) {
     console.log('channel clicked');
+    teamId = teamID;
     forChannel = true;
     console.log(channelId);
+    console.log(teamId);
+
     sentTo = channelId;
-    //renderChatHistory();
 
     console.log(sentTo);
-    receiverRef = firebase.database().ref('team-6').child('channels').child(sentTo).child('messages');
+    receiverRef = firebase.database().ref(teamId).child('channels').child(sentTo).child('messages');
     receiverRef.on('value', function (snapshot) {
         let chatBox = document.getElementById('messageBody');
         console.log(snapshot.val());
@@ -65,11 +67,13 @@ export function openChatDetailsForChannel(channelId) {
     });
 }
 
-export function openChatDetailsForUser(userId) {
+export function openChatDetailsForUser(userId, teamID) {
+    console.log("teamid-"+ teamID)
+    teamId = teamID;
     sentTo = userId;
     console.log(sentTo);
     //renderChatHistory();
-    let receiverRef = firebase.database().ref('team-6').child('directMessages').child('users').child(sentTo).child('messages');
+    let receiverRef = firebase.database().ref(teamId).child('directMessages').child('users').child(sentTo).child('messages');
     receiverRef.on('value', function (snapshot) {
         let chatBox = document.getElementById('messageBody');
         console.log(snapshot.val());
@@ -156,7 +160,7 @@ btnSubmit.addEventListener('click', evt => {
 });
 
 function pushMessagesForChannel(msg) {
-    receiverRef = firebase.database().ref('team-6').child('channels').child(sentTo).child('messages');
+    receiverRef = firebase.database().ref(teamId).child('channels').child(sentTo).child('messages');
 
         // push Message to DB
         receiverRef.push(msg);
@@ -181,8 +185,8 @@ function pushMessagesForChannel(msg) {
 }
 
 function pushMessagesForUser(msg) {
-    senderRef = firebase.database().ref('team-6').child('directMessages').child('users').child(userDisplayName).child('messages');
-    receiverRef = firebase.database().ref('team-6').child('directMessages').child('users').child(sentTo).child('messages');
+    senderRef = firebase.database().ref(teamId).child('directMessages').child('users').child(userDisplayName).child('messages');
+    receiverRef = firebase.database().ref(teamId).child('directMessages').child('users').child(sentTo).child('messages');
     senderRef.push(msg);
     receiverRef.push(msg);
 
