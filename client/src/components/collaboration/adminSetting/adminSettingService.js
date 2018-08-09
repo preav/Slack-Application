@@ -2,7 +2,7 @@
 import firebase from 'firebase';
 import { database } from '../userSetting/userSettingService';
 // import { getAllChannels } from '../userSetting/userSettingService';
-
+import { getUserName } from "./../userSetting/userSettingService"
 const jQuery = require('jquery');
 
 
@@ -30,31 +30,32 @@ function fnCreateChannel() {
 }
 document.getElementById('createChannel1').addEventListener('click', fnCreateChannel);
 
-function getAllUsersFromTeam() {
-  const userContactref = firebase.database().ref('team-6/users');
-  console.log('asdfsadas', userContactref);
-  userContactref.once('value', (snapshot) => {
-    const getAllContactValue = Object.keys(snapshot.val());
-    let getAllContactHtml = '';
-    const abc = getAllContactValue.map((contactVal) => {
-      getAllContactHtml += `
-        <div>
-            <div class="buttom-panel text-center mt-1">
-                <div userId='${contactVal}'>
-                  <input type="checkbox" value=${contactVal} name="chVal" class="addUserToChannel">${contactVal}<br>
-                </div>
-            </div>
-        </div>
-        `;
-      return getAllContactHtml;
-    });
-    jQuery('#usersinTeam').append(getAllContactHtml);
-  });
+function getAllUsersFromTeam(userID) {
+  console.log("userid" ,userID );
+  getUserName(userID);
+  // console.log('teamName======>', userContactref);
+  // userContactref.once('value', (snapshot) => {
+  //   const getAllContactValue = Object.keys(snapshot.val());
+  //   let getAllContactHtml = '';
+  //   const abc = getAllContactValue.map((contactVal) => {
+  //     getAllContactHtml += `
+  //       <div>
+  //           <div class="buttom-panel text-center mt-1">
+  //               <div userId='${contactVal}'>
+  //                 <input type="checkbox" value=${contactVal} name="chVal" class="addUserToChannel">${contactVal}<br>
+  //               </div>
+  //           </div>
+  //       </div>
+  //       `;
+  //     return getAllContactHtml;
+  //   });
+  //   jQuery('#usersinTeam').append(getAllContactHtml);
+  // });
 }
 
 jQuery(document).on('click', '#createChannel', (e) => {
   const channelId = e.target.parentElement.getAttribute('channelId');
-  getAllUsersFromTeam();
+  getAllUsersFromTeam(userID);
 });
 
 export { fnCreateChannel, getAllUsersFromTeam };

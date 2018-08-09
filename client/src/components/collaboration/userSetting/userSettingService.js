@@ -89,6 +89,7 @@ function getUserName(userID) {
   });
   return user;
 }
+
 // functionality for updating something in firebase via
 function muteUsers(userId) {
   const newPostKey = database.ref(`team-6/directMessages/users/${userId}`).update({
@@ -200,4 +201,5 @@ export {
   muteChannel,
   unMuteChannel,
   removeChannel,
+  getUserName
 };
