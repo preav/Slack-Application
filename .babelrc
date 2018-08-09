@@ -1,0 +1,13 @@
+{
+    "presets": [
+      [
+        "env",
+        {
+          "target": {
+            "browser": ["last 2 versions"]
+          }
+        }
+      ]
+    ]
+  }
+  
