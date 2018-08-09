@@ -5,61 +5,90 @@ import { clickChannel } from '../../../../src/components/chats/chat-service';
 let database = firebase.database();
 const jQuery = require('jquery');
 
-function getAllChannels() {
+function getAllChannels(teamName) {
+  const checkChannelRef = database.ref('teams/' + teamName);
   let getAllContactHtml = `<ul class="side-list"><li>Channels
-    <span><a id="createChannel" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-circle"></i></a></span>
-    </li>`
-  const userContactref = database.ref('team-6').child('channels');
-  userContactref.on('value', (snapshot) => {
-    // const getAllContactValue = Object.values(snapshot.val());
-    // const getAllContactValue = Object.keys(snapshot.val());
-    const getAllContactValue = Object.keys(snapshot.val());
+    <span><a id="createChannel" data-teamid="${teamName}" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-circle"></i></a></span>
+    </li></ul><ul class="side-list side-list-body" id="channelList"></ul>`;
+  $('#showContactInformation').append(getAllContactHtml);
+  checkChannelRef.on('value', (snapshot) => {
+    const getChannelRef = snapshot.val();
+    if (getChannelRef['channels']) {
+      database.ref('teams/' + teamName + '/channels').once('value', dataSnapshot => {
+        $('#channelList').empty();
+        dataSnapshot.forEach(childSnapshot => {
+          // console.log(childSnapshot.key);
+          let channelID = childSnapshot.key;
+          let channelName = childSnapshot.val().channelName;
+          var channelListHTML = `
+                <li data-channelid="${channelID}" data-channelname="${channelName}" class="channels">
+                ${channelName}
+                <span data-channelid="${channelID}" data-teamid="${teamName}">
+                <!--<a class="muteChannel"><i class="fa fa-microphone-slash"></i></a>
+                <a class="unmuteChannel"><i class="fa fa-microphone"></i></a>-->
+                <a class="removeChannel"><i class="fa fa-times-circle-o"></i></a>
+              </span>
+              </li>`;
+          $('#channelList').append(channelListHTML);
+        });
+      });
 
-    const abc = getAllContactValue.map((contactVal) => {
-      // const conName = Object.keys(contactVal);
-      console.log("contactVal",contactVal)
-      getAllContactHtml += `
-        <li channelId=${contactVal} class="channels">
-        ${contactVal}
-        <span channelId="${contactVal}">
-          <a class="muteChannel"><i class="fa fa-microphone-slash"></i></a>
-          <a class="unmuteChannel"><i class="fa fa-microphone"></i></a>
-          <a class="removeChannel"><i class="fa fa-times-circle-o"></i></a>
-        </span>
-        </li>`;
-      return getAllContactHtml;
-    });
-  });
-  getAllContactHtml += "</ul>";
-  jQuery('#showContactInformation').append(getAllContactHtml);
-  // document.getElementById(`${contactVal}`).addEventListener('click', clickChannel);
-}
-document.getElementById('userContacts').addEventListener('click', getAllChannels);
-
-function getAllUsers() {
-  const userContactref = database.ref('team-6').child('directMessages').child('users');
-  userContactref.on('value', (snapshot) => {
-    const getAllContactValue = Object.keys(snapshot.val());
-    console.log("getAllContactValue",getAllContactValue)
-    let getAllContactHtml = '<ul class="side-list"><li>Direct Messages</li>';
-    const abc = getAllContactValue.map((contactVal) => {
-      getAllContactHtml += `
-      <li class="contactUser">
-       ${contactVal}
-        <span userId = ${contactVal}>
-          <a class="muteUser"><i class="fa fa-microphone-slash"></i></a>
-          <a class="unmuteUser"><i class="fa fa-microphone"></i></a>
-          <a class="removeUser"><i class="fa fa-times-circle-o"></i></a>
-        </span>
-        </li>`;
-      return getAllContactHtml;
-    });
-    getAllContactHtml += "</ul>";
-    jQuery('#showContactInformation').append(getAllContactHtml);
+    }
   });
 }
-document.getElementById('userContacts').addEventListener('click', getAllUsers);
 
+function getAllUsers(teamName) {
+  const checkUserRef = database.ref('teams/' + teamName);
+  let getAllContactHtml = `<ul class="side-list"><li>Direct Messages
+    </li></ul><ul class="side-list side-list-body" id="usersList"></ul>`;
+  $('#showContactInformation').append(getAllContactHtml);
+  checkUserRef.on('value', (snapshot) => {
+    const checkUserRef = snapshot.val();
+    if (checkUserRef['users']) {
+      // console.log("Present");
+      database.ref('teams/' + teamName + '/users').once('value', dataSnapshot => {
+        $('#usersList').empty();
+        dataSnapshot.forEach(childSnapshot => {
+          let userNode = childSnapshot.key;
+          let userID = childSnapshot.val();
+          let user = getUserName(userID);
+          // console.log("UN-"+userName);
+          var userListHTML = `
+                <li data-userid="${userID}" data-username="${user.userName}" class="users">
+                ${user.displayName}
+                <span data-usernode="${userNode}" data-teamid="${teamName}">
+                <!--<a class="muteUser"><i class="fa fa-microphone-slash"></i></a>
+                <a class="unmuteUser"><i class="fa fa-microphone"></i></a>-->
+                <a class="removeUser"><i class="fa fa-times-circle-o"></i></a>
+              </span>
+              </li>`;
+          $('#usersList').append(userListHTML);
+        });
+      });
+    }
+  });
+}
+
+function getUserName(userID) {
+  let user = {};
+  let userDisplayNameLocal = '';
+  let usersDbRef = firebase.database().ref('users');
+  usersDbRef.once('value', (dataSnapshot) => {
+    dataSnapshot.forEach(childSnapshot => {
+      if (childSnapshot.key === userID) {
+        if (childSnapshot.val().name == null) {
+          user.userName = childSnapshot.val().username;
+          user.displayName = childSnapshot.val().username;
+        }
+        else {
+          user.userName = childSnapshot.val().username;
+          user.displayName = childSnapshot.val().name;
+        }
+      }
+    });
+  });
+  return user;
+}
 // functionality for updating something in firebase via
 function muteUsers(userId) {
   const newPostKey = database.ref(`team-6/directMessages/users/${userId}`).update({
@@ -79,7 +108,7 @@ jQuery(document).on('click', '.muteUser', (e) => {
 });
 
 function unMuteUsers(userId) {
-  const newPostKey = database.ref(`team-6/directMessages/users/${userId}`).update({
+  const newPostKey = database.ref(`${teamName}/directMessages/users/${userId}`).update({
     mute: false,
   }, (error) => {
     if (error) {
@@ -96,16 +125,16 @@ jQuery(document).on('click', '.unmuteUser', (e) => {
 });
 
 
-function deleteUsers(userId) {
-  const removeUserRef = database.ref(`team-6/directMessages/users/${userId}`).remove();
+function deleteUsers(userNode, teamID) {
+  database.ref('teams/' + teamID + '/users').child(`${userNode}`).remove();
 }
 
 
-jQuery(document).on('click', '.removeUser', function(){
-  // const userId = e.target.parentElement.parentElement.getAttribute('userId');
-  const userId = jQuery(this).parents('span').attr('userId');
-  console.log('User Removed',userId);
-  deleteUsers(userId);
+jQuery(document).on('click', '.removeUser', function (e) {
+  e.preventDefault;
+  const userNode = $(this).parents('span').data('usernode');
+  const teamID = $(this).parents('span').data('teamid');
+  deleteUsers(userNode, teamID);
   $(this).parents('li').remove();
 });
 
@@ -147,16 +176,16 @@ jQuery(document).on('click', '.unmuteChannel', (e) => {
   unMuteChannel(channelId);
 });
 
-function removeChannel(channelId) {
-  const newPostKey = database.ref('team-6').child('channels').child(`${channelId}`)
-    .remove();
+function removeChannel(channelID, teamID) {
+  database.ref('teams/' + teamID + '/channels').child(`${channelID}`).remove();
 }
 
 
-$(document).on('click', '.removeChannel', function(){
-  const channelId = $(this).parents('span').attr('channelId');
+$(document).on('click', '.removeChannel', function () {
+  const channelID = $(this).parents('span').data('channelid');
+  const teamID = $(this).parents('span').data('teamid');
   // console.log(channelId);
-  removeChannel(channelId);
+  removeChannel(channelID, teamID);
   $(this).parents('li').remove();
 });
 

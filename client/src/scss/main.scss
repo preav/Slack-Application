@@ -373,4 +373,12 @@ label {
             }
         }
     }
+    &.side-list-body {
+        li {
+            &:first-child {
+            font-weight: normal;
+            border-width: 0;
+        }
+    }
+}
 }

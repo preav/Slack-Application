@@ -6,16 +6,17 @@ import { database } from '../userSetting/userSettingService';
 const jQuery = require('jquery');
 
 
-function fnCreateChannel(channelName, channelType, channelId) {
+function fnCreateChannel() {
   const userV = [];
   jQuery('.addUserToChannel').each(function () {
+    console.log(jQuery(this).val());
     userV.push(jQuery(this).val());
   });
+  const teamID = $('#createChannel').data('teamid');
   const channelN = document.getElementById('channelName').value;
   const channelT = document.getElementById('channelType').value;
-  const channelref = database.ref('team-6/channels');
-  channelref.push({
-    channelName: channelN,
+  database.ref('teams/'+teamID+'/channels').push({
+    channelName : channelN,
     private: channelT,
     users: userV,
   }, (error) => {
@@ -29,11 +30,6 @@ function fnCreateChannel(channelName, channelType, channelId) {
 }
 document.getElementById('createChannel1').addEventListener('click', fnCreateChannel);
 
-// function addLi(channelId){
-//     const channelId = $(this).parents('span').attr('channelId');
-//     $("#showContactInformation").append($("<li>").channelId);
-// }
-
 function getAllUsersFromTeam() {
   const userContactref = firebase.database().ref('team-6/users');
   console.log('asdfsadas', userContactref);
@@ -45,7 +41,7 @@ function getAllUsersFromTeam() {
         <div>
             <div class="buttom-panel text-center mt-1">
                 <div userId='${contactVal}'>
-                  <input type="checkbox" value=${contactVal} class="addUserToChannel">${contactVal}<br>
+                  <input type="checkbox" value=${contactVal} name="chVal" class="addUserToChannel">${contactVal}<br>
                 </div>
             </div>
         </div>
