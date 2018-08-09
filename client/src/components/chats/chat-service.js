@@ -7,12 +7,12 @@ import '../../../../firebase/firebase-config';
 import firebase from 'firebase';
 var dropbox = require('dropbox').Dropbox;
 
+//creating Store
 const store = createStore(chat);
 
+//event listeners
 document.getElementById('addMedia').addEventListener('click', getFile);
-
-// Log the initial state
-//console.log('initial Value',store.getState())
+document.getElementById('enter').addEventListener('click', sendMessage);
 
 let sentToUserName = ''; // github username, eg. anilkumar-bv
 let sentToDisplayName = ''; // github Name, eg. Anil Kumar
@@ -27,8 +27,7 @@ if (currentUser && currentUser.user !== 'undefined') {
     userDisplayName = getDisplayNameFrom(userName);
 }
 else {
-    // initialize to one of the User
-    userName = 'anilkumar-bv';
+    userName = 'anilkumar-bv'; // initialize to one of the User
 }
 
 function getDisplayNameFrom(userNameInput) {
@@ -78,6 +77,7 @@ export function openChatDetailsForChannel(channelId, teamID) {
                 chatBox.appendChild(paraElement);
             }
         });
+        chatBox.scrollTo(0,document.body.scrollHeight);
     });
 }
 
@@ -105,11 +105,9 @@ export function openChatDetailsForUser(userId, teamID) {
                 chatBox.appendChild(paraElement);
             }
         });
+        chatBox.scrollTo(0,document.body.scrollHeight);
     });
 }
-
-// get Send Button
-const btnSubmit = document.getElementById('enter');
 
 // function to validate input Message and check if Sender is set
 function validateInputs(inputMessage) {
@@ -124,15 +122,14 @@ function validateInputs(inputMessage) {
         alert('Please provide input text for Chat');
         return false;
     }
-
     return true;
 }
 
 // Function to build Message Entity
 function buildMessageEntity(message) {
     let msg = {};
-    msg.messageText = message;
-    msg.date = Date.now();
+    msg.messageText = message; 
+    msg.date = new Date(Date.now());
     msg.sentToUserName = sentToUserName;
     if (sentToDisplayName == null) // for Channel, userName and userDisplayName is same
         msg.sentToDisplayName = sentToUserName;
@@ -154,9 +151,7 @@ function buildMessageEntity(message) {
     return msg;
 }
 
-// Click event of "Send" button for Chat
-btnSubmit.addEventListener('click', evt => {
-
+function sendMessage(evt) {
     // Validate the input Message
     const rawMessage = document.querySelector('#enteredCommand').value;
     if (!validateInputs(rawMessage)) {
@@ -187,7 +182,7 @@ btnSubmit.addEventListener('click', evt => {
 
     // Add this to State of store
     store.dispatch(addChatToStore(message, currentDateTime, userName, sentToUserName, userDisplayName, sentToDisplayName));
-});
+}
 
 function pushMessagesForChannel(msg) {
     receiverRef = firebase.database().ref('teams').child(teamId).child('channels').child(sentToUserName).child('messages');
@@ -221,7 +216,6 @@ function pushMessagesForUser(msg) {
 
     // Render the Messages
     receiverRef.on('value', function (snapshot) {
-
         let chatBox = document.getElementById('messageBody');
         chatBox.innerHTML = '';
         snapshot.forEach(function (childSnapshot) {
@@ -235,6 +229,7 @@ function pushMessagesForUser(msg) {
                 chatBox.appendChild(paraElement);
             }
         });
+        chatBox.scrollTo(0,document.body.scrollHeight);
     });
 }
 
@@ -251,7 +246,6 @@ database.ref('messages').once('value', dataSnapshot => {
         chatInstance.sentToDisplayName = childSnapshot.val().sentToDisplayName;
         stateArray.push(chatInstance);
     });
-
     //state = createStore(chat, stateArray)
 });
 
@@ -300,10 +294,9 @@ function getFile(event) {
         dbx.filesDownload({ path: fileName})// here i mentioned the shareable link rather then I want to specify path
             .then(function (data) {
                 var downloadUrl = URL.createObjectURL(data.fileBlob);
-                var template = `<a href=${downloadUrl} download=${data.name}> Click to download sent media </a>`;
+                var template = `<a href=${downloadUrl} download=${data.name}> Media File Received </a>`;
                 var htmlElement = document.createElement('div');
                 htmlElement.innerHTML = template;
-                console.log(htmlElement)
                 var builtMessage = buildMessageEntity(template);
                 console.log(builtMessage)
                 pushMessagesForUser(builtMessage);
