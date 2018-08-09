@@ -13,7 +13,7 @@ import { store } from './profileReducer';
 
 store.subscribe(() =>{
   var currentState = store.getState();
-  localStorage["current_user"] = JSON.stringify(currentState);  
+  localStorage["current_user"] = JSON.stringify(currentState);
  });
 
 const getUrlParameter = function getUrlParameter(sParam) {
@@ -64,6 +64,7 @@ export function createInvitationComponent() {
   });
   invitComponent.querySelector('.skip_button').addEventListener('click', (e) => {
     e.preventDefault();
+    $('form#formid').find('input:text').val('');
     proceedNext(teamName,`Skipped inivitation for team ${teamName}`);
   });
   invitComponent.querySelector('#submit').addEventListener('click', (e) => {
@@ -91,7 +92,8 @@ export function createInvitationComponent() {
       console.log(recieverarr);
       //const sentmailComponent = mailSentBody();
       //$(`#${inivitationViewHolderId}`).empty().append(sentmailComponent);
-      proceedNext(teamName,`Inivitation for team ${teamName} sent to all the recipients`);
+      $('form#formid').find('input:text').val('');
+      proceedNext(teamName,`Inivitation for team ${teamName}`);
     }
   });
   $(`#${inivitationViewHolderId}`).empty().append(invitComponent);
@@ -279,8 +281,8 @@ export function userGitLogin() {
 
           console.log(teamnameFromUrl);
           console.log(team);
-          
-       // const currentUsrData = callCurrentUserData(userUID,userData,null);       
+
+       // const currentUsrData = callCurrentUserData(userUID,userData,null);
        // console.log("curret user val>>>>>>>>>>>>>>>>>"+currentUsrData);
        // store.dispatch({type: "LOGIN", currentUsrData});
 
@@ -312,7 +314,7 @@ export function userGitLogin() {
       //console.log(userData);
       // Saving/updating current logged in user
       saveUpdateUser(userUID, userData).then((res) => {
-       
+
        // const currentUsrData = callCurrentUserData(userUID,userData,null);
        // console.log("curret user val>>>>>>>>>>>>>>>>>"+currentUsrData);
        // store.dispatch({type: "LOGIN", currentUsrData});
