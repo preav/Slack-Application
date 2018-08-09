@@ -42,10 +42,11 @@ body
     height: 94%;
     overflow-y: scroll;
 }
-.container-fluid{
-   padding: 0;
-   text-align: center;
-}
+
+//.container-fluid{
+//   padding: 0;
+//   text-align: center;
+//}
 
 .containerWrapper {
    width: 100%;
@@ -190,18 +191,6 @@ body
     margin: 30px 70px 30px 70px;
 }
 
-#close {
-    float: right;
-    display:inline-block;
-    padding:2px 5px;
-}
-
-#close:hover {
-    float:right;
-    display:inline-block;
-    padding:2px 5px;
-    color:#fff;
-}
 
 .commandComment {
     width: 500px;
@@ -310,12 +299,6 @@ $border-radius: .25rem;
     transform: translate(0,-50%);
     top: 50%;
     margin: 0 auto;
-}
-
-label {
-    display: inline-block;
-    text-align: right;
-    //width: 20%;
 }
 
 .emojionearea .emojionearea-editor {

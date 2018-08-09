@@ -9,11 +9,11 @@ import { getCurrentUserData, saveUpdateUserProfile } from './profile/profileServ
 import { checkAuthStateChange, gitLogin, gitLogout } from '../../../../firebase/git-login';
 import { saveUpdateUser, getCurrentUserDetails, saveUpdateTeam } from '../../../../firebase/onboarding-db';
 import { getAllChannels, getAllUsers } from '../collaboration/userSetting/userSettingService';
-import store from './profileReducer';
+import { store } from './profileReducer';
 
 store.subscribe(() =>{
   var currentState = store.getState();
-  localStorage["current_user"] = JSON.stringify(currentState);
+  localStorage["current_user"] = JSON.stringify(currentState);  
  });
 
 const getUrlParameter = function getUrlParameter(sParam) {
@@ -129,7 +129,7 @@ document.querySelector('#user-profile').addEventListener('click', () => {
 });
 
 
-export function createTeamFormView() {
+export async function createTeamFormView() {
   const teamName = document.getElementById('team-name').value;
   // console.log(`value:${teamName}`);
 
@@ -207,6 +207,12 @@ $(document).on("click", ".team-link", function(){
   var teamName = $(this).data('team');
     $("#chatContainer").show();
     $('#signupContainer').hide();
+
+    const obj = store.getState();
+    obj.user.currentTeam.teamName = teamName;
+    console.log("***************************"+JSON.stringify(obj));
+    store.dispatch({type: "LOGIN", obj});
+
     getAllChannels(teamName);
     getAllUsers(teamName);
   // alert($(this).data('team'));
@@ -219,8 +225,6 @@ export function userGitLogin() {
 
     createDashboardView();
 
-    const userUID = response.user.uid;
-    store.dispatch({type: "LOGIN", value: response.user.uid});
 
     const userData = {
       username: response.additionalUserInfo.username,
@@ -233,6 +237,19 @@ export function userGitLogin() {
       status: 'active',
       permission: { write: false, read: true }
     };
+
+    const userUID = response.user.uid;
+
+    const obj =  {
+      "user": {
+        "userName": userData.username,
+        "currentTeam": {
+          "teamName": "",
+          "channals": []
+        },
+        "teams": []
+      }};
+      store.dispatch({type: "LOGIN", obj});
 
     if (teamnameFromUrl != 'undefined' && teamnameFromUrl != "") {
       console.log(`Adding to team: ${teamnameFromUrl}`);
@@ -262,6 +279,11 @@ export function userGitLogin() {
 
           console.log(teamnameFromUrl);
           console.log(team);
+          
+       // const currentUsrData = callCurrentUserData(userUID,userData,null);       
+       // console.log("curret user val>>>>>>>>>>>>>>>>>"+currentUsrData);
+       // store.dispatch({type: "LOGIN", currentUsrData});
+
           saveUpdateTeam(teamnameFromUrl, team).then((r) => {console.log(r)});
         }, (error) => {
           console.log(error);
@@ -271,6 +293,8 @@ export function userGitLogin() {
         //console.log(userData);
         // Saving/updating current logged in user
         saveUpdateUser(userUID, userData).then((res) => {
+
+
           console.log(res);
           getTeamsOfCurrentUser();
         }, (error) => {
@@ -288,6 +312,11 @@ export function userGitLogin() {
       //console.log(userData);
       // Saving/updating current logged in user
       saveUpdateUser(userUID, userData).then((res) => {
+       
+       // const currentUsrData = callCurrentUserData(userUID,userData,null);
+       // console.log("curret user val>>>>>>>>>>>>>>>>>"+currentUsrData);
+       // store.dispatch({type: "LOGIN", currentUsrData});
+
         console.log(res);
       }, (error) => {
         console.log(`Error in saving/updating user: ${error.toString()}`);
@@ -306,7 +335,7 @@ export function userGitLogin() {
 
 export function userGitLogout() {
   localStorage.removeItem("current_user");
-  store.dispatch({type: "LOGOUT_USER", payload: {}});
+  store.dispatch({type: "LOGOUT_USER", payload: null});
   gitLogout();
   homeComponentView();
 }
