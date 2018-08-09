@@ -15,9 +15,7 @@ export const createTodolistTask = function (widgetData) {
     if (firebaseTodolistdRes.id !== '') {
       const newRepowidget = document.createElement('div');
       newRepowidget.innerHTML = todolistCreateMsg(
-        `I added task (${widgetData.task}) into your to do list.`,
-        widgetData.id, widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered,
-      );
+        `I added task (${widgetData.task}) into your to do list.`, widgetData);
       createWidgetEle.appendChild(newRepowidget);
       createWidgetEle.scrollTop = createWidgetEle.scrollHeight;
       // update firebase database with slackbot response for adding task into to-do-list.
@@ -25,7 +23,7 @@ export const createTodolistTask = function (widgetData) {
         `I added task (${widgetData.task}) into your to do list.`);
     } else {
       errorOrSuccDiv.innerHTML = todolistCreateMsg('Task is not added on your to do list due to technical issue.',
-        widgetData.id, widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered);
+        widgetData);
       createWidgetEle.appendChild(errorOrSuccDiv);
       createWidgetEle.scrollTop = createWidgetEle.scrollHeight;
       // update firebase database with slackbot response for adding task into to-do-list.

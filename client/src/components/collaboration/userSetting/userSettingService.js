@@ -19,7 +19,7 @@ function getAllChannels(teamName) {
     const abc = getAllContactValue.map((contactVal) => {
       // const conName = Object.keys(contactVal);
       getAllContactHtml += `
-        <li id=${contactVal} class="channels" data-channelId=${contactVal}>
+        <li id=${contactVal} class="channels" data-channelid=${contactVal} data-teamid=${teamName}>
         ${contactVal}
         <span id="${contactVal}channel">
           <a class="muteChannel"><i class="fa fa-microphone-slash"></i></a>
@@ -36,8 +36,9 @@ function getAllChannels(teamName) {
 }
 
 $(document).on("click", '.channels', function(){
-  const channelId = $(this).data('channelId');
-  openChatDetailsForChannel(channelId);
+  const teamID = $(this).data('teamid');
+  const channelId = $(this).data('channelid');
+  openChatDetailsForChannel(channelId, teamID);
 });
 
 document.getElementById('userContacts').addEventListener('click', getAllChannels);
@@ -46,10 +47,10 @@ function getAllUsers(teamName) {
   const userContactref = database.ref('team-6').child('directMessages').child('users');
   userContactref.on('value', (snapshot) => {
     const getAllContactValue = Object.keys(snapshot.val());
-    let getAllContactHtml = `<ul class="side-list"><li data-toggle="modal" data-teamID=${teamName} data-target="#searchModal" id="searchPeople">Direct Messages</li>`;
+    let getAllContactHtml = `<ul class="side-list"><li data-toggle="modal" data-teamid=${teamName} data-target="#searchModal" id="searchPeople">Direct Messages</li>`;
     const abc = getAllContactValue.map((contactVal) => {
       getAllContactHtml += `
-      <li class="contactUser" data-userid=${contactVal}>
+      <li class="contactUser" data-userid=${contactVal} data-teamid=${teamName}>
         ${contactVal}
         <span userId = ${contactVal}>
           <a class="muteUser"><i class="fa fa-microphone-slash"></i></a>
@@ -63,12 +64,15 @@ function getAllUsers(teamName) {
     jQuery('#showContactInformation').append(getAllContactHtml);
   });
 }
-$(document).on("click", '.contactUser', function(){
-  const userId = $(this).data('userid');
-  openChatDetailsForUser(userId);
-});
-document.getElementById('userContacts').addEventListener('click', getAllUsers);
 
+// Get the UserId of the person who is selected for chatting
+$(document).on("click", '.contactUser', function(){
+  const teamID = $(this).data('teamid');
+  const userId = $(this).data('userid');
+  openChatDetailsForUser(userId, teamID);
+});
+
+document.getElementById('userContacts').addEventListener('click', getAllUsers);
 
 function fnAddMember(status, userName) {
   const memberRef = database.ref('team001/users/').push({

@@ -63,6 +63,15 @@ const config = {
             }, {
                 test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
                 loader: "url-loader?limit=10000&mimetype=image/svg+xml"
+            }, {
+                test: require.resolve('jquery'),
+                 use: [{
+                    loader: 'expose-loader',
+                    options: 'jQuery'
+                },{
+                    loader: 'expose-loader',
+                    options: '$'
+                }]
             }
         ]
     },
