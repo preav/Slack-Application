@@ -12,7 +12,8 @@ import { sendReminderMeaageOnTime } from './reminder/reminder-controller';
 // });
 
 const user = JSON.parse(window.localStorage.getItem("current_user"));
-getUserSlackbotChatHistory(user.user.userName); 
-
+if(user) {
+	getUserSlackbotChatHistory(user.user.userName); 
+}
 setInterval(function(){ sendReminderMeaageOnTime(); }, 10000);
 

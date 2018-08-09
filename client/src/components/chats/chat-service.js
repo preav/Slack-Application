@@ -5,12 +5,11 @@ import moment from 'moment';
 var markdown = require("markdown").markdown;
 import '../../../../firebase/firebase-config';
 import firebase from 'firebase';
-//import { filesDownload } from '../collaborator/addFiles';
 var dropbox = require('dropbox').Dropbox;
 
 const store = createStore(chat);
 
-//document.getElementById('addMedia').addEventListener('click', getFile);
+document.getElementById('addMedia').addEventListener('click', getFile);
 
 // Log the initial state
 //console.log('initial Value',store.getState())
@@ -214,6 +213,7 @@ function pushMessagesForChannel(msg) {
 }
 
 function pushMessagesForUser(msg) {
+    console.log('push messages to db called')
     senderRef = firebase.database().ref('teams').child(teamId).child('directMessages').child('users').child(userName).child('messages');
     receiverRef = firebase.database().ref('teams').child(teamId).child('directMessages').child('users').child(sentToUserName).child('messages');
     senderRef.push(msg);
@@ -225,12 +225,6 @@ function pushMessagesForUser(msg) {
         let chatBox = document.getElementById('messageBody');
         chatBox.innerHTML = '';
         snapshot.forEach(function (childSnapshot) {
-            // if(childSnapshot.val().messageText.indexOf('Sent a media file ') > -1){
-            //     var index = "Sent a media file ".length;
-            //     var fileName = childSnapshot.val().messageText.substring(index)
-            //     fileName = "/"+fileName;
-            //     filesDownload(fileName);
-            // }
             let childData = childSnapshot.val();
             if ((childData.sentByUserName === sentToUserName || childData.sentToUserName === sentToUserName) &&
                 (childData.sentByUserName === userName || childData.sentToUserName === userName)) {
@@ -262,64 +256,59 @@ database.ref('messages').once('value', dataSnapshot => {
 });
 
 // Render Chat history using subscribe method
-store.subscribe(() => {
-    console.log(store.getState());
-});
+// store.subscribe(() => {
+//     console.log(store.getState());
+// });
 
-// export function getFileName(fileName, fileId) {
-//     var scrubbedFileName = fileName.substr(1);
-//     console.log(scrubbedFileName);
-//     // Build the Message entity
-//     let msg = {};
-//     var message = "Sent a media file "+scrubbedFileName+" "+fileId;
-//     msg.messageText = message
-//     msg.date = Date.now();
-//     msg.sentTo = sentTo;
-//     msg.sentBy = userDisplayName;
-//     pushMessagesForUser(msg);
-// }
+function getFile(event) {
+    console.log('getFile called')
+    $('#imgupload').trigger('click');
+    event.stopPropagation();
+    $('#imgupload').change(function(e) {
+        e.stopPropagation();
+        console.log("inside change function")
+        var files = e.target.files;
+        console.log(files[0])
+        var fileName = "/"+files[0].name;
+        filesUpload(files[0], fileName);
+    });
+ }
 
-// function getFile(event) {
-//     $('#imgupload').trigger('click');
-//     $('#imgupload').change(function(e) {
-//            var files = e.target.files; 
-//        for (var i = 0, file; file = files[i]; i++) {
-//          var fileName = "/"+file.name;
-//          filesUpload(event, file, fileName);
-//        }
-//      });
-//  }
+ function filesUpload(fileValue, fileName) {
+    console.log('files upload method has been triggered')
+     var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
+     $.ajax({
+         url: 'https://content.dropboxapi.com/2/files/upload',
+         type: 'post',
+         data: fileValue,
+         processData: false,
+         contentType: 'application/octet-stream',
+         headers: {
+             "Authorization": "Bearer " + ACCESS_TOKEN,
+             "Dropbox-API-Arg": `{"path": "${fileName}", "mode": "add", "autorename": true, "mute": false}`
+         },
+         success: function (data) {
+             filesDownload(data.id);
+         }
+     })
+ }
 
-//  function filesUpload(event, fileValue, fileName) {
-//      var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
-//      $.ajax({
-//          url: 'https://content.dropboxapi.com/2/files/upload',
-//          type: 'post',
-//          data: fileValue,
-//          processData: false,
-//          contentType: 'application/octet-stream',
-//          headers: {
-//              "Authorization": "Bearer " + ACCESS_TOKEN,
-//              "Dropbox-API-Arg": `{"path": "${fileName}", "mode": "add", "autorename": true, "mute": false}`
-//          },
-//          success: function (data) {
-//              getFileName(data.path_display, data.id);
-//              //console.log(data)
-//          }
-//      })
-//  }
-
-//  function filesDownload(fileName) {
-// 	var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
-//  	var dbx = new dropbox({accessToken: ACCESS_TOKEN});
-//         dbx.filesDownload({ path: fileName})// here i mentioned the shareable link rather then I want to specify path
-//             .then(function (data) {
-//                 var downloadUrl = URL.createObjectURL(data.fileBlob);
-//                 var template = `<a href=${downloadUrl} download=${data.name}>Download here </a>`;
-//                 document.getElementById('messageBody').innerHTML += template;
-//             })
-//             .catch(function (error) {
-//                 console.error(error);
-//             });
-//         return
-// }
+ function filesDownload(fileName) {
+    console.log('filesDownload called')
+	var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
+ 	var dbx = new dropbox({accessToken: ACCESS_TOKEN});
+        dbx.filesDownload({ path: fileName})// here i mentioned the shareable link rather then I want to specify path
+            .then(function (data) {
+                var downloadUrl = URL.createObjectURL(data.fileBlob);
+                var template = `<a href=${downloadUrl} download=${data.name}> Click to download sent media </a>`;
+                var htmlElement = document.createElement('div');
+                htmlElement.innerHTML = template;
+                console.log(htmlElement)
+                var builtMessage = buildMessageEntity(template);
+                console.log(builtMessage)
+                pushMessagesForUser(builtMessage);
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+}
