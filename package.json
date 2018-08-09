@@ -7,7 +7,7 @@
     "build": "webpack --mode production",
     "start": "webpack-dev-server --mode development --open --hot --config webpack.config.js",
     "serve": "webpack-dev-server --host 0.0.0.0 --watch-poll",
-    "test": "mocha || true"
+    "test": "mocha --compilers babel-register"
   },
   "author": "chaithu",
   "license": "ISC",
@@ -16,7 +16,6 @@
     "babel-eslint": "^8.2.6",
     "babel-loader": "^7.1.5",
     "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
     "babel-preset-stage-0": "^6.24.1",
     "bootstrap": "^4.1.2",
     "cors": "^2.8.4",
@@ -56,7 +55,10 @@
     "webpack-dev-server": "^3.1.5"
   },
   "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0",
     "chai": "^4.1.2",
+    "deep-freeze": "0.0.1",
     "expose-loader": "^0.7.5",
     "mocha": "^5.2.0",
     "moment": "^2.22.2"

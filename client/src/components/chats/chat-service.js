@@ -2,13 +2,13 @@ import { createStore } from 'redux'
 import { chat } from './chat-reducers'
 import { addChatToStore } from './chat-controller'
 import moment from 'moment';
-//const firebase = require('firebase');
 var markdown = require("markdown").markdown;
 import '../../../../firebase/firebase-config';
 import firebase from 'firebase';
 import { getCurrentUserDetails } from '../../../../firebase/onboarding-db'
 //import { filesDownload } from '../collaborator/addFiles';
 var dropbox =  require('dropbox').Dropbox;
+
 const store = createStore(chat);
 
 //document.getElementById('addMedia').addEventListener('click', getFile);
@@ -28,6 +28,7 @@ if (currentUser) {
     console.log('userDisplayName', userDisplayName);
 }
 else {
+    // initialize to one of the User
     userDisplayName = 'anilkumar-bv';
 }
 
@@ -91,23 +92,44 @@ export function openChatDetailsForUser(userId) {
 // get Send Button
 const btnSubmit = document.getElementById('enter');
 
-// Click event of "Send" button for Chat
-btnSubmit.addEventListener('click', evt => {
-
+// function to validate input Message and check if Sender is set
+function validateInputs(inputMessage){
     // Check if a User is selected to Chat with
     if (sentTo === '') {
         alert('Please select a User to Chat with');
         return false;
     }
 
-    const rawMessage = document.querySelector('#enteredCommand').value;
-
-    // Check if empty Text is being sent
-    if (rawMessage.trim() === '') {
+     // Check if empty Text is being sent
+     if (inputMessage.trim() === '') {
         alert('Please provide input text for Chat');
         return false;
     }
 
+    return true;
+}
+
+// Function to build Message Entity
+function buildMessageEntity(message) {
+    let msg = {};
+    msg.messageText = message;
+    msg.date = Date.now();
+    msg.sentTo = sentTo;
+    msg.sentBy = userDisplayName;
+
+    return msg;
+}
+
+// Click event of "Send" button for Chat
+btnSubmit.addEventListener('click', evt => {
+
+    // Validate the input Message
+    const rawMessage = document.querySelector('#enteredCommand').value;
+    if(!validateInputs(rawMessage)){
+        return;
+    }
+   
+    // Clear the Input text box
     for (let elem of document.getElementsByClassName('emojionearea-editor')) {
         elem.innerText = ' ';
     }
@@ -115,15 +137,26 @@ btnSubmit.addEventListener('click', evt => {
     const currentDateTime = Date.now();
 
     // Build the Message entity
-    let msg = {};
-    msg.messageText = message;
-    msg.date = currentDateTime;
-    msg.sentTo = sentTo;
-    msg.sentBy = userDisplayName;
+    let msg = buildMessageEntity(message);
 
     // If message is sent to a Channel, store message only under the Channel
     if (forChannel) {
-        receiverRef = firebase.database().ref('team-6').child('channels').child(sentTo).child('messages');
+        pushMessagesForChannel(msg);
+    }
+    else { // If it's Direct Messages, store message under both the Sender and Receiver nodes
+        pushMessagesForUser(msg);
+    }
+
+    // push a copy of the message to "Messages" collection on DB
+    let messagesRef = firebase.database().ref('messages');
+    messagesRef.push(msg);
+
+    // Add this to State of store
+    store.dispatch(addChatToStore(message, currentDateTime, userDisplayName, sentTo));
+});
+
+function pushMessagesForChannel(msg) {
+    receiverRef = firebase.database().ref('team-6').child('channels').child(sentTo).child('messages');
 
         // push Message to DB
         receiverRef.push(msg);
@@ -145,18 +178,7 @@ btnSubmit.addEventListener('click', evt => {
                 }
             });
         });
-    }
-    else { // If it's Direct Messages, store message under both the Sender and Receiver nodes
-        pushMessagesForUser(msg);
-    }
-
-    // push a copy of the message to "Messages" collection on DB
-    let messagesRef = firebase.database().ref('messages');
-    messagesRef.push(msg);
-
-    // Add this to State of store
-    store.dispatch(addChatToStore(message, currentDateTime, userDisplayName, sentTo));
-});
+}
 
 function pushMessagesForUser(msg) {
     senderRef = firebase.database().ref('team-6').child('directMessages').child('users').child(userDisplayName).child('messages');
@@ -212,41 +234,6 @@ database.ref('messages').once('value', dataSnapshot => {
 store.subscribe(() => {
     console.log(store.getState());
 });
-
-// function to pull messages from State and Render them
-// function renderChatHistory() {
-//     console.log(store.getState());
-//     console.log('in subscribe method');
-
-//     // Clear the HTML content
-//     document.getElementById('messageBody').innerHTML = '';
-
-//     // Get all the Messages and display relevant ones
-//     const messages = store.getState();
-//     for (let message of messages) {
-//         if (forChannel) {
-//             if (message.sentTo === sentTo) {
-//                 renderMessage(message);
-//             }
-//         }
-//         else { // Direct Messages
-//             if ((message.sentBy === sentTo || message.sentTo === sentTo) &&
-//                 (message.sentBy === userDisplayName || message.sentTo === userDisplayName)) {
-//                 renderMessage(message);
-//             }
-//         }
-//     }
-// }
-
-// function renderMessage(message) {
-//     const paraElement = document.createElement('p');
-//     const formattedTime = moment(message.date).fromNow();
-//     paraElement.innerHTML = `<strong>${message.sentBy}</strong> - ${formattedTime}<br>
-//                                         ${message.messageText}`;
-//     let chatBox = document.getElementById('messageBody');
-//     chatBox.appendChild(paraElement);
-// }
-
 
 // export function getFileName(fileName, fileId) {
 //     var scrubbedFileName = fileName.substr(1);
