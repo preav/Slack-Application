@@ -5,16 +5,28 @@ function userReducer(state = {}, action) {
   switch (action.type) {   
       case 'LOGOUT_USER': 
       return {};  
+
       case 'LOGIN':
-      return {
-        state,
-        data: action.value
-    }      
-    default:
+      return Object.assign({}, action.obj);
+
+      default:
       return state;
   }
 }
 // store initialization
 
-const store = createStore(userReducer, JSON.parse(window.localStorage.getItem("current_user"))||[]);
-export default store;
+export const store = createStore(userReducer, JSON.parse(window.localStorage.getItem("current_user"))||[]);
+
+export function callCurrentUserData (userId, userData, currentTeamData) {
+
+  const curretUser = {
+    "user": {
+      "userName": userData.username,
+      "currentTeams": {
+        "teamName": currentTeamData,
+        "channals": []
+      },
+      "teams": userData.teams
+    }};      
+ return curretUser;
+}

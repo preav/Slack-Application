@@ -1,6 +1,6 @@
 const assert = require('chai').assert;
 const app = require('../app');
-import {getCurrentUserData1,saveUpdateUserProfile} from '../client/src/components/onboarding/profile/profileService'
+import {getCurrentUserData1,saveUpdateUserProfile1} from '../client/src/components/onboarding/profile/profileService'
 
 
 describe('Profile', function () {
@@ -17,7 +17,7 @@ describe('Profile', function () {
             name: 'test user',
             email: 'test@test.com'           
            };
-           saveUpdateUserProfile(userData).then((output) =>{
+           saveUpdateUserProfile1(userData).then((output) =>{
                
            });
     });

@@ -7,7 +7,7 @@ import apiURL from '../client/src/components/constants';
 
 export function saveUpdateUser(userId, userData) {
   // console.log(`${apiURL}/saveUpdateUser?userId=${userId}`);
-  // console.log(userData);
+  console.log(userData);
   return new Promise((resolve, reject) => {
     $.ajax({
       url: `${apiURL}/saveUpdateUser?userId=${userId}`,

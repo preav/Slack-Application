@@ -89,3 +89,31 @@ export function saveUpdateUserProfile(updated_name, updated_email) {
     });
   });
  }
+
+
+ 
+export function saveUpdateUserProfile1(updated_name, updated_email) {
+  // Return a new promise.
+  const userId = firebase.auth().currentUser.uid;
+  console.log(`https://us-central1-slackcollaboration-fa323.cloudfunctions.net/saveUpdateUser?userId=cMCTzZqeqOfSbRq8FjolmlQkDOf2`);
+  //console.log(userData);
+
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: `https://us-central1-slackcollaboration-fa323.cloudfunctions.net/saveUpdateUser?userId=cMCTzZqeqOfSbRq8FjolmlQkDOf2`,
+      type: 'POST',      
+      data: JSON.stringify({ name: updated_name,
+      email : updated_email }),
+      contentType: 'application/json;charset=UTF-8',
+      dataType: 'text',
+      success(data) {
+        console.log('Saved data');
+        resolve(data);
+      },
+      error(e) {
+        console.log('Error in saving data');
+        reject(e.statusText);
+      },
+    });
+  });
+ }

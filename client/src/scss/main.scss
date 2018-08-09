@@ -113,6 +113,11 @@ body
     border-radius: 4px;
 }
 
+#create-team-form .form-group
+{
+    text-align:left;
+}
+
 .avatar{
     border-radius: 50%;
     width: 80%;
@@ -186,18 +191,6 @@ body
     margin: 30px 70px 30px 70px;
 }
 
-#close {
-    float: right;
-    display:inline-block;
-    padding:2px 5px;
-}
-
-#close:hover {
-    float:right;
-    display:inline-block;
-    padding:2px 5px;
-    color:#fff;
-}
 
 .commandComment {
     width: 500px;
