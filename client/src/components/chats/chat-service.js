@@ -23,15 +23,14 @@ let forChannel = false;
 
 // Get Current User Details
 let currentUser = window.localStorage.getItem("current_user");
-console.log(currentUser);
-if (currentUser) {
-    userName = JSON.parse(currentUser).data;
+console.log(currentUser );
+if (currentUser && currentUser.user !== 'undefined') {
+    userName = JSON.parse(currentUser).user.userName;
     console.log('userName', userName);
-    userDisplayName = getDisplayNameFrom(userName);
 }
 else {
     // initialize to one of the User
-    userDisplayName = 'anilkumar-bv';
+    userName = 'anilkumar-bv';
 }
 
 function getDisplayNameFrom(userName) {
