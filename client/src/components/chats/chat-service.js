@@ -21,9 +21,9 @@ let forChannel = false;
 
 // Get Current User Details
 let currentUser = window.localStorage.getItem("current_user");
-console.log(currentUser);
-if (currentUser) {
-    userDisplayName = JSON.parse(currentUser).data;
+console.log(currentUser );
+if (currentUser && currentUser.user !== 'undefined') {
+    userDisplayName = JSON.parse(currentUser).user.userName;
     console.log('userDisplayName', userDisplayName);
 }
 else {
