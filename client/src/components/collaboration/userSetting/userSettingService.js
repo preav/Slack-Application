@@ -44,7 +44,6 @@ $(document).on("click", '.channels', function(){
 document.getElementById('userContacts').addEventListener('click', getAllChannels);
 
 function getAllUsers(teamName) {
-  console.log("ccc "+teamName);
   const userContactref = database.ref('team-6').child('directMessages').child('users');
   userContactref.on('value', (snapshot) => {
     const getAllContactValue = Object.keys(snapshot.val());
