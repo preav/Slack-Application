@@ -1,6 +1,10 @@
 // <<<<<<<<<< FOR DESKTOP NOTIFICATIONS >>>>>>>>>>>>>
 
-// checks window state
+let notificationList = []
+export const getnotificationList = () => {
+        return notificationList
+    }
+    // checks window state
 var vis = (function() {
     var stateKey, eventKey, keys = {
         hidden: "visibilitychange",
@@ -64,8 +68,11 @@ export function sendDesktopNotification(msgInfo, currentWindow) {
         body: msgInfo.messageText,
         tag: "multiple notifications"
     });
-    //’tag’ handles muti tab scenario i.e when multiple tabs are
-    // open then only one notification is sent
+
+    //Demo
+    notificationList.push(msgInfo)
+        //’tag’ handles muti tab scenario i.e when multiple tabs are
+        // open then only one notification is sent
 
     //3. handle notification events and set timeout
     notification.onclick = function() {
