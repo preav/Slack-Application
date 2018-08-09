@@ -22,6 +22,23 @@ export function getCurrentUserData() {
   });
 }
 
+
+export function getCurrentUserData1() {
+  //const userUID = firebase.auth().currentUser.uid;
+  const dataPromise = fetch(`https://us-central1-slackcollaboration-fa323.cloudfunctions.net/getUser?userId=cMCTzZqeqOfSbRq8FjolmlQkDOf2`);
+  return new Promise((resolve, reject) => {
+    dataPromise
+      .then((res) => {
+        res.json().then((data) => {
+          resolve(data);
+        });
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
+
 export function updateUserData(name, email) {
   const userUID = firebase.auth().currentUser.uid;
   const req = new Request(`https://us-central1-slackcollaboration-fa323.cloudfunctions.net/saveUpdateUser?userId=${userUID}`, {

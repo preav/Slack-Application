@@ -121,7 +121,7 @@ document.querySelector('#user-profile').addEventListener('click', () => {
 });
 
 
-export function createTeamFormView() {
+export async function createTeamFormView() {
   const teamName = document.getElementById('team-name').value;
   // console.log(`value:${teamName}`);
 
