@@ -6,7 +6,7 @@ var markdown = require("markdown").markdown;
 import '../../../../firebase/firebase-config';
 import firebase from 'firebase';
 //import { filesDownload } from '../collaborator/addFiles';
-var dropbox =  require('dropbox').Dropbox;
+var dropbox = require('dropbox').Dropbox;
 
 const store = createStore(chat);
 
@@ -15,25 +15,50 @@ const store = createStore(chat);
 // Log the initial state
 //console.log('initial Value',store.getState())
 
-let sentTo = '';
-let userDisplayName = '';
+let sentToUserName = ''; // github username, eg. anilkumar-bv
+let sentToDisplayName = ''; // github Name, eg. Anil Kumar
+let userName = ''; // github username
+let userDisplayName = ''; // github Name
 let forChannel = false;
 
 // Get Current User Details
 let currentUser = window.localStorage.getItem("current_user");
 console.log(currentUser );
 if (currentUser && currentUser.user !== 'undefined') {
-    userDisplayName = JSON.parse(currentUser).user.userName;
-    console.log('userDisplayName', userDisplayName);
+    userName = JSON.parse(currentUser).user.userName;
+    console.log('userName', userName);
 }
 else {
     // initialize to one of the User
-    userDisplayName = 'anilkumar-bv';
+    userName = 'anilkumar-bv';
+}
+
+function getDisplayNameFrom(userName) {
+    //get the User Name from userName
+    let userDisplayNameLocal = '';
+    let usersDbRef = firebase.database().ref('users');
+    usersDbRef.once('value', (dataSnapshot) => {
+        dataSnapshot.forEach(childSnapshot => {
+            console.log(childSnapshot.val());
+            if (childSnapshot.val().username === userName) {
+                // Check if name field is available. If not, return the userName itself
+                if (childSnapshot.val().name == null) {
+                    userDisplayNameLocal = userName;
+                }
+                else {
+                    userDisplayNameLocal = childSnapshot.val().name;
+                }
+                console.log('userDisplayName', userDisplayName);
+            }
+        });
+    })
+
+    return userDisplayNameLocal;
 }
 
 // Get a reference to the database service
 var database = firebase.database();
-let receiverRef = firebase.database().ref(teamId).child('channels').child('chn001').child('users').child(userDisplayName);
+let receiverRef = null; //firebase.database().ref(teamId).child('channels').child().child('users').child(userDisplayName);
 let senderRef = null;
 let teamId = '';
 
@@ -45,10 +70,10 @@ export function openChatDetailsForChannel(channelId, teamID) {
     console.log(channelId);
     console.log(teamId);
 
-    sentTo = channelId;
+    sentToUserName = channelId;
 
     console.log(sentTo);
-    receiverRef = firebase.database().ref(teamId).child('channels').child(sentTo).child('messages');
+    receiverRef = firebase.database().ref(teamId).child('channels').child(sentToUserName).child('messages');
     receiverRef.on('value', function (snapshot) {
         let chatBox = document.getElementById('messageBody');
         console.log(snapshot.val());
@@ -56,10 +81,10 @@ export function openChatDetailsForChannel(channelId, teamID) {
         snapshot.forEach(function (childSnapshot) {
             let childData = childSnapshot.val();
             console.log(childData);
-            if (childData.sentTo === sentTo) {
+            if (childData.sentToUserName === sentToUserName) {
                 const paraElement = document.createElement('p');
                 const formattedTime = moment(childData.date).fromNow();
-                paraElement.innerHTML = `<strong>${childData.sentBy}</strong> - ${formattedTime}<br>
+                paraElement.innerHTML = `<strong>${childData.sentByDisplayName}</strong> - ${formattedTime}<br>
                                          ${childData.messageText}`;
                 chatBox.appendChild(paraElement);
             }
@@ -68,12 +93,16 @@ export function openChatDetailsForChannel(channelId, teamID) {
 }
 
 export function openChatDetailsForUser(userId, teamID) {
-    console.log("teamid-"+ teamID)
+    console.log("teamid-" + teamID)
     teamId = teamID;
-    sentTo = userId;
-    console.log(sentTo);
+    sentToUserName = userId;
+    console.log(sentToUserName);
+
+    // Get the Name to display
+    sentToDisplayName = getDisplayNameFrom(sentToUserName);
+
     //renderChatHistory();
-    let receiverRef = firebase.database().ref(teamId).child('directMessages').child('users').child(sentTo).child('messages');
+    let receiverRef = firebase.database().ref(teamId).child('directMessages').child('users').child(sentToUserName).child('messages');
     receiverRef.on('value', function (snapshot) {
         let chatBox = document.getElementById('messageBody');
         console.log(snapshot.val());
@@ -81,11 +110,11 @@ export function openChatDetailsForUser(userId, teamID) {
         snapshot.forEach(function (childSnapshot) {
             let childData = childSnapshot.val();
             console.log(childData);
-            if ((childData.sentBy === sentTo || childData.sentTo === sentTo) &&
-                (childData.sentBy === userDisplayName || childData.sentTo === userDisplayName)) {
+            if ((childData.sentByUserName === sentToUserName || childData.sentToUserName === sentToUserName) &&
+                (childData.sentByUserName === userName || childData.sentToUserName === userName)) {
                 const paraElement = document.createElement('p');
                 const formattedTime = moment(childSnapshot.val().date).fromNow();
-                paraElement.innerHTML = `<strong>${childSnapshot.val().sentBy}</strong> - ${formattedTime}<br>
+                paraElement.innerHTML = `<strong>${childSnapshot.val().sentByDisplayName}</strong> - ${formattedTime}<br>
                                         ${childSnapshot.val().messageText}`;
                 chatBox.appendChild(paraElement);
             }
@@ -97,15 +126,15 @@ export function openChatDetailsForUser(userId, teamID) {
 const btnSubmit = document.getElementById('enter');
 
 // function to validate input Message and check if Sender is set
-function validateInputs(inputMessage){
+function validateInputs(inputMessage) {
     // Check if a User is selected to Chat with
-    if (sentTo === '') {
+    if (sentToUserName === '') {
         alert('Please select a User to Chat with');
         return false;
     }
 
-     // Check if empty Text is being sent
-     if (inputMessage.trim() === '') {
+    // Check if empty Text is being sent
+    if (inputMessage.trim() === '') {
         alert('Please provide input text for Chat');
         return false;
     }
@@ -118,8 +147,13 @@ function buildMessageEntity(message) {
     let msg = {};
     msg.messageText = message;
     msg.date = Date.now();
-    msg.sentTo = sentTo;
-    msg.sentBy = userDisplayName;
+    msg.sentToUserName = sentToUserName;
+    if (sentToDisplayName == null) // for Channel, userName and userDisplayName is same
+        msg.sentToDisplayName = sentToUserName;
+    else
+        msg.sentToDisplayName = sentToDisplayName;
+    msg.sentByUserName = userName;
+    msg.sentByDisplayName = userDisplayName;
 
     return msg;
 }
@@ -129,10 +163,10 @@ btnSubmit.addEventListener('click', evt => {
 
     // Validate the input Message
     const rawMessage = document.querySelector('#enteredCommand').value;
-    if(!validateInputs(rawMessage)){
+    if (!validateInputs(rawMessage)) {
         return;
     }
-   
+
     // Clear the Input text box
     for (let elem of document.getElementsByClassName('emojionearea-editor')) {
         elem.innerText = ' ';
@@ -160,39 +194,39 @@ btnSubmit.addEventListener('click', evt => {
 });
 
 function pushMessagesForChannel(msg) {
-    receiverRef = firebase.database().ref(teamId).child('channels').child(sentTo).child('messages');
+    receiverRef = firebase.database().ref(teamId).child('channels').child(sentToUserName).child('messages');
 
-        // push Message to DB
-        receiverRef.push(msg);
+    // push Message to DB
+    receiverRef.push(msg);
 
-        // Render the Messages
-        receiverRef.on('value', function (snapshot) {
-            let chatBox = document.getElementById('messageBody');
-            console.log(snapshot.val());
-            chatBox.innerHTML = '';
-            snapshot.forEach(function (childSnapshot) {
-                let childData = childSnapshot.val();
-                console.log(childData);
-                if (childData.sentTo === sentTo) {
-                    const paraElement = document.createElement('p');
-                    const formattedTime = moment(childData.date).fromNow();
-                    paraElement.innerHTML = `<strong>${childData.sentBy}</strong> - ${formattedTime}<br>
+    // Render the Messages
+    receiverRef.on('value', function (snapshot) {
+        let chatBox = document.getElementById('messageBody');
+        console.log(snapshot.val());
+        chatBox.innerHTML = '';
+        snapshot.forEach(function (childSnapshot) {
+            let childData = childSnapshot.val();
+            console.log(childData);
+            if (childData.sentToUserName === sentToUserName) {
+                const paraElement = document.createElement('p');
+                const formattedTime = moment(childData.date).fromNow();
+                paraElement.innerHTML = `<strong>${childData.sentByDisplayName}</strong> - ${formattedTime}<br>
                                              ${childData.messageText}`;
-                    chatBox.appendChild(paraElement);
-                }
-            });
+                chatBox.appendChild(paraElement);
+            }
         });
+    });
 }
 
 function pushMessagesForUser(msg) {
-    senderRef = firebase.database().ref(teamId).child('directMessages').child('users').child(userDisplayName).child('messages');
-    receiverRef = firebase.database().ref(teamId).child('directMessages').child('users').child(sentTo).child('messages');
+    senderRef = firebase.database().ref(teamId).child('directMessages').child('users').child(userName).child('messages');
+    receiverRef = firebase.database().ref(teamId).child('directMessages').child('users').child(sentToUserName).child('messages');
     senderRef.push(msg);
     receiverRef.push(msg);
 
     // Render the Messages
     receiverRef.on('value', function (snapshot) {
-    
+
         let chatBox = document.getElementById('messageBody');
         console.log(snapshot.val());
         chatBox.innerHTML = '';
@@ -205,11 +239,11 @@ function pushMessagesForUser(msg) {
             // }
             let childData = childSnapshot.val();
             console.log(childData);
-            if ((childData.sentBy === sentTo || childData.sentTo === sentTo) &&
-                (childData.sentBy === userDisplayName || childData.sentTo === userDisplayName)) {
+            if ((childData.sentByUserName === sentToUserName || childData.sentToUserName === sentToUserName) &&
+                (childData.sentByUserName === userName || childData.sentToUserName === userName)) {
                 const paraElement = document.createElement('p');
                 const formattedTime = moment(childSnapshot.val().date).fromNow();
-                paraElement.innerHTML = `<strong>${childSnapshot.val().sentBy}</strong> - ${formattedTime}<br>
+                paraElement.innerHTML = `<strong>${childSnapshot.val().sentByDisplayName}</strong> - ${formattedTime}<br>
                                             ${childSnapshot.val().messageText}`;
                 chatBox.appendChild(paraElement);
             }
@@ -224,8 +258,10 @@ database.ref('messages').once('value', dataSnapshot => {
         let chatInstance = {};
         chatInstance.messageText = childSnapshot.val().messageText;
         chatInstance.date = childSnapshot.val().date;
-        chatInstance.sentBy = childSnapshot.val().sentBy;
-        chatInstance.sentTo = childSnapshot.val().sentTo;
+        chatInstance.sentByUserName = childSnapshot.val().sentByUserName;
+        chatInstance.sentToUserName = childSnapshot.val().sentToUserName;
+        chatInstance.sentByDisplayName = childSnapshot.val().sentByDisplayName;
+        chatInstance.sentToDisplayName = childSnapshot.val().sentToDisplayName;
         stateArray.push(chatInstance);
     });
 
@@ -262,7 +298,7 @@ store.subscribe(() => {
 //        }
 //      });
 //  }
- 
+
 //  function filesUpload(event, fileValue, fileName) {
 //      var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
 //      $.ajax({
