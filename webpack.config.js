@@ -2,7 +2,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
 const config = {
-  entry: ['jquery', 'babel-polyfill',
+  entry: ['./client/src/components/notifications/notification-main.js',
+  'jquery', 'babel-polyfill',
     './client/src/components/index.js',
     './client/src/scss/main.scss'
   ],
@@ -12,7 +13,7 @@ const config = {
   },
   module: {
     rules: [
-      {
+      /*{
         enforce: 'pre',
         test: /\.js?$/,
         exclude: [/node_modules/],
@@ -20,87 +21,73 @@ const config = {
         options: {
           fix: true,
         },
-      },
-      {
-        test: /\.js?$/,
-        exclude: [/node_modules/],
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              presets: ['env', 'stage-0'],
+      },*/
+            {
+                test: /\.js?$/,
+                exclude: [/node_modules/],
+                use: [{
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['env', 'stage-0'],
+                    },
+                }, ],
             },
-          },
-        ],
-      },
-      {
-        test: /\.scss$/,
-        use: [
-          {
-            loader: "style-loader" // creates style nodes from JS strings
-          },
-          {
-            loader: "css-loader" // translates CSS into CommonJS
-          },
-          {
-            loader: "sass-loader" // compiles Sass to CSS
-          }
+            {
+                test: /\.scss$/,
+                use: [{
+                        loader: "style-loader" // creates style nodes from JS strings
+                    },
+                    {
+                        loader: "css-loader" // translates CSS into CommonJS
+                    },
+                    {
+                        loader: "sass-loader" // compiles Sass to CSS
+                    }
+                ]
+            },
+            {
+                test: /\.css$/,
+                loader: 'style-loader!css-loader?sourceMap'
+            }, {
+                test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+                loader: "url-loader?limit=10000&mimetype=application/font-woff"
+            }, {
+                test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+                loader: "url-loader?limit=10000&mimetype=application/font-woff"
+            }, {
+                test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+                loader: "url-loader?limit=10000&mimetype=application/octet-stream"
+            }, {
+                test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+                loader: "file-loader"
+            }, {
+                test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
+                loader: "url-loader?limit=10000&mimetype=image/svg+xml"
+            }, {
+                test: require.resolve('jquery'),
+                 use: [{
+                    loader: 'expose-loader',
+                    options: 'jQuery'
+                },{
+                    loader: 'expose-loader',
+                    options: '$'
+                }]
+            }
         ]
-      },
-      {
-        test: /\.css$/,
-        loader: 'style-loader!css-loader?sourceMap'
-      }, {
-        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url-loader?limit=10000&mimetype=application/font-woff"
-      }, {
-        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url-loader?limit=10000&mimetype=application/font-woff"
-      }, {
-        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url-loader?limit=10000&mimetype=application/octet-stream"
-      }, {
-        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "file-loader"
-      }, {
-        test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        loader: "url-loader?limit=10000&mimetype=image/svg+xml"
-      }, {
-        test: require.resolve('jquery'),
-        use: [{
-          loader: 'expose-loader',
-          options: 'jQuery',
-        }, {
-          loader: 'expose-loader',
-          options: '$',
-        }]
-      },
-      {
-          test: /\.(jpe?g|png|gif)$/i,
-          loader:"file-loader",
-          query:
-          {
-              name:'[name].[ext]',
-              outputPath:'images/'
-              //the images will be emmited to dist/images folder
-              //the images will be put in the DOM <style> tag as eg. background: url(assets/images/image.png);
-          }
-      },
-    ]
-  },
-  plugins: [
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-      'window.$': 'jquery',
-      'window.jQuery': 'jquery',
-      Waves: 'node-waves',
-    }),
-    new HtmlWebpackPlugin({
-      template: './index.html'
-    })
-  ],
-  devtool: 'source-map',
+    },
+    plugins: [
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+            jQuery: 'jquery',
+            'window.$': 'jquery',
+            'window.jQuery': 'jquery',
+            Waves: 'node-waves',
+        }),
+        new HtmlWebpackPlugin({
+            template: './index.html'
+        })
+    ],
+    devtool: 'source-map',
 };
 
 module.exports = config;

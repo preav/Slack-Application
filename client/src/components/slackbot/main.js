@@ -1,7 +1,7 @@
 import { hitEnter } from './command-line';
 import { getUserChatHistory } from './chat-history/chathistory-controller';
-
 import './todolist/todolist-controller';
+import { sendReminderMeaageOnTime } from './reminder/reminder-controller';
 
 // const enteredCommand = document.getElementById('enteredCommand');
 
@@ -13,3 +13,6 @@ import './todolist/todolist-controller';
 // });
 
 getUserChatHistory('testUser1'); // pass real user
+
+setInterval(function(){ sendReminderMeaageOnTime(); }, 10000);
+

@@ -3,29 +3,6 @@ function createHTMLElement(html) {
     template.innerHTML = html;
     return template.content.firstElementChild;
   }
-  function createSearchResult(user,text) {
-    const createResultTemplateTxt = `<div class="border container tab-pane" aria-labelledby="pills-home-tab" id="createRepo">
-  <button type="button" class="close" aria-label="Close">
-  <span aria-hidden="true">&times;</span>
-  </button>
-  <div class="card card-body" role="tabpanel" aria-labelledby="pills-home-tab" style="content: \e003">
-  <form>
-  <div class="form-group row">      
-          <div class="col-md-3">
-              <output>${user}</output>
-          </div>
-      </div>
-      <div class="form-group row">
-           <div class="col-md-3">
-          <output>${text}</output>
-          </div>
-      </div>  
-  </form>
-  </div>
-  </div>`;
-  
-    return createHTMLElement(createResultTemplateTxt);
-  }
 
   function tabDisplay(src)
   {

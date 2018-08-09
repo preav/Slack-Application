@@ -1,14 +1,14 @@
 // function to respond back after calendar event created
-export const calendarEventCreateMsg = function (botResponse, panId, creatDate, creatTime, commandEntered) {
-  return `<div class='createGithubRepo playGroungDiv-you' id='createGithubRepo-you_${panId}' >
+export const calendarEventCreateMsg = function (botResponse, widgetData) {
+  return `<div class='createGithubRepo playGroungDiv-you' id='createGithubRepo-you_${widgetData.id}' >
               <span><strong><a href="#">You</a></strong></span>
-              <p>${commandEntered}</p>
-              <span>On ${creatDate} at ${creatTime}</span>
+              <p>${widgetData.commandEntered}</p>
+              <span><strong>A few seconds ago<strong></span>
               </div>
-              <div class='createGithubRepo panBackground playGroungDiv-bot' id='createGithubRepo_${panId}' >
+              <div class='createGithubRepo panBackground playGroungDiv-bot' id='createGithubRepo_${widgetData.id}' >
               <span><strong>Slackbot</strong></span>
               <p>${botResponse}</p>
-              <span>On ${creatDate} at ${creatTime}</span>
+              <span><strong>A few seconds ago<strong></span>
           </div>`;
 };
 
