@@ -1,5 +1,5 @@
 import firebase from 'firebase';
-import { saveUpdateTeam, saveUpdateUser, getCurrentUserDetails } from '../../../../../firebase/onboarding-db';
+import { saveUpdateTeam, saveUpdateUser, getCurrentUserDetails, getTeamDetail } from '../../../../../firebase/onboarding-db';
 
 export function submitTeamCreateForm() {
   const userUID = firebase.auth().currentUser.uid;
@@ -32,9 +32,18 @@ export function submitTeamCreateForm() {
 
   getCurrentUserDetails().then((response) => {
     // console.log(response);
-    const userData = {
-      teams: [...response.teams, teamName],
-    };
+    const teams=response.teams;
+    let userData;
+    if(teams != 'undefined' && teams != "" && teams != null){
+      userData = {
+        teams: [...response.teams, teamName],
+      };
+    }else{
+      userData = {
+        teams: [teamName],
+      };
+    }
+
     saveUpdateUser(userUID, userData).then((res) => {
       console.log(res);
     }, (err) => {
@@ -45,6 +54,9 @@ export function submitTeamCreateForm() {
   });
 }
 
-export function test() {
+export async function getTeam(teamName) {
+  var team = await getTeamDetail(teamName);
+  console.log(team);
 
+  return team;
 }

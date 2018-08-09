@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import '../../../../../firebase/firebase-config';
-import { clickChannel } from '../../../../src/components/chats/chat-service';
+import { openChatDetailsForChannel, openChatDetailsForUser } from '../../../../src/components/chats/chat-service';
 
 let database = firebase.database();
 const jQuery = require('jquery');

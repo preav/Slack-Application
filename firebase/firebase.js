@@ -1,3 +1,4 @@
 import firebase from 'firebase';
 
-export const database = firebase.database();
+const database = firebase.database();
+export default database;

@@ -13,8 +13,7 @@ export const createCalendarEvent = function (widgetData) {
       const newRepowidget = document.createElement('div');
       newRepowidget.innerHTML = calendarEventCreateMsg(
         `I create a calendar event (${widgetData.calendarEvent}), please check your calendar.`,
-        widgetData.id, widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered,
-      );
+        widgetData);
       createWidgetEle.appendChild(newRepowidget);
       createWidgetEle.scrollTop = createWidgetEle.scrollHeight;
       // update firebase database with slackbot response for creating calendar event.
@@ -23,8 +22,7 @@ export const createCalendarEvent = function (widgetData) {
     } else {
       errorOrSuccDiv.innerHTML = calendarEventCreateMsg(
         'Calendar event cannot be created due to technical issue, please try after some time.',
-        widgetData.id, widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered,
-      );
+        widgetData);
       createWidgetEle.appendChild(errorOrSuccDiv);
       createWidgetEle.scrollTop = createWidgetEle.scrollHeight;
       // update firebase database with slackbot response for creating calendar event.
