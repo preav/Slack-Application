@@ -48,7 +48,8 @@ $("#enteredCommand").emojioneArea({
       keypress: function (editor, event) {
           if (event.which == 13) {
               event.preventDefault();
-              var enteredValue = $('#enteredCommand').data("emojioneArea").getText();;
+              var enteredValue = $('#enteredCommand').data("emojioneArea").getText();
+              $('#enteredCommand').val('');
               hitEnter(enteredValue);
           }
       }

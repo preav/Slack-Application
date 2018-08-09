@@ -80,23 +80,25 @@ export const sendReminderMeaageOnTime = function () {
     const reminderMsgListArray = Object.keys(reminderMsgListObject).map(i => reminderMsgListObject[i])
     for(var k = 1; k <= reminderMsgListArray.length - 1; k++){//loop for each users
       var reminderMsgListArrayObj =reminderMsgListArray[k].reminder;
-      const allReminderMsgListArray = Object.keys(reminderMsgListArrayObj).map(i => reminderMsgListArrayObj[i])
-      for(var j = 0; j <= allReminderMsgListArray.length - 1; j++){ // loop for each reminder for a user
-        console.log('Reminder ', allReminderMsgListArray[j].commandEntered);
-        if(((Date.parse(allReminderMsgListArray[j].reminderTime) - (new Date())) < 0) 
-        &&  (allReminderMsgListArray[j].reminderSent === 'No')) {
-           // once reminder time arrive
-          console.log('time reached to send reminder!!');
-          const newRepowidget = document.createElement('div');
-          newRepowidget.innerHTML = showUserReminderBeforeSave(allReminderMsgListArray[j]);
-          createWidgetEle.appendChild(newRepowidget);
-          createWidgetEle.scrollTop = createWidgetEle.scrollHeight;
-          
-          // save reminder sent to firebase database
-          saveReminderSent(allReminderMsgListArray[j])
+      // if(reminderMsgListArrayObj === 'undefined'){
+        const allReminderMsgListArray = Object.keys(reminderMsgListArrayObj).map(i => reminderMsgListArrayObj[i])
+        for(var j = 0; j <= allReminderMsgListArray.length - 1; j++){ // loop for each reminder for a user
+          console.log('Reminder ', allReminderMsgListArray[j].commandEntered);
+          if(((Date.parse(allReminderMsgListArray[j].reminderTime) - (new Date())) < 0) 
+          &&  (allReminderMsgListArray[j].reminderSent === 'No')) {
+            // once reminder time arrive
+            console.log('time reached to send reminder!!');
+            const newRepowidget = document.createElement('div');
+            newRepowidget.innerHTML = showUserReminderBeforeSave(allReminderMsgListArray[j]);
+            createWidgetEle.appendChild(newRepowidget);
+            createWidgetEle.scrollTop = createWidgetEle.scrollHeight;
+            
+            // save reminder sent to firebase database
+            saveReminderSent(allReminderMsgListArray[j])
 
+          }
         }
-      }
+      // }
     }
     
   });

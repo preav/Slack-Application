@@ -74,8 +74,22 @@ export const getReminderForAllUsersService = () => new Promise((resolve, reject)
 
 // function to save reminder data into firebase database -- firebase
 export const saveReminderSent = widgetData => new Promise((resolve, reject) => {
-  let widgetDataTemp = widgetData;
-  widgetDataTemp.currentdateTime = new Date();
+  const currentdateTime = new Date().toString();
+
+  let widgetDataTemp = {
+    botResponse:widgetData.botResponse,
+    commandEntered: widgetData.commandEntered,
+    currentdateTime: currentdateTime,
+    creatDate: widgetData.creatDate,
+    creatTime: widgetData.creatTime,
+    id: widgetData.id,
+    remindeeUser: widgetData.remindeeUser,
+    reminderDate:widgetData.reminderDate,
+    reminderTime:widgetData.reminderTime,
+    userId: widgetData.userId,
+    widgetName:"remindersent",
+}
+
   const collectionKey = 
   database.ref(`SlackXT/slackbot/${widgetDataTemp.userId}/remindersent`).push(widgetDataTemp).getKey();
 
@@ -89,7 +103,7 @@ export const saveReminderSent = widgetData => new Promise((resolve, reject) => {
   console.log('collectionKey = ', collectionKey);
   if (collectionKey !== '') {
     widgetData.id = collectionKey;
-    widgetData.currentdateTime = new Date();
+    //widgetData.currentdateTime = new Date();
     console.log('reminder saved successfully...', widgetData.id);
     resolve(widgetData);
   } else {
