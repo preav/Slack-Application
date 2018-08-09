@@ -12,7 +12,7 @@ const config = {
   },
   module: {
     rules: [
-      /*{
+      {
         enforce: 'pre',
         test: /\.js?$/,
         exclude: [/node_modules/],
@@ -20,7 +20,7 @@ const config = {
         options: {
           fix: true,
         },
-  },*/
+      },
       {
         test: /\.js?$/,
         exclude: [/node_modules/],
@@ -74,7 +74,18 @@ const config = {
           loader: 'expose-loader',
           options: '$',
         }]
-      }
+      },
+      {
+          test: /\.(jpe?g|png|gif)$/i,
+          loader:"file-loader",
+          query:
+          {
+              name:'[name].[ext]',
+              outputPath:'images/'
+              //the images will be emmited to dist/images folder
+              //the images will be put in the DOM <style> tag as eg. background: url(assets/images/image.png);
+          }
+      },
     ]
   },
   plugins: [

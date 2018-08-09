@@ -61,18 +61,11 @@ export function getCurrentUserDetails() {
   });
 }
 
-export async function getTeamDetail(teamName)
-{
-  const result = null;
-
-  try {
-    const result = await $.ajax({
-      url: `${apiURL}/getTeam?teamName=${teamName}`,
-      type: 'GET',
-      // data: {varName : varValue},
-    });
-    return result;
-  } catch (error) {
-    console.error(error);
-  }    
+export async function getTeamDetail(teamName) {
+  const result = await $.ajax({
+    url: `${apiURL}/getTeam?teamName=${teamName}`,
+    type: 'GET',
+    // data: {varName : varValue},
+  });
+  return result;
 }
