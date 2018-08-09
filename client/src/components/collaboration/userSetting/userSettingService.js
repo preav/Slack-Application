@@ -78,7 +78,7 @@ function getAllUsers(teamName) {
 // Get the UserId of the person who is selected for chatting
 $(document).on("click", '.users', function(){
   const teamID = $(this).data('teamid');
-  const userId = $(this).data('userid');
+  const userId = $(this).data('username');
   openChatDetailsForUser(userId, teamID);
 });
 
