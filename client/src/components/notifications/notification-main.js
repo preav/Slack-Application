@@ -50,8 +50,8 @@ function desktopNotification(currentWindow) {
     console.log('desk not called')
     if (Notification.permission === "granted") {
         console.log("granted")
-        var msgInfo = { "messageText": '' };
-        sendDesktopNotification(msgInfo, currentWindow);
+        var msgInfo = { "messageText": "", "sentBy": "" };
+        // sendDesktopNotification(msgInfo, currentWindow);
     } else {
         console.log("not granted")
     }
@@ -71,5 +71,5 @@ export function sendDesktopNotification(msgInfo, currentWindow) {
     notification.onclick = function() {
         currentWindow.focus();
     };
-    setTimeout(notification.close.bind(notification), 10000);
+    setTimeout(notification.close.bind(notification), 5000);
 }
