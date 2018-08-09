@@ -19,6 +19,7 @@ import 'emojione';
 import 'emojionearea';
 
 // import for slackbot main.js
+import 'datejs';
 import './slackbot/main';
 
 import './chats/chat-service';

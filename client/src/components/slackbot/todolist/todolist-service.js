@@ -1,5 +1,6 @@
 const firebase = require('firebase');
-import { database } from '../../../../../firebase/firebase';
+import database from '../../../../../firebase/firebase';
+//const database = require('../../../../../firebase/firebase'); 
 
 // function to save to-do-list task data into firebase database -- firebase
 export const createTodolistService = widgetData => new Promise((resolve, reject) => {

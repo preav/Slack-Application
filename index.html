@@ -127,6 +127,11 @@
                         <ul class="nav nav-tabs nav-tabs--vertical nav-tabs--left sticky-offset" style="background-color: #3333332a; " role="navigation">
                           <li class="nav-item">
                             <a href="#" role="tab" class="text-secondary">
+                              <b>Talk With Bot</b>
+                            </a>
+                          </li>
+                          <li class="nav-item">
+                            <a href="#" role="tab" class="text-secondary">
                               <b>Channels</b>
                             </a>
                           </li>
@@ -231,7 +236,7 @@
     </div>
     <div class="container-fluid">
       <div id="signupContainer"></div>
-      <div id="playGround show-login"></div>
+      
     </div>
     <div class="show-login" id="chatContainer">
       <div class="container-fluid d-flex text-left containerWrapper">
@@ -240,7 +245,10 @@
           </div>
         </section>
         <section id="chatArea" class="col-xs-7 col-sm-9 d-flex flex-column">
-          <div id="messageBody"></div>
+          <div id="messageBody">
+            <div id="playGround"></div>
+
+          </div>
           <label for="enteredCommand" class="sr-only"> Text Message Area </label>
           <form id="add-msg-form" onsubmit="return false">
             <div class="input-group mb-2">
