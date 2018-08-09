@@ -1,5 +1,5 @@
-import { database } from '../../../../../firebase/firebase';
 const firebase = require('firebase');
+import database from '../../../../../firebase/firebase';
 
 // function to save calendar event into firebase database -- firebase
 export const createCalendarEventService = widgetData => new Promise((resolve, reject) => {

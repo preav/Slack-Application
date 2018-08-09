@@ -30,7 +30,7 @@ export const createRepository = function (widgetData) {
         createRepoWidgetEle.scrollTop = createRepoWidgetEle.scrollHeight;
         // update firebase database with slackbot response
         updateSlackBotResponse(widgetData,
-          `Slack has created repository (${widgetData.repositoryName}) in your github account`);
+          `I have created repository (${widgetData.repositoryName}) on github.`);
       }).catch((err) => {
         console.log(err, 'error in gitbot-controller.js ...');
       });
@@ -58,11 +58,12 @@ export const createRepositoryIssue = function (widgetData) {
       createRepoFirebaseService(widgetData).then((response) => {
         console.log(`createRepositoryIssue() in gitbot-controller.js = ${response}`);
         const newRepowidget = document.createElement('div');
-        newRepowidget.innerHTML = createIssueResponse(widgetData.repositoryName,
-          widgetData.issueName,
-          widgetData.id, widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered);
+        newRepowidget.innerHTML = createIssueResponse(widgetData);
         createRepoWidgetEle.appendChild(newRepowidget);
         createRepoWidgetEle.scrollTop = createRepoWidgetEle.scrollHeight;
+        // update firebase database with slackbot response
+        updateSlackBotResponse(widgetData,
+`I have created an issue (${widgetData.issueName}) on repository (${widgetData.repositoryName})`);
       }).catch((err) => {
         console.log(err, 'error in gitbot-controller.js ...');
       });

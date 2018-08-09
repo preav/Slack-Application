@@ -10,7 +10,8 @@ $("#end").change(function () {
     }
 });
 
-$(document).on('click', '#ok', () => {  
+$(document).on('click', '#ok', () => {
+    document.getElementById('chatResult').style.display='none';   
     const startDate = document.getElementById('start').value;
     const endDate = document.getElementById('end').value;
     getMessagesFromFireBase(startDate, endDate);   
@@ -28,4 +29,3 @@ export function dateValidation() {
             return 'true';
         });
     }
-
