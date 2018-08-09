@@ -2,7 +2,7 @@
 import firebase from 'firebase';
 import { database } from '../userSetting/userSettingService';
 // import { getAllChannels } from '../userSetting/userSettingService';
-import { getUserName } from "./../userSetting/userSettingService"
+import { getAllUsers } from "./../userSetting/userSettingService"
 const jQuery = require('jquery');
 
 
@@ -30,9 +30,14 @@ function fnCreateChannel() {
 }
 document.getElementById('createChannel1').addEventListener('click', fnCreateChannel);
 
-function getAllUsersFromTeam(userID) {
-  console.log("userid" ,userID );
-  getUserName(userID);
+function getAllUsersFromTeam(userID1) {
+  // console.log("UserId1",userID1);
+    // getUserName(userID1);
+  // console.log("something",teamName);
+  // console.log("something23",userNode);
+  // getAllUsers(teamName);
+  // console.log("userid" ,userID );
+  // getUserName(userID);
   // console.log('teamName======>', userContactref);
   // userContactref.once('value', (snapshot) => {
   //   const getAllContactValue = Object.keys(snapshot.val());
@@ -54,8 +59,14 @@ function getAllUsersFromTeam(userID) {
 }
 
 jQuery(document).on('click', '#createChannel', (e) => {
-  const channelId = e.target.parentElement.getAttribute('channelId');
-  getAllUsersFromTeam(userID);
+  // const userNode = $(this).parents('span').data('usernode');
+  // const teamID = $(this).parents('span').data('teamid');
+  // console.log("coming here",userNode);
+  // console.log("coming here",teamID);
+  const userID1 = $(this).parents('span').data('userid');
+  console.log("userID1",userID1);
+  // getAllUsers();
+  // getAllUsersFromTeam(userID1);
 });
 
 export { fnCreateChannel, getAllUsersFromTeam };
