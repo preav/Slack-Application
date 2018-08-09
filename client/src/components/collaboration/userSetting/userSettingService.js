@@ -7,7 +7,7 @@ const jQuery = require('jquery');
 
 function getAllChannels(teamName) {
   const checkChannelRef = database.ref('teams/' + teamName);
-  let getAllContactHtml = `<ul class="side-list"><li>Channels
+  let getAllContactHtml = `<ul class="side-list"><li><strong data-toggle="modal" data-target="#searchModal" id="searchChannel">Channels</strong>
     <span><a id="createChannel" data-teamid="${teamName}" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-circle"></i></a></span>
     </li></ul><ul class="side-list side-list-body" id="channelList"></ul>`;
   $('#showContactInformation').append(getAllContactHtml);
@@ -45,7 +45,7 @@ $(document).on("click", '.channels', function(){
 
 function getAllUsers(teamName) {
   const checkUserRef = database.ref('teams/' + teamName);
-  let getAllContactHtml = `<ul class="side-list"><li>Direct Messages
+  let getAllContactHtml = `<ul class="side-list"><li data-toggle="modal" data-target="#searchModal" id="searchPeople">Direct Messages
     </li></ul><ul class="side-list side-list-body" id="usersList"></ul>`;
   $('#showContactInformation').append(getAllContactHtml);
   checkUserRef.on('value', (snapshot) => {

@@ -9,7 +9,7 @@ let globallist=[
     },
     {
         messages:[]
-    },
+    }, 
     {
         all:[]
     }
@@ -19,15 +19,18 @@ export function getAllChannels(teamId) {
     const db = firebase.database().ref(teamId + '/channelMsg');
     db.on('value', (channelList) => {
         channelList.forEach((channelIndex) => {
-            console.log("channel"+channelIndex.key);
                 let flag=true;
                 for(let i=0;i<globallist[0].channels.length;i++){
-                    if(globallist[0].channels[i]===channelIndex.key)
+                    if(globallist[0].channels[i].label===channelIndex.key)
                         flag=false;
                 }
                 if(flag===true){
-                    globallist[0].channels.push(channelIndex.key);
-                    globallist[3].all.push(channelIndex.key);
+                    let data={
+                        category: "channel",
+                        label: channelIndex.key
+                    }
+                    globallist[0].channels.push(data);
+                    globallist[3].all.push(data);
                 }
         });
     });
@@ -39,19 +42,23 @@ export function getAllUsers(teamId) {
         userList.forEach((user) => {
             let flag=true;
                 for(let i=0;i<globallist[1].users.length;i++){
-                    if(globallist[1].users[i]===user.child('username').val())
+                    if(globallist[1].users[i].label===user.child('username').val())
                         flag=false;
                 }
                 if(flag===true){
-                    globallist[1].users.push(user.child('username').val());
-                    globallist[3].all.push(user.child('username').val());
+                    let data={
+                        category: "people",
+                        label: user.child('username').val()
+                    }
+                    globallist[1].users.push(data);
+                    globallist[3].all.push(data);
                 }
         });
     });
 }
 
-function getDirectMessages(){
-    const users = firebase.database().ref('/team-6/directMessages/users');
+function getDirectMessages(teamId){
+    const users = firebase.database().ref(teamId+'/directMessages/users');
     users.on('value', (snapshot) => {
         const getAllUserIds = Object.values(snapshot.val());
         const abc = getAllUserIds.map((msgVal) => {
@@ -60,25 +67,26 @@ function getDirectMessages(){
                 Object.entries(msgsList).forEach(([key, value]) => {
                     const msgData = value;
                     let message=msgData.messageText;
-                    let rcvDate=msgData.date;
-                    let by=msgData.sentBy;
-                    let msgId=msgData.messageId;
+                    // let rcvDate=msgData.date;
+                    // let by=msgData.sentBy;
+                    // let msgId=msgData.messageId;
                     let data={
-                        text: message,
-                        date: rcvDate,
-                        sentby: by,
-                        id: msgId 
+                        category : "message",
+                        label:message,
+                        // date: rcvDate,
+                        // sentby: by,
+                        // id: msgId 
                     }
                     globallist[2].messages.push(data);
-                    globallist[3].all.push(message);
+                    globallist[3].all.push(data);
                 });
             });
         });
     });
 }
 
-function getChannelMessages() {
-    const channelMsg = firebase.database().ref('/team-6/channelMsg/');
+function getChannelMessages(teamId) {
+    const channelMsg = firebase.database().ref(teamId+'/channelMsg/');
     channelMsg.on('value', (snapshot) => {
         const getAllChannelValue = Object.values(snapshot.val());
         const abc = getAllChannelValue.map((chnVal) => {
@@ -87,26 +95,27 @@ function getChannelMessages() {
                 Object.entries(msgsList).forEach(([key, value]) => {
                     const msgData = value;
                     let message=msgData.messageText;
-                    let rcvDate=msgData.date;
-                    let by=msgData.sentBy;
-                    let msgId=msgData.messageId;
+                    // let rcvDate=msgData.date;
+                    // let by=msgData.sentBy;
+                    // let msgId=msgData.messageId;
                     let data={
-                        text: message,
-                        date: rcvDate,
-                        sentby: by,
-                        id: msgId 
+                        category : "message",
+                        label: message,
+                        // date: rcvDate,
+                        // sentby: by,
+                        // id: msgId 
                     }
                     globallist[2].messages.push(data);
-                    globallist[3].all.push(message);
+                    globallist[3].all.push(data);
                 });
             });
         });
     });
 }
 
-export function getAllMessages(){
-    getDirectMessages();
-    getChannelMessages();
+export function getAllMessages(teamId){
+    getDirectMessages(teamId);
+    getChannelMessages(teamId);
 }
 
 export function searchAllChannels() {
@@ -125,9 +134,18 @@ export function searchAllChannels() {
             select: function( event, ui ) {
               $( "#tags" ).val( ui.item.value );
               return false;
+            },
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { name: "", value: "No results found" };
+                    ui.content.push(noResult);
+                }
             }
           })
-          .autocomplete( "instance" )._renderItem = viewHtml(ul,item);
+          .autocomplete( "instance" )._renderItem =function (ul, item) {
+            return $(`<li class="list-group-item">${item.value}</li>`)
+          .appendTo( ul );
+        };
     });
 }
 
@@ -147,19 +165,48 @@ export function searchAllUsers() {
             select: function( event, ui ) {
               $( "#tags" ).val( ui.item.value );
               return false;
+            },
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { name: "", value: "No results found" };
+                    ui.content.push(noResult);
+                }
             }
           })
-          .autocomplete( "instance" )._renderItem = viewHtml(ul,item);
+          .autocomplete( "instance" )._renderItem =function (ul, item) {
+            return $(`<li class="list-group-item">${item.value}</li>`)
+          .appendTo( ul );
+        };
     });
 }
 
 export function searchAll(){
     const html = document.getElementById("searchResult");
     html.innerHTML = "";
-
-    $(function () {
-        $( "#tags" ).autocomplete({
-            minLength: 0,
+  $( function() {
+    $.widget( "custom.catcomplete", $.ui.autocomplete, {
+      _create: function() {
+        this._super();
+        this.widget().menu( "option", "items", "> :not(.ui-autocomplete-category)" );
+      },
+      _renderMenu: function( ul, items ) {
+        var that = this,
+          currentCategory = "";
+        $.each( items, function( index, item ) {
+          var li;
+          if ( item.category != currentCategory ) {
+            ul.append( "<li class='ui-autocomplete-category'><strong>" + item.category + "</strong></li>" );
+            currentCategory = item.category;
+          }
+          li = that._renderItemData( ul, item );
+          if ( item.category ) {
+            li.attr( "aria-label", item.category + " : " + item.label );
+          }
+        });
+      }
+    });
+    $( "#tags" ).catcomplete({
+        minLength: 0,
             source: globallist[3].all,           
             appendTo: "#searchResult",
             focus: function( event, ui ) {
@@ -169,10 +216,15 @@ export function searchAll(){
             select: function( event, ui ) {
               $( "#tags" ).val( ui.item.value );
               return false;
+            },
+            response: function (event, ui) {
+                if (!ui.content.length) {
+                    var noResult = { name: "", value: "No results found" };
+                    ui.content.push(noResult);
+                }
             }
-          })
-          .autocomplete( "instance" )._renderItem = viewHtml(ul,item);
     });
+  });
 }
 
 export default globallist;
