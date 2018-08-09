@@ -5,8 +5,10 @@ import moment from 'moment';
 var markdown = require("markdown").markdown;
 import '../../../../firebase/firebase-config';
 import firebase from 'firebase';
+import { sendDesktopNotification } from '../notifications/notification-main'
+
 //import { filesDownload } from '../collaborator/addFiles';
-var dropbox =  require('dropbox').Dropbox;
+var dropbox = require('dropbox').Dropbox;
 
 const store = createStore(chat);
 
@@ -25,8 +27,7 @@ console.log(currentUser);
 if (currentUser) {
     userDisplayName = JSON.parse(currentUser).data;
     console.log('userDisplayName', userDisplayName);
-}
-else {
+} else {
     // initialize to one of the User
     userDisplayName = 'anilkumar-bv';
 }
@@ -49,11 +50,11 @@ export function openChatDetailsForChannel(channelId, teamID) {
 
     console.log(sentTo);
     receiverRef = firebase.database().ref(teamId).child('channels').child(sentTo).child('messages');
-    receiverRef.on('value', function (snapshot) {
+    receiverRef.on('value', function(snapshot) {
         let chatBox = document.getElementById('messageBody');
         console.log(snapshot.val());
         chatBox.innerHTML = '';
-        snapshot.forEach(function (childSnapshot) {
+        snapshot.forEach(function(childSnapshot) {
             let childData = childSnapshot.val();
             console.log(childData);
             if (childData.sentTo === sentTo) {
@@ -68,17 +69,17 @@ export function openChatDetailsForChannel(channelId, teamID) {
 }
 
 export function openChatDetailsForUser(userId, teamID) {
-    console.log("teamid-"+ teamID)
+    console.log("teamid-" + teamID)
     teamId = teamID;
     sentTo = userId;
     console.log(sentTo);
     //renderChatHistory();
     let receiverRef = firebase.database().ref(teamId).child('directMessages').child('users').child(sentTo).child('messages');
-    receiverRef.on('value', function (snapshot) {
+    receiverRef.on('value', function(snapshot) {
         let chatBox = document.getElementById('messageBody');
         console.log(snapshot.val());
         chatBox.innerHTML = '';
-        snapshot.forEach(function (childSnapshot) {
+        snapshot.forEach(function(childSnapshot) {
             let childData = childSnapshot.val();
             console.log(childData);
             if ((childData.sentBy === sentTo || childData.sentTo === sentTo) &&
@@ -97,15 +98,15 @@ export function openChatDetailsForUser(userId, teamID) {
 const btnSubmit = document.getElementById('enter');
 
 // function to validate input Message and check if Sender is set
-function validateInputs(inputMessage){
+function validateInputs(inputMessage) {
     // Check if a User is selected to Chat with
     if (sentTo === '') {
         alert('Please select a User to Chat with');
         return false;
     }
 
-     // Check if empty Text is being sent
-     if (inputMessage.trim() === '') {
+    // Check if empty Text is being sent
+    if (inputMessage.trim() === '') {
         alert('Please provide input text for Chat');
         return false;
     }
@@ -129,10 +130,10 @@ btnSubmit.addEventListener('click', evt => {
 
     // Validate the input Message
     const rawMessage = document.querySelector('#enteredCommand').value;
-    if(!validateInputs(rawMessage)){
+    if (!validateInputs(rawMessage)) {
         return;
     }
-   
+
     // Clear the Input text box
     for (let elem of document.getElementsByClassName('emojionearea-editor')) {
         elem.innerText = ' ';
@@ -146,9 +147,12 @@ btnSubmit.addEventListener('click', evt => {
     // If message is sent to a Channel, store message only under the Channel
     if (forChannel) {
         pushMessagesForChannel(msg);
-    }
-    else { // If it's Direct Messages, store message under both the Sender and Receiver nodes
+    } else { // If it's Direct Messages, store message under both the Sender and Receiver nodes
         pushMessagesForUser(msg);
+        console.log(JSON.stringify(msg))
+        sendDesktopNotification(msg)
+
+
     }
 
     // push a copy of the message to "Messages" collection on DB
@@ -162,26 +166,26 @@ btnSubmit.addEventListener('click', evt => {
 function pushMessagesForChannel(msg) {
     receiverRef = firebase.database().ref(teamId).child('channels').child(sentTo).child('messages');
 
-        // push Message to DB
-        receiverRef.push(msg);
+    // push Message to DB
+    receiverRef.push(msg);
 
-        // Render the Messages
-        receiverRef.on('value', function (snapshot) {
-            let chatBox = document.getElementById('messageBody');
-            console.log(snapshot.val());
-            chatBox.innerHTML = '';
-            snapshot.forEach(function (childSnapshot) {
-                let childData = childSnapshot.val();
-                console.log(childData);
-                if (childData.sentTo === sentTo) {
-                    const paraElement = document.createElement('p');
-                    const formattedTime = moment(childData.date).fromNow();
-                    paraElement.innerHTML = `<strong>${childData.sentBy}</strong> - ${formattedTime}<br>
+    // Render the Messages
+    receiverRef.on('value', function(snapshot) {
+        let chatBox = document.getElementById('messageBody');
+        console.log(snapshot.val());
+        chatBox.innerHTML = '';
+        snapshot.forEach(function(childSnapshot) {
+            let childData = childSnapshot.val();
+            console.log(childData);
+            if (childData.sentTo === sentTo) {
+                const paraElement = document.createElement('p');
+                const formattedTime = moment(childData.date).fromNow();
+                paraElement.innerHTML = `<strong>${childData.sentBy}</strong> - ${formattedTime}<br>
                                              ${childData.messageText}`;
-                    chatBox.appendChild(paraElement);
-                }
-            });
+                chatBox.appendChild(paraElement);
+            }
         });
+    });
 }
 
 function pushMessagesForUser(msg) {
@@ -191,12 +195,12 @@ function pushMessagesForUser(msg) {
     receiverRef.push(msg);
 
     // Render the Messages
-    receiverRef.on('value', function (snapshot) {
-    
+    receiverRef.on('value', function(snapshot) {
+
         let chatBox = document.getElementById('messageBody');
         console.log(snapshot.val());
         chatBox.innerHTML = '';
-        snapshot.forEach(function (childSnapshot) {
+        snapshot.forEach(function(childSnapshot) {
             // if(childSnapshot.val().messageText.indexOf('Sent a media file ') > -1){
             //     var index = "Sent a media file ".length;
             //     var fileName = childSnapshot.val().messageText.substring(index)
@@ -262,7 +266,7 @@ store.subscribe(() => {
 //        }
 //      });
 //  }
- 
+
 //  function filesUpload(event, fileValue, fileName) {
 //      var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
 //      $.ajax({
