@@ -13,7 +13,7 @@ const config = {
   },
   module: {
     rules: [
-      /*{
+      {
         enforce: 'pre',
         test: /\.js?$/,
         exclude: [/node_modules/],
@@ -21,7 +21,7 @@ const config = {
         options: {
           fix: true,
         },
-      },*/
+      },
             {
                 test: /\.js?$/,
                 exclude: [/node_modules/],
