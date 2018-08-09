@@ -336,7 +336,7 @@ export function userGitLogin() {
 
 export function userGitLogout() {
   localStorage.removeItem("current_user");
-  store.dispatch({type: "LOGOUT_USER", payload: {}});
+  store.dispatch({type: "LOGOUT_USER", payload: null});
   gitLogout();
   homeComponentView();
 }
