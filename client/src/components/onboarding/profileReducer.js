@@ -4,7 +4,7 @@ import { createStore } from 'redux';
 function userReducer(state = {}, action) {
   switch (action.type) {   
       case 'LOGOUT_USER': 
-      return {};  
+      return null;  
 
       case 'LOGIN':
       return Object.assign({}, action.obj);
