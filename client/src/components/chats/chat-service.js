@@ -140,6 +140,10 @@ function buildMessageEntity(message) {
     else
         msg.sentToDisplayName = sentToDisplayName;
 
+    // if it's for Channel, sentToDisplayName should be same as sentToUserName
+    if(forChannel)
+        msg.sentToDisplayName = sentToUserName;
+        
     msg.sentByUserName = userName;
 
 
