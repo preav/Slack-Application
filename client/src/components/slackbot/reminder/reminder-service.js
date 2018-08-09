@@ -62,7 +62,6 @@ export const getReminderForAllUsersService = () => new Promise((resolve, reject)
   .then((snapshot) => {
     const reminderListData = snapshot.val();
     if (reminderListData !== '') {
-      console.log('All reminder list retrieved successfully...', reminderListData);
       resolve(reminderListData);
     } else {
       reject(new Error(`Error occured while retrieving all reminder list from firebase database.`));

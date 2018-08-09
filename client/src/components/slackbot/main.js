@@ -1,5 +1,4 @@
-import { hitEnter } from './command-line';
-import { getUserChatHistory } from './chat-history/chathistory-controller';
+import { getUserSlackbotChatHistory } from './chat-history/chathistory-controller';
 import './todolist/todolist-controller';
 import { sendReminderMeaageOnTime } from './reminder/reminder-controller';
 
@@ -12,7 +11,8 @@ import { sendReminderMeaageOnTime } from './reminder/reminder-controller';
 //   }
 // });
 
-getUserChatHistory('testUser1'); // pass real user
+const user = JSON.parse(window.localStorage.getItem("current_user"));
+getUserSlackbotChatHistory(user.user.userName); 
 
 setInterval(function(){ sendReminderMeaageOnTime(); }, 10000);
 

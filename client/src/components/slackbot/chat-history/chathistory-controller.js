@@ -3,7 +3,7 @@ import { getChatHistoryForUserService,
 import { showChatHistory, showUserReminder } from './chathistory-view';
 
 // function to create otherbot
-export const getUserChatHistory = function (userId) {
+export const getUserSlackbotChatHistory = function (userId) {
   const createWidgetEle = document.getElementById('playGround');
   // calling service function to create otherbot in firebase database
   getChatHistoryForUserService(userId).then((chathistory) => {
@@ -57,12 +57,10 @@ export const getUserChatHistory = function (userId) {
     if(typeof(chatHistoryRemindersentObjArray) !== 'undefined'){
       unsortedArray = [...unsortedArray, ...chatHistoryRemindersentObjArray];
     }
-    
     // sort array on datetime and display dom
     if(typeof(unsortedArray) !== 'undefined'){
       var sortedArray = new Array();
       sortedArray = unsortedArray.sort((a,b) => new Date(a.currentdateTime) - new Date(b.currentdateTime));
-      console.log('sortedArray ====', sortedArray);
       for(var z = 0; z <= sortedArray.length - 1; z++){
         const newRepowidget = document.createElement('div');
         if(sortedArray[z].widgetName === 'remindersent') {

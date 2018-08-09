@@ -73,7 +73,6 @@ $(document).on('click', '.todoListItemsAction', function () {
   if (action === 'checked') {
     // check
     // calling firebase database update
-    //console.log('oooooo', markOrUnmarkOrDelete(action, $(this).data('value'), $(this).data('userid')));
     markOrUnmarkOrDelete(action, $(this).data('value'), $(this).data('userid'));
 
 
@@ -87,7 +86,6 @@ $(document).on('click', '.todoListItemsAction', function () {
   } else if (action === 'unchecked') {
     // uncheck
     // calling firebase database update
-    //console.log('hhhhh', markOrUnmarkOrDelete(action, $(this).data('value'), $(this).data('userid')) );
     markOrUnmarkOrDelete(action, $(this).data('value'), $(this).data('userid'));
     $(this).toggleClass('fa-check-square-o text-success fa-square-o text-secondary').data('action', 'checked');
     $(this).parents('li.list-group-item').addClass('bg-light');

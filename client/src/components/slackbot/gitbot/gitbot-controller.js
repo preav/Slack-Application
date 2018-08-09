@@ -22,10 +22,8 @@ export const createRepository = function (widgetData) {
     } else {
       // calling service to save widget state into firebase database
       createRepoFirebaseService(widgetData).then((response) => {
-        console.log(`gitbot-controller.js = ${response}`);
         const newRepowidget = document.createElement('div');
-        newRepowidget.innerHTML = createRepoResponse(widgetData.repositoryName,
-          widgetData.id, widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered);
+        newRepowidget.innerHTML = createRepoResponse(widgetData);
         createRepoWidgetEle.appendChild(newRepowidget);
         createRepoWidgetEle.scrollTop = createRepoWidgetEle.scrollHeight;
         // update firebase database with slackbot response
@@ -56,7 +54,6 @@ export const createRepositoryIssue = function (widgetData) {
     } else {
       // calling service to save widget state into firebase database
       createRepoFirebaseService(widgetData).then((response) => {
-        console.log(`createRepositoryIssue() in gitbot-controller.js = ${response}`);
         const newRepowidget = document.createElement('div');
         newRepowidget.innerHTML = createIssueResponse(widgetData);
         createRepoWidgetEle.appendChild(newRepowidget);
