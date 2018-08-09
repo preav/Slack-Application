@@ -19,7 +19,6 @@ export function getAllChannels(teamId) {
     const db = firebase.database().ref(teamId + '/channelMsg');
     db.on('value', (channelList) => {
         channelList.forEach((channelIndex) => {
-            console.log("channel"+channelIndex.key);
                 let flag=true;
                 for(let i=0;i<globallist[0].channels.length;i++){
                     if(globallist[0].channels[i].label===channelIndex.key)
