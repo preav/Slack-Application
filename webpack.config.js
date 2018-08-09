@@ -21,7 +21,7 @@ const config = {
         options: {
           fix: true,
         },
-  },*/
+      },*/
             {
                 test: /\.js?$/,
                 exclude: [/node_modules/],
