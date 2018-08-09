@@ -231,8 +231,7 @@ export function userGitLogin() {
       phoneNumber: response.user.phoneNumber,
       gitURL: response.additionalUserInfo.profile.html_url,
       status: 'active',
-      permission: { write: false, read: true },
-      teams: []
+      permission: { write: false, read: true }
     };
 
     if (teamnameFromUrl != 'undefined' && teamnameFromUrl != "") {
