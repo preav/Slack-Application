@@ -188,8 +188,9 @@ function pushMessagesForChannel(msg) {
 }
 
 function pushMessagesForUser(msg) {
-    senderRef = firebase.database().ref(`teams/${teamId}/directMessages/users/${userName}/messages`);
-    receiverRef = firebase.database().ref(`teams/${teamId}/directMessages/users/${sentToUserName}/messages`);
+    
+    senderRef = firebase.database().ref(`teams/${teamId}`).child('directMessages').child('users').child(userName).child('messages');
+    receiverRef = firebase.database().ref(`teams/${teamId}`).child('directMessages').child('users').child(sentToUserName).child(`messages`);
     senderRef.push(msg);
     receiverRef.push(msg);
 
