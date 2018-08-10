@@ -46,6 +46,7 @@ import { sendMessage } from '../components/chats/chat-service';
 
 $("#enteredCommand").emojioneArea({
     inline: false,
+    pickerPosition: 'top',
     events: {
         keypress: function (editor, event) {
             if (event.which == 13) {
