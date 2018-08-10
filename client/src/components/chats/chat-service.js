@@ -5,6 +5,7 @@ import firebase from 'firebase';
 import { chat } from './chat-reducers'
 import { addChatToStore } from './chat-controller'
 import '../../../../firebase/firebase-config';
+import { sendDesktopNotification } from '../notifications/notification-main'
 var dropbox = require('dropbox').Dropbox;
 
 //creating Store
@@ -43,8 +44,7 @@ function getDisplayNameFrom(userNameInput) {
                 // Check if name field is available. If not, return the userName itself
                 if (childSnapshot.val().name == null) {
                     userDisplayNameLocal = userNameInput;
-                }
-                else {
+                } else {
                     userDisplayNameLocal = childSnapshot.val().name;
                 }
             }
@@ -68,7 +68,7 @@ export function openChatDetailsForChannel(channelId, teamID) {
     receiverRef.on('value', snapshot => {
         let chatBox = document.getElementById('messageBody');
         chatBox.innerHTML = '';
-        snapshot.forEach(function (childSnapshot) {
+        snapshot.forEach(function(childSnapshot) {
             if (childSnapshot.val().sentToUserName === sentToUserName) {
                 renderMessage(childSnapshot, chatBox);
             }
@@ -82,10 +82,10 @@ export function openChatDetailsForUser(userId, teamID) {
     sentToUserName = userId;
 
     let receiverRef = firebase.database().ref(`teams/${teamID}/directMessages/users/${sentToUserName}/messages`);
-    receiverRef.on('value', function (snapshot) {
+    receiverRef.on('value', function(snapshot) {
         let chatBox = document.getElementById('messageBody');
         chatBox.innerHTML = '';
-        snapshot.forEach(function (childSnapshot) {
+        snapshot.forEach(function(childSnapshot) {
             let childData = childSnapshot.val();
             if ((childData.sentByUserName === sentToUserName || childData.sentToUserName === sentToUserName) &&
                 (childData.sentByUserName === userName || childData.sentToUserName === userName)) {
@@ -155,9 +155,9 @@ export function sendMessage(evt) {
     // If message is sent to a Channel, store message only under the Channel
     if (forChannel) {
         pushMessagesForChannel(msg);
-    }
-    else { // If it's Direct Messages, store message under both the Sender and Receiver nodes
+    } else { // If it's Direct Messages, store message under both the Sender and Receiver nodes
         pushMessagesForUser(msg);
+        sendDesktopNotification(msg)
     }
 
     // push a copy of the message to "Messages" collection on DB
@@ -175,10 +175,10 @@ function pushMessagesForChannel(msg) {
     receiverRef.push(msg);
 
     // Render the Messages
-    receiverRef.on('value', function (snapshot) {
+    receiverRef.on('value', function(snapshot) {
         let chatBox = document.getElementById('messageBody');
         chatBox.innerHTML = '';
-        snapshot.forEach(function (childSnapshot) {
+        snapshot.forEach(function(childSnapshot) {
             if (childSnapshot.val().sentToUserName === sentToUserName) {
                 renderMessage(childSnapshot, chatBox);
             }
@@ -188,17 +188,17 @@ function pushMessagesForChannel(msg) {
 }
 
 function pushMessagesForUser(msg) {
-    
+
     senderRef = firebase.database().ref(`teams/${teamId}`).child('directMessages').child('users').child(userName).child('messages');
     receiverRef = firebase.database().ref(`teams/${teamId}`).child('directMessages').child('users').child(sentToUserName).child(`messages`);
     senderRef.push(msg);
     receiverRef.push(msg);
 
     // Render the Messages
-    receiverRef.on('value', function (snapshot) {
+    receiverRef.on('value', function(snapshot) {
         let chatBox = document.getElementById('messageBody');
         chatBox.innerHTML = '';
-        snapshot.forEach(function (childSnapshot) {
+        snapshot.forEach(function(childSnapshot) {
             let childData = childSnapshot.val();
             if ((childData.sentByUserName === sentToUserName || childData.sentToUserName === sentToUserName) &&
                 (childData.sentByUserName === userName || childData.sentToUserName === userName)) {
@@ -223,48 +223,48 @@ function getFile(event) {
         console.log("inside change function")
         var files = e.target.files;
         console.log(files[0])
-        var fileName = "/"+files[0].name;
+        var fileName = "/" + files[0].name;
         filesUpload(files[0], fileName);
     });
- }
+}
 
 
- function filesUpload(fileValue, fileName) {
+function filesUpload(fileValue, fileName) {
     console.log('files upload method has been triggered')
-     var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
-     $.ajax({
-         url: 'https://content.dropboxapi.com/2/files/upload',
-         type: 'post',
-         data: fileValue,
-         processData: false,
-         contentType: 'application/octet-stream',
-         headers: {
-             "Authorization": "Bearer " + ACCESS_TOKEN,
-             "Dropbox-API-Arg": `{"path": "${fileName}", "mode": "add", "autorename": true, "mute": false}`
-         },
-         success: function (data) {
-             filesDownload(data.id);
-         }
-     })
- }
+    var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
+    $.ajax({
+        url: 'https://content.dropboxapi.com/2/files/upload',
+        type: 'post',
+        data: fileValue,
+        processData: false,
+        contentType: 'application/octet-stream',
+        headers: {
+            "Authorization": "Bearer " + ACCESS_TOKEN,
+            "Dropbox-API-Arg": `{"path": "${fileName}", "mode": "add", "autorename": true, "mute": false}`
+        },
+        success: function(data) {
+            filesDownload(data.id);
+        }
+    })
+}
 
- function filesDownload(fileName) {
+function filesDownload(fileName) {
     console.log('filesDownload called')
-	var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
- 	var dbx = new dropbox({accessToken: ACCESS_TOKEN});
-        dbx.filesDownload({ path: fileName})// here i mentioned the shareable link rather then I want to specify path
-            .then(function (data) {
-                var downloadUrl = URL.createObjectURL(data.fileBlob);
-                var template = `<a href=${downloadUrl} download=${data.name}> Media File Received </a>`;
-                var htmlElement = document.createElement('div');
-                htmlElement.innerHTML = template;
-                var builtMessage = buildMessageEntity(template);
-                console.log(builtMessage)
-                pushMessagesForUser(builtMessage);
-            })
-            .catch(function (error) {
-                console.error(error);
-            });
+    var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
+    var dbx = new dropbox({ accessToken: ACCESS_TOKEN });
+    dbx.filesDownload({ path: fileName }) // here i mentioned the shareable link rather then I want to specify path
+        .then(function(data) {
+            var downloadUrl = URL.createObjectURL(data.fileBlob);
+            var template = `<a href=${downloadUrl} download=${data.name}> Media File Received </a>`;
+            var htmlElement = document.createElement('div');
+            htmlElement.innerHTML = template;
+            var builtMessage = buildMessageEntity(template);
+            console.log(builtMessage)
+            pushMessagesForUser(builtMessage);
+        })
+        .catch(function(error) {
+            console.error(error);
+        });
 }
 
 // Render Chat history using subscribe method
