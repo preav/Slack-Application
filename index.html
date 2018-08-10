@@ -114,84 +114,125 @@
           <!-- The Modal -->
           <div class="modal" id="myModal">
             <div class="modal-dialog modal-lg">
-              <div class="modal-content" style="height:100%;width:100%;overflow:auto;">
-                <div class="modal-header bg-dark text-secondary">
+              <div class="modal-content">
+                <div class="modal-header">
                   <h4 class="modal-title w-100 font-weight-bold">Chat History</h4>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div class="modal-body mx-3">
-                  <div class="md-form mb-5">
-                    <form>
-                      <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">Start Date</label>
-                        <div class="col-sm-10">
-                          <input class="form-control" type="date" id="start" name="trip" value="2018-07-22" min="2018-01-01" max="2018-12-31">
-                        </div>
+  
+                <div class="modal-body p-0 pt-2">
+                  <div class="md-form">
+                    <form class="form-inline justify-content-center mb-2">
+                      <div class="form-group">
+                          <label for="start">Start Date:</label>
+                         <input class="form-control mx-sm-3" type="date" id="start" name="trip" value="2018-01-01" min="2018-01-01" max="2018-12-31">
+   
                       </div>
-                      <div class="form-group row">
-                        <label class="col-sm-2 col-form-label">End Date</label>
-                        <div class="col-sm-10">
-                          <input class="form-control" type="date" id="end" name="trip" value="2018-07-29" min="2018-01-01" max="2018-12-31">
-                        </div>
-                      </div>
-                    </form>
-                    <div class="d-flex justify-content-center">
-                      <button class="btn btn-dark" id="ok">Submit</button>
-                    </div>
-                    <div class="md-form mb-2" id="chatResult" style="display: none;">
-                      <div class="d-flex flex-row mt-2">
-                        <ul class="nav nav-tabs nav-tabs--vertical nav-tabs--left sticky-offset" style="background-color: #3333332a; " role="navigation">
-                          <li class="nav-item">
-                            <a href="#" role="tab" class="text-secondary">
-                              <b>Channels</b>
-                            </a>
-                          </li>
-                          <li class="nav-item">
-                            <a href="#channel1" class="nav-link active text-secondary" data-toggle="tab" role="tab" aria-controls="Channel1">Channel1</a>
-                          </li>
-                          <li class="nav-item">
-                            <a href="#channel2" class="nav-link text-secondary" data-toggle="tab" role="tab" aria-controls="Channel2">Channel2</a>
-                          </li>
-                          <div id="channelTab"></div>
-                          <li class="nav-item">
-                            <a href="#" role="tab" class="text-secondary">
-                              <b>Direct Messages</b>
-                            </a>
-                          </li>
-                          <li class="nav-item">
-                            <a href="#userA" class="nav-link text-secondary" data-toggle="tab" role="tab" aria-controls="userA">userA</a>
-                          </li>
-                          <li class="nav-item">
-                            <a href="#userB" class="nav-link text-secondary" data-toggle="tab" role="tab" aria-controls="userB">userB</a>
-                          </li>
-                          <div id="userTab"></div>
-                        </ul>
-                        <div class="tab-content" id="channelContent">
-                          <div class="tab-pane fade show active" id="channel1" role="tabpanel">
-                            <p>userA 21/08/87 18:00: Aenean purus pharetra dictum.</p>
-                            <p>userB 21/08/87 13.03: Chekcing msgs purus pharetra dictum.</p>
-                          </div>
-                          <div class="tab-pane fade" id="channel2" role="tabpanel">
-                            <p>userB 2/08/87 18:00: Aenean purus pharetra dictum.</p>
-                            <p>userC 2/08/87 13.03: Chekcing msgs purus pharetra dictum.</p>
-                          </div>
-                          <div class="tab-pane fade" id="userA" role="tabpanel">
-                            <p>userF 2/08/87 18.00: Aenean purus pharetra dictum.</p>
-                            <p>userC 2/08/87 08.03: Chekcing msgs purus pharetra dictum.</p>
-                          </div>
-                          <div class="tab-pane fade" id="userB" role="tabpanel">
-                            <p>userF 2/08/87 21.00: Aenean purus pharetra dictum.</p>
-                            <p>userC 2/08/87 18.03: Chekcing msgs purus pharetra dictum.</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="modal-footer d-flex justify-content-center">
-                        <button class="btn btn-dark" data-dismiss="modal">Ok</button>
-                      </div>
-                    </div>
+                      <div class="form-group">
+                          <label for="end">End Date:</label>
+                          <input class="form-control mx-sm-3" type="date" id="end" name="trip" value="2018-01-01" min="2018-01-01" max="2018-12-31">
+                   </div> 
+                   <button type="button" class="btn btn-dark" id="ok">Submit</button>
+                  </form>
+                    <!--accordin-->
 
+                    <!--testing-->
+<!-- Grid row -->
+<div class="row gradient-background d-flex justify-content-center col-md-12 container-fluid" id="chatResult" style="display: none;">
+
+  <!-- Grid column -->
+  <div class="col-md-12 col-xl-12 mb-2">
+
+      <!--Accordion wrapper-->
+      <div class="accordion accordion-2" id="accordionEx7" role="tablist" aria-multiselectable="true">
+
+          <!-- Accordion card -->
+          <div class="card">
+
+              <!-- Card header -->
+              <div class="card-header rgba-stylish-strong z-depth-1 mb-1" role="tab" id="heading1">
+                  <a data-toggle="collapse" data-parent="#accordionEx7" href="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                      <h5 class="mb-0 white-text font-thin">
+                          #Channels <i class="fa fa-angle-down rotate-icon"></i>
+                      </h5>
+                  </a>
+              </div>
+
+              <!-- Card body -->
+              <div id="collapse1" class="collapse show" role="tabpanel" aria-labelledby="heading1" data-parent="#accordionEx7">
+                  <div class="card-body mb-1 rgba-grey-light white-text">
+                    <div id="channelContent">
+                      <div class="container">
+                          <!-- About -->
+                          <div class="row">
+                              <div class="col-sm-3 sidebar sidebar-left">
+                                  <ul class="nav nav-pills nav-stacked" id="channelTab">
+                                      <li class="nav-item"><a data-toggle="pill" href="#dashboard" class="nav-link active">Dashboard</a></li>
+                                      <li class="nav-item"><a data-toggle="pill" href="#test" class="nav-link">Menu 1</a></li>                                     
+                                  </ul>
+                              </div>
+                              <div class="col-sm-9">
+                                  <div class="tab-content" id="channelContent">
+                                      <div id="dashboard" class="tab-pane fade in active">
+                                          <h3>HOME</h3>
+                                      </div>
+                                      <div id="test" class="tab-pane fade">
+                                          <h3>test 1</h3>
+                                     </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Accordion card -->
+
+          <!-- Accordion card -->
+          <div class="card">
+
+              <!-- Card header -->
+              <div class="card-header rgba-stylish-strong z-depth-1 mb-1" role="tab" id="heading2">
+                  <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx7" href="#collapse2" aria-expanded="false" aria-controls="collapse2">
+                      <h5 class="mb-0 white-text font-thin">
+                          #Direct Messages <i class="fa fa-angle-down rotate-icon"></i>
+                      </h5>
+                  </a>
+              </div>
+
+              <!-- Card body -->
+              <div id="collapse2" class="collapse" role="tabpanel" aria-labelledby="heading2" data-parent="#accordionEx7">
+                  <div class="card-body mb-1 rgba-grey-light white-text" style="padding:0;">
+                    <div id="content">
+                      <div class="container">
+                          <!-- About -->
+                          <div class="row">
+                              <div class="col-sm-3 sidebar sidebar-left">
+                                  <ul class="nav nav-pills nav-stacked" id="userTab">                                                                         
+                                  </ul>
+                              </div>
+                              <div class="col-sm-9 text-right">
+                                  <div class="tab-content" id="userContent">
+                                     
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  </div>
+              </div>
+          </div>
+          <!-- Accordion card -->      
+      </div>   
+  </div>
+
+</div>
+
+
+  <!--accordin-->
                   </div>
                 </div>
               </div>
@@ -218,8 +259,8 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div class="modal-body mx-3">
-              <div class="md-form mb-5">
+            <div class="modal-body">
+              <div class="md-form">
                 <label>Channel name</label>
                 <input type="text" id="channelName" class="form-control validate">
               </div>
