@@ -217,6 +217,8 @@ $(document).on("click", ".team-link", function(){
 
     getAllChannels(teamName);
     getAllUsers(teamName);
+
+    $("#searchAll").attr('data-teamid', teamName);
   // alert($(this).data('team'));
 });
 
