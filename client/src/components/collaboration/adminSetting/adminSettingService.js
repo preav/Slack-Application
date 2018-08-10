@@ -17,7 +17,7 @@ function fnCreateChannel() {
   database.ref('teams/'+teamID+'/channels').push({
     channelName : channelN,
     private: channelT,
-    userV :  userV
+    users :  userV
    }, (error) => {
     if (error) {
       console.log(error, 'There is error while saving data into firebase...');
