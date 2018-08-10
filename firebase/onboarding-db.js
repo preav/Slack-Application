@@ -61,8 +61,7 @@ export function getCurrentUserDetails() {
   });
 }
 
-export async function getTeamDetail(teamName)
-{
+export async function getTeamDetail(teamName) {
   const result = null;
 
   try {
@@ -74,5 +73,5 @@ export async function getTeamDetail(teamName)
     return result;
   } catch (error) {
     console.error(error);
-  }    
+  }
 }

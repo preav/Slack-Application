@@ -2,18 +2,18 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
 const config = {
-  entry: ['./client/src/components/notifications/notification-main.js',
-  'jquery', 'babel-polyfill',
-    './client/src/components/index.js',
-    './client/src/scss/main.scss'
-  ],
-  output: {
-    path: __dirname + '/dist',
-    filename: 'bundle.js'
-  },
-  module: {
-    rules: [
-      /*{
+    entry: ['./client/src/components/notifications/notification-main.js',
+        'jquery', 'babel-polyfill',
+        './client/src/components/index.js',
+        './client/src/scss/main.scss'
+    ],
+    output: {
+        path: __dirname + '/dist',
+        filename: 'bundle.js'
+    },
+    module: {
+        rules: [
+            /*{
         enforce: 'pre',
         test: /\.js?$/,
         exclude: [/node_modules/],
@@ -65,10 +65,10 @@ const config = {
                 loader: "url-loader?limit=10000&mimetype=image/svg+xml"
             }, {
                 test: require.resolve('jquery'),
-                 use: [{
+                use: [{
                     loader: 'expose-loader',
                     options: 'jQuery'
-                },{
+                }, {
                     loader: 'expose-loader',
                     options: '$'
                 }]
