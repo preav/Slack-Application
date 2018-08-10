@@ -50,6 +50,7 @@ $("#enteredCommand").emojioneArea({
               event.preventDefault();
               var enteredValue = $('#enteredCommand').data("emojioneArea").getText();
               var slackWindow = $("#enteredCommand").attr('data-slackbot');
+              $('#enteredCommand').data("emojioneArea").setText('');
               if(slackWindow) {
                 //   alert("Slack");
                 hitEnter(enteredValue);
