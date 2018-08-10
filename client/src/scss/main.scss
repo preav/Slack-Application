@@ -148,6 +148,18 @@ body
     border: 1px solid #919193;
 }
 
+#sentBy{
+    float: left;
+    font-size: 12px;
+    padding-bottom: 0.3rem;
+}
+
+#sentTo{
+    float: right;
+    font-size: 12px;
+    padding-bottom: 0.3rem;
+}
+
 #contentHolder{
     border-radius: 0.7rem;
 }

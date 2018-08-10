@@ -29,13 +29,3 @@ $(document).on("click", "#searchAll", function () {
     searchAll();
     $("#tags").val("").focus();
 });
-
-
-
-// $(document).ready(function () {
-//     let teamId = "team-6".toString();
-//     getAllUsers(teamId);
-//     getAllChannels(teamId);
-//     getAllMessages(teamId);
-//     console.log(globallist);
-// });

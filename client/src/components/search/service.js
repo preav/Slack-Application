@@ -17,7 +17,6 @@ let globallist = [
 
 export function getAllChannels(teamId) {
     const db = firebase.database().ref('teams/' + teamId + '/channels');
-    // const db = firebase.database().ref('teams/Team-Pragathi/channels');
     db.on('value', (channelList) => {
         channelList.forEach((channelIndex) => {
             let flag = true;
@@ -38,7 +37,6 @@ export function getAllChannels(teamId) {
 }
 
 export function getAllUsers(teamId) {
-    // const db = firebase.database().ref('/users');
     const db = firebase.database().ref('/teams/' + teamId + '/directMessages/users');
     db.on('value', (userList) => {
         userList.forEach((user) => {
@@ -69,14 +67,14 @@ function getDirectMessages(teamId) {
                 const msgsList = value;
                 Object.entries(msgsList).forEach(([key, value]) => {
                     const msgData = value;
-                    let message=msgData.messageText;
-                    let by=msgData.sentByUserName;
-                    let to=msgData.sentToUserName;
+                    let message = msgData.messageText;
+                    let by = msgData.sentByUserName;
+                    let to = msgData.sentToUserName;
                     let flag = true;
                     for (let i = 0; i < globallist[2].messages.length; i++) {
-                        if (globallist[2].messages[i].label ===message &&
-                            globallist[2].messages[i].sentby===by &&
-                            globallist[2].messages[i].sentTo===to
+                        if (globallist[2].messages[i].label === message &&
+                            globallist[2].messages[i].sentby === by &&
+                            globallist[2].messages[i].sentTo === to
                         )
                             flag = false;
                     }
@@ -96,40 +94,42 @@ function getDirectMessages(teamId) {
     });
 }
 
-/*
-function getChannelMessages(teamId) {
-    const channelMsg = firebase.database().ref(teamId+'/channelMsg/');
-    channelMsg.on('value', (snapshot) => {
-        const getAllChannelValue = Object.values(snapshot.val());
-        const abc = getAllChannelValue.map((chnVal) => {
-            Object.entries(chnVal).forEach(([key, value]) => {
-                const msgsList = value;
-                Object.entries(msgsList).forEach(([key, value]) => {
-                    const msgData = value;
-                    let message=msgData.messageText;
-                    // let rcvDate=msgData.date;
-                    // let by=msgData.sentBy;
-                    // let msgId=msgData.messageId;
-                    let data={
-                        category : "message",
-                        label: message,
-                        // date: rcvDate,
-                        // sentby: by,
-                        // id: msgId 
+function getChannelMessages(teamId){
+    const channelMsg = firebase.database().ref('teams/' + teamId + '/channels/');
+    channelMsg.on('value',(channels)=>{
+        channels.forEach((channel)=>{
+            let messages = channel.child(`messages`);
+            messages.forEach(message => {
+                    let msg = message.val().messageText;
+                    let by = message.val().sentByUserName;
+                    let to = message.val().sentToUserName;
+                    let flag = true;
+                    for (let i = 0; i < globallist[2].messages.length; i++) {
+                        if (globallist[2].messages[i].label === msg &&
+                            globallist[2].messages[i].sentby === by &&
+                            globallist[2].messages[i].sentTo === to
+                        )
+                            flag = false;
                     }
-                    globallist[2].messages.push(data);
-                    globallist[3].all.push(data);
-                });
-            });
-        });
-    });
+                    if (flag == true) {
+                        let data = {
+                            category: "message",
+                            label: msg,
+                            sentby: by,
+                            sentTo: to
+                        }
+                        globallist[2].messages.push(data);
+                        globallist[3].all.push(data);
+                    }
+                // alert(message.val().messageText);
+            })
+        })
+    })
 }
-*/
 
 export function getAllMessages(teamId) {
-    // alert(teamId);
     getDirectMessages(teamId);
-    // getChannelMessages(teamId);
+    getChannelMessages(teamId);
 }
 
 export function searchAllChannels() {
@@ -203,20 +203,22 @@ export function searchAll() {
                 this._super();
                 this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
             },
-            _renderItem: function( ul, item ) {
-                if(item.category ==="message"){
-                   return $("<li>")
-                  .attr( "data-value", item.value )
-                  .append( item.label )
-                  .append(item.sentby)
-                  .append(item.sentTo)
-                  .appendTo( ul );
+            _renderItem: function (ul, item) {
+                if (item.category === "message") {
+                    return $("<li>")
+                        .attr("data-value", item.value)
+                        .append(`<i id=sentTo>sentTo:${item.sentTo}</i>`)
+                        .append(`<i id=sentBy>sentBy:${item.sentby}</i><br>`)
+                        .append(item.label)
+                        .appendTo(ul);
                 }
-                return $( "<li>" )
-                  .attr( "data-value", item.value )
-                  .append( item.label )
-                  .appendTo( ul );
-              },
+                else {
+                    return $("<li>")
+                        .attr("data-value", item.value)
+                        .append(item.label)
+                        .appendTo(ul);
+                }
+            },
             _renderMenu: function (ul, items) {
                 var that = this,
                     currentCategory = "";
@@ -247,7 +249,7 @@ export function searchAll() {
             },
             response: function (event, ui) {
                 if (!ui.content.length) {
-                    var noResult = { name: "", value: "No results found" };
+                    var noResult = { name: "", label: "No results found" };
                     ui.content.push(noResult);
                 }
             }
