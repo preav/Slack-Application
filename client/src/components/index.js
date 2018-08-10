@@ -10,7 +10,7 @@ import '../scss/main.scss';
 import firebase from 'firebase';
 
 import {
-  fnCreateChannel,
+    fnCreateChannel,
 } from './collaboration/adminSetting/adminSettingService';
 import { config } from '../../../config/config';
 
@@ -42,22 +42,25 @@ import '../../../firebase/firebase';
 import { hitEnter } from './slackbot/command-line';
 require('font-awesome/css/font-awesome.css');
 
+import { sendMessage } from '../components/chats/chat-service';
+
 $("#enteredCommand").emojioneArea({
-  inline: false,
-  events: {
-      keypress: function (editor, event) {
-          if (event.which == 13) {
-              event.preventDefault();
-              var enteredValue = $('#enteredCommand').data("emojioneArea").getText();
-              var slackWindow = $("#enteredCommand").attr('data-slackbot');
-              if(slackWindow) {
-                //   alert("Slack");
-                hitEnter(enteredValue);
-              } else {
-                  alert("Message");
-              }
-              
-          }
-      }
-  }
+    inline: false,
+    events: {
+        keypress: function (editor, event) {
+            if (event.which == 13) {
+                event.preventDefault();
+                var enteredValue = $('#enteredCommand').data("emojioneArea").getText();
+                var slackWindow = $("#enteredCommand").attr('data-slackbot');
+                if (slackWindow == 'true') {
+                    //   alert("Slack");
+                    hitEnter(enteredValue);
+                } else {
+                    //   alert("Message");
+                    sendMessage();
+                }
+
+            }
+        }
+    }
 });
