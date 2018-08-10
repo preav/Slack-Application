@@ -10,29 +10,13 @@ import { checkAuthStateChange, gitLogin, gitLogout } from '../../../../firebase/
 import { saveUpdateUser, getCurrentUserDetails, saveUpdateTeam } from '../../../../firebase/onboarding-db';
 import { getAllChannels, getAllUsers } from '../collaboration/userSetting/userSettingService';
 import { store } from './profileReducer';
-
+import { saveUpdateUserAfterLogin } from './onboarding-service';
+// Create a token generator with the default settings:
+var randtoken = require('rand-token');
 store.subscribe(() =>{
   var currentState = store.getState();
   localStorage["current_user"] = JSON.stringify(currentState);
  });
-
-const getUrlParameter = function getUrlParameter(sParam) {
-  const sPageURL = decodeURIComponent(window.location.search.substring(1));
-  const sURLVariables = sPageURL.split('&');
-  let sParameterName;
-  let i;
-  for (i = 0; i < sURLVariables.length; i += 1) {
-    sParameterName = sURLVariables[i].split('=');
-
-    if (sParameterName[0] === sParam) {
-      return sParameterName[1] === undefined ? true : sParameterName[1];
-    }
-  }
-  return undefined;
-};
-const teamnameFromUrl = decodeURIComponent(getUrlParameter('teamname'));
-const url = window.location.href;
-console.log(teamnameFromUrl);
 
 export function createInvitationComponent() {
   const form = document.getElementById('create-team-form');
@@ -76,7 +60,11 @@ export function createInvitationComponent() {
       if (reciever !== '' && reciever !== undefined) {
         console.log(`dfdf-${reciever}`);
         recieverarr.push(reciever);
+
+        // Generate a 16 character alpha-numeric token:
+        var token = randtoken.generate(16);
         const appUrl = window.location.href;
+
         const redireURL = `${appUrl}?teamname=${teamName}`;// &useremail=${reciever}`;
         const output = `<div style="border: 6px solid #ccc;font-family:arial;width: 800px;margin: auto;">
         <div style="text-align:center;padding-top: 50px;"><img src="https://media.licdn.com/dms/image/C560BAQEYp_bjM8rH9w/company-logo_200_200/0?e=2159024400&v=beta&t=YN-rmUmfLXgy7WrKeZ-aDfePrC6cM3GNTQg_wybCpnk" alt="sapient-logo"/></div>
@@ -197,7 +185,8 @@ export function createDashboardView() {
 export function getTeamsOfCurrentUser() {
   const currentUser = getCurrentUserDetails();
   currentUser.then((response) => {
-    if (response.teams != null && response.teams.length > 0) {
+    //console.log(response.teams);
+    if (response.teams != 'undefined' && response.teams != null && response.teams.length > 0) {
       $('#teamsDisplayHeader').empty().append("You're already a member of these Slack workspaces:");
       $('#teamsDisplay').empty();
       $.each(response.teams, (k, v) => {
@@ -206,7 +195,10 @@ export function getTeamsOfCurrentUser() {
         <button type="button" class="btn btn-success addUserTeam btn-sm" data-teamid="${v}" title="Add People to ${v}"><i class="fa fa-plus"></i></button>
         <button type="button" class="btn btn-danger removeTeam btn-sm" data-teamid="${v}" title="Remove ${v}"><i class="fa fa-remove"></i></button></div>`);
       });
-
+    }
+    else
+    {
+      $('#teamsDisplayHeader').empty().append("You're not of part of any Slack workspace yet.");
     }
   }, (error) => {
     console.log(error);
@@ -241,119 +233,21 @@ $(document).on("click", ".team-link", function(){
   // alert($(this).data('team'));
 });
 
-export function userGitLogin() {
-  const loggedUser = gitLogin();
-  loggedUser.then((response) => {
-    // console.log(response);
-
+export async function userGitLogin() {
+  try
+  {
+    const loggedUser = await gitLogin();
+    console.log(loggedUser);
     createDashboardView();
-
-
-    const userData = {
-      username: response.additionalUserInfo.username,
-      accessToken: response.credential.accessToken,
-      name: response.user.displayName,
-      email: response.user.email,
-      profilePicture: response.user.photoURL,
-      phoneNumber: response.user.phoneNumber,
-      gitURL: response.additionalUserInfo.profile.html_url,
-      status: 'active',
-      permission: { write: false, read: true }
-    };
-
-    const userUID = response.user.uid;
-
-    const obj =  {
-      "user": {
-        "userName": userData.username,
-        "currentTeam": {
-          "teamName": "",
-          "channals": []
-        },
-        "teams": []
-      }};
-      store.dispatch({type: "LOGIN", obj});
-
-    if (teamnameFromUrl != 'undefined' && teamnameFromUrl != "") {
-      console.log(`Adding to team: ${teamnameFromUrl}`);
-      let currentUserDetails = getCurrentUserDetails().then((response) => {
-        if(response === "")
-        {
-          console.log("New user");
-          userData.teams.push(teamnameFromUrl);
-        }
-        else
-        {
-          console.log("Updating user teams");
-          if(currentUserDetails.teams != 'undefined' && currentUserDetails.teams != "" && currentUserDetails.teams != null) {
-            userData.teams.push(...currentUserDetails.teams, teamnameFromUrl);
-          }else{
-            userData.teams.push(teamnameFromUrl);
-          }
-        }
-
-        let team = {};
-        getTeam(teamnameFromUrl).then((res) => {
-          if(res.users != 'undefined' && res.users != "" && res.users != null) {
-            team.users =  [...res.users, userUID];
-          }else{
-            team.users =  [userUID];
-          }
-
-          console.log(teamnameFromUrl);
-          console.log(team);
-
-       // const currentUsrData = callCurrentUserData(userUID,userData,null);
-       // console.log("curret user val>>>>>>>>>>>>>>>>>"+currentUsrData);
-       // store.dispatch({type: "LOGIN", currentUsrData});
-
-          saveUpdateTeam(teamnameFromUrl, team).then((r) => {console.log(r)});
-        }, (error) => {
-          console.log(error);
-        });
-
-
-        //console.log(userData);
-        // Saving/updating current logged in user
-        saveUpdateUser(userUID, userData).then((res) => {
-
-
-          console.log(res);
-          getTeamsOfCurrentUser();
-        }, (error) => {
-          console.log(`Error in saving/updating user: ${error.toString()}`);
-          gitLogout();
-          homeComponentView();
-        });
-
-      }, (err) => {
-        console.log(err)
-      });
-    }
-    else
-    {
-      //console.log(userData);
-      // Saving/updating current logged in user
-      saveUpdateUser(userUID, userData).then((res) => {
-
-       // const currentUsrData = callCurrentUserData(userUID,userData,null);
-       // console.log("curret user val>>>>>>>>>>>>>>>>>"+currentUsrData);
-       // store.dispatch({type: "LOGIN", currentUsrData});
-
-        console.log(res);
-      }, (error) => {
-        console.log(`Error in saving/updating user: ${error.toString()}`);
-        gitLogout();
-        homeComponentView();
-      });
-    }
-
-    window.history.pushState("object or string", "Slack", url.split("?")[0]);
-  }, (error) => {
+    await saveUpdateUserAfterLogin(loggedUser.user.uid, loggedUser);
+    getTeamsOfCurrentUser();
+  }
+  catch(error)
+  {
     console.log(error.toString());
     gitLogout();
     homeComponentView();
-  });
+  }
 }
 
 export function userGitLogout() {
@@ -362,15 +256,21 @@ export function userGitLogout() {
   gitLogout();
   homeComponentView();
 }
-export function userLoginStatus() {
-  const u = checkAuthStateChange();
-  u.then((response) => {
-    console.log(response);
+export async function userLoginStatus() {
+  try
+  {
+    const u = await checkAuthStateChange();
+    console.log(u);
     createDashboardView();
-  }, (error) => {
-    console.log(error.toString());
+    const result = await saveUpdateUserAfterLogin(u.uid, u);
+    console.log(result);
+    getTeamsOfCurrentUser();
+  }
+  catch(ex)
+  {
+    console.log(ex);
     homeComponentView();
-  });
+  }
 }
 
 export function init() {

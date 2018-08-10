@@ -23,8 +23,8 @@ let userDisplayName = ''; // github Name
 let forChannel = false;
 
 // Get Current User Details
-const currentUser = window.localStorage.getItem('current_user');
-if (currentUser != null && currentUser.user !== 'undefined') {
+let currentUser = window.localStorage.getItem("current_user");
+if (currentUser && currentUser != 'null' && currentUser.user !== 'undefined') {
     userName = JSON.parse(currentUser).user.userName;
     userDisplayName = getDisplayNameFrom(userName);
 } else {

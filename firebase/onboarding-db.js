@@ -55,7 +55,8 @@ export function getCurrentUserDetails() {
         resolve(data);
       },
       error(e) {
-        reject(e.statusText);
+        console.log(e);
+        reject(e);
       },
     });
   });
