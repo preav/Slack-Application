@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const config = {
   entry: ['./client/src/components/notifications/notification-main.js',
@@ -85,7 +86,10 @@ const config = {
         }),
         new HtmlWebpackPlugin({
             template: './index.html'
-        })
+        }),
+        new CopyWebpackPlugin([
+          {from:'client/src/img',to:'client/src/img'} 
+      ]), 
     ],
     devtool: 'source-map',
 };
