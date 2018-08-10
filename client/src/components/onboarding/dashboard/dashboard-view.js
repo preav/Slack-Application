@@ -1,6 +1,7 @@
 import createHTMLElement from '../onboarding-service';
 
 export const dashboardViewHolderId = 'signupContainer';
+export const editProfileHolderId = 'editProfileContainer';
 
 export function dashboardComponent() {
   const dashboardElement = createHTMLElement(

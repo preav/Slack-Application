@@ -1,5 +1,5 @@
 import { homePageComponent, homeViewHolderId } from './home/home-view';
-import { dashboardComponent, dashboardViewHolderId } from './dashboard/dashboard-view';
+import { dashboardComponent, dashboardViewHolderId, editProfileHolderId } from './dashboard/dashboard-view';
 import { createTeamViewHolderId, createTeamComponent } from './team-create/team-create-view';
 import { inivitationViewHolderId, invitationComponent, mailSentBody } from './invitation/invitation-view';
 import { Email } from './invitation/smtp';
@@ -108,14 +108,14 @@ document.querySelector('#user-profile').addEventListener('click', () => {
   getCurrentUserData().then((data) => {
     // const tempCurrUsrData = data;
     console.log(`user data >>>>>>>>>>>>>>>>>>>>>${data.profilePicture}`);
-    $(`#${dashboardViewHolderId}`).empty().append(profileViewComponent(data));
+    $(`#${editProfileHolderId}`).empty().append(profileViewComponent(data));
 
     $('#updateUserDataBtn').click(() => {
       const userName = document.getElementById('userName').value;
       const email = document.getElementById('mailId').value;
       console.log("calling update>>>>"+userName+"-----"+email);
       //saveUpdateUserProfile(userName, email);
-
+      $('#editModal').modal('hide')
       saveUpdateUserProfile(userName, email).then((response) => {
         console.log(response);
       }, (error) => {
@@ -123,10 +123,10 @@ document.querySelector('#user-profile').addEventListener('click', () => {
       });
     });
 
-    $('#closeBtn').click(() => {
-      $( ".editProfileDiv" ).hide();
-      createDashboardView();
-    });
+    // $('#closeBtn').click(() => {
+    //   $( ".editProfileDiv" ).hide();
+    //   createDashboardView();
+    // });
   });
 });
 
