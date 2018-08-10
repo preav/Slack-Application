@@ -6,8 +6,8 @@ export const editProfileHolderId = 'editProfileContainer';
 export function dashboardComponent() {
   const dashboardElement = createHTMLElement(
     `<div class="dashboard d-flex flex-fill justify-content-center">
-        <div class="col-5">    
-            <div class="mt-5">
+        <div class="col-6">    
+            <div class="mt-5 text-center">
                 <div class="mt-2">
                     <img src="./client/src/img/create_a_team.png" alt="Create a team">
                     <h1>Create a new workspace</h1>

@@ -4,7 +4,6 @@ import createHTMLElement from '../onboarding-service';
 
 // export const profileViewHolderId = 'signupContainer';
 
-
 export default function profileViewComponent(data) {
   // const userUID = firebase.auth().currentUser.uid;
 
@@ -18,9 +17,8 @@ export default function profileViewComponent(data) {
           <img src="${data.profilePicture}" class="avatar" alt="avatar">        
           
           <div class="form-group">
-          <input type="file" class="my-3 border">
+          <input id="changeUserPicture" type="file" class="my-3 border">
           </div>
-          
         </div>
       </div>
       
@@ -45,7 +43,7 @@ export default function profileViewComponent(data) {
      
           <div class="form-group">
             <label control-label">Password:</label>
-              <input class="form-control" type="text" value="test">
+              <input class="form-control" type="password" value="test">
           </div>
           </div>
         </form>
@@ -53,6 +51,9 @@ export default function profileViewComponent(data) {
   </div>
 </div>`,
   );
-
   return profileView;
+}
+
+function changeUserPicture() {
+  console.log('change triggered')
 }
