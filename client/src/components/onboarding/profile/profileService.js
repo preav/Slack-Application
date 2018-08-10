@@ -91,6 +91,30 @@ export function saveUpdateUserProfile(updated_name, updated_email) {
  }
 
 
+ export function updateUserTeam(teams) {
+  
+  const userId = firebase.auth().currentUser.uid;  
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: `https://us-central1-slackcollaboration-fa323.cloudfunctions.net/saveUpdateUser?userId=${userId}`,
+      type: 'POST',      
+      data: JSON.stringify({teams}),
+      contentType: 'application/json;charset=UTF-8',
+      dataType: 'text',
+      success(data) {
+        console.log('Saved data');
+        resolve(data);
+      },
+      error(e) {
+        console.log('Error in saving data');
+        reject(e.statusText);
+      },
+    });
+  });
+ }
+
+
+
  
 export function saveUpdateUserProfile1(updated_name, updated_email) {
   // Return a new promise.
@@ -117,3 +141,25 @@ export function saveUpdateUserProfile1(updated_name, updated_email) {
     });
   });
  }
+
+
+  export function deleteTeam(delTeam){
+    let currentUser = firebase.auth().currentUser.uid;   
+    var filteredAry;
+    const currentTeams  = firebase.database().ref('users').child(currentUser).child('teams');
+
+     currentTeams.on('value', function (snapshot) { 
+       if(snapshot != null) {
+          // console.log(Object.values(snapshot.val())); 
+       const allTeamVal = Object.values(snapshot.val());      
+       console.log(allTeamVal);
+        filteredAry = allTeamVal.filter(e => e !== delTeam)
+       }
+    });
+   // console.log("current Team>>>>>"+filteredAry);
+    updateUserTeam(filteredAry).then((response) => {
+      console.log(response);
+    }, (error) => {
+      console.log(`Error in deleteing error`);
+    });
+} 

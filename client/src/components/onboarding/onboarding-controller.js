@@ -5,7 +5,7 @@ import { inivitationViewHolderId, invitationComponent, mailSentBody } from './in
 import { Email } from './invitation/smtp';
 import { submitTeamCreateForm, getTeam } from './team-create/team-create-service';
 import profileViewComponent from './profile/profileView';
-import { getCurrentUserData, saveUpdateUserProfile } from './profile/profileService';
+import { getCurrentUserData, saveUpdateUserProfile, deleteTeam } from './profile/profileService';
 import { checkAuthStateChange, gitLogin, gitLogout } from '../../../../firebase/git-login';
 import { saveUpdateUser, getCurrentUserDetails, saveUpdateTeam } from '../../../../firebase/onboarding-db';
 import { getAllChannels, getAllUsers } from '../collaboration/userSetting/userSettingService';
@@ -188,6 +188,9 @@ export function getTeamsOfCurrentUser() {
         <button type="button" class="btn btn-success addUserTeam btn-sm" data-teamid="${v}" title="Add People to ${v}"><i class="fa fa-plus"></i></button>
         <button type="button" class="btn btn-danger removeTeam btn-sm" data-teamid="${v}" title="Remove ${v}"><i class="fa fa-remove"></i></button></div>`);
       });
+
+    
+
     }
     else
     {
@@ -207,7 +210,11 @@ $(document).on("click", ".addUserTeam", function(){
 $(document).on("click", ".removeTeam", function(){
   var teamID = $(this).data('teamid');
   $(this).parents('.teamsContainer').remove();
+
+  // delete team 
   alert(`REMOVE ${teamID}`);
+
+  deleteTeam(teamID);
 });
 
 $(document).on("click", ".team-link", function(){
