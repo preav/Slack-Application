@@ -169,8 +169,6 @@ export function homeComponentView() {
   $(`#${homeViewHolderId}`).empty().append(homeComp);
   document.querySelector('#git-login').addEventListener('click', () => { userGitLogin(); });
   document.querySelector('#git-login').disabled = false;
-  // document.querySelector('#git-signout').classList.add('d-none');
-  // document.querySelector('#user-profile').classList.add('d-none');
   $("#user-settings").addClass('d-none');
   $('#signupContainer').show();
   $('#chatContainer, #searchContainer, #notificationFilter, #notificationCounter').hide();
@@ -178,15 +176,19 @@ export function homeComponentView() {
   return homeComp;
 }
 
+$(document).on("click",".navbar-brand", function(){
+  createDashboardView();
+  $('#signupContainer').show();
+  $('#chatContainer, #searchContainer, #notificationFilter').hide();
+});
+
 export function createDashboardView() {
   const dashComponent = dashboardComponent();
   $(`#${dashboardViewHolderId}`).empty().append(dashComponent);
   document.querySelector('#create-team').addEventListener('click', () => { createTeamFormView(); });
   document.querySelector('#git-signout').addEventListener('click', () => { userGitLogout(); });
-  // document.querySelector('#git-signout').classList.remove('d-none');
-  // document.querySelector('#user-profile').classList.remove('d-none');
   $("#user-settings").removeClass('d-none');
-  $("#searchContainer, #notificationFilter, #notificationCounter").show();
+  $("#notificationCounter").show();
   getTeamsOfCurrentUser();
 
   return dashComponent;
@@ -225,14 +227,15 @@ $(document).on("click", ".removeTeam", function(){
 
 $(document).on("click", ".team-link", function(){
   var teamName = $(this).data('team');
-    $("#chatContainer").show();
+    $("#chatContainer, #searchContainer, #notificationFilter").show();
     $('#signupContainer').hide();
+    
 
     const obj = store.getState();
     obj.user.currentTeam.teamName = teamName;
     console.log("***************************"+JSON.stringify(obj));
     store.dispatch({type: "LOGIN", obj});
-
+    $('#showContactInformation').html("");
     getAllChannels(teamName);
     getAllUsers(teamName);
   // alert($(this).data('team'));

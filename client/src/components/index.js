@@ -52,9 +52,9 @@ $("#enteredCommand").emojioneArea({
                 event.preventDefault();
                 var enteredValue = $('#enteredCommand').data("emojioneArea").getText();
                 var slackWindow = $("#enteredCommand").attr('data-slackbot');
-                $('#enteredCommand').data("emojioneArea").setText('');
-                if (slackWindow) {
+                if (slackWindow == "true") {
                     hitEnter(enteredValue);
+                    $('#enteredCommand').data("emojioneArea").setText('');
                 } else {
                     sendMessage();
                 }
