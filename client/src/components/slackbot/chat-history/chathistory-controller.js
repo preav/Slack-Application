@@ -2,9 +2,20 @@ import { getChatHistoryForUserService,
   getReminderForUserService } from './chathistory-service';
 import { showChatHistory, showUserReminder } from './chathistory-view';
 
+$(document).on("click", "#chatWithSlackbot", function(){
+  getUserSlackbotChatHistory();
+  $("#enteredCommand").attr('data-slackbot', 'true');
+});
+
+
 // function to create otherbot
-export const getUserSlackbotChatHistory = function (userId) {
-  const createWidgetEle = document.getElementById('playGround');
+//export const getUserSlackbotChatHistory = function () {
+function getUserSlackbotChatHistory(){
+  console.log('getUserSlackbotChatHistory-----------------------------');
+  const user = JSON.parse(window.localStorage.getItem("current_user"));
+  const userId = user.user.userName;
+  
+  const createWidgetEle = document.getElementById('messageBody');
   // calling service function to create otherbot in firebase database
   getChatHistoryForUserService(userId).then((chathistory) => {
     // converting object to array
