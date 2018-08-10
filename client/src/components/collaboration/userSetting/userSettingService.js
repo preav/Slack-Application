@@ -7,7 +7,7 @@ const jQuery = require('jquery');
 
 function getAllChannels(teamName) {
   const checkChannelRef = database.ref('teams/' + teamName);
-  let getAllContactHtml = `<ul class="side-list"><li><strong data-toggle="modal" data-target="#searchModal" id="searchChannel">Channels</strong>
+  let getAllContactHtml = `<ul class="side-list"><li><strong data-toggle="modal" data-teamid="${teamName}" data-target="#searchModal" id="searchChannel">Channels</strong>
     <span><a id="createChannel" data-teamid="${teamName}" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-circle"></i></a></span>
     </li></ul><ul class="side-list side-list-body" id="channelList"></ul>`;
   $('#showContactInformation').append(getAllContactHtml);

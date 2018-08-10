@@ -230,6 +230,7 @@ $(document).on("click", ".team-link", function(){
     getAllUsers(teamName);
 
     $("#currentTeam span").html(teamName);
+    $("#searchAll").attr('data-teamid', teamName);
   // alert($(this).data('team'));
 });
 
