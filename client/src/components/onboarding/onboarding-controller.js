@@ -238,8 +238,9 @@ export function createTeamDashboard(teamName)
     getAllUsers(teamName);
 
     $("#currentTeam span").html(teamName);
-  
-}
+    $("#searchAll").attr('data-teamid', teamName);
+  // alert($(this).data('team'));
+};
 
 export async function userGitLogin() {
   try
