@@ -1,7 +1,9 @@
 const assert = require('chai').assert;
 const app = require('../app');
 //const createTodolistService = require('../client/src/components/slackbot/todolist/todolist-service');
-import { createTodolistService,
+import createTodolistService from '../client/src/components/slackbot/todolist/todolist-service';
+
+import { 
     updateSlackBotTodolistResponse,
     getTodolistForUserService,
     markOrUnmarkOrDelete } from '../client/src/components/slackbot/todolist/todolist-service';

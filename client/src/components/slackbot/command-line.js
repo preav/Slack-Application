@@ -106,7 +106,7 @@ export const hitEnter = function (e) {
           commandEntered: e,
           widgetName: recastResponse.intents[0].slug,
           channelName: recastResponse.entities.channelname[0].raw,
-          targetUser: recastResponse.entities.user[0].value,
+          targetUser: recastResponse.entities.mail[0].value,
           userId: user.user.userName,
           creatDate: creatDate,
           creatTime: creatTime,

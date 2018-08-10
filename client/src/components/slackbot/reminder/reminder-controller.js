@@ -81,7 +81,7 @@ export const sendReminderMeaageOnTime = function () {
     for(var k = 0; k <= reminderMsgListArray.length - 1; k++){//loop for each users
       var reminderMsgListArrayObj =reminderMsgListArray[k].reminder;
         if (typeof(reminderMsgListArrayObj) !== 'undefined'){
-        const allReminderMsgListArray = Object.keys(reminderMsgListArrayObj).map(i => reminderMsgListArrayObj[i])
+        const allReminderMsgListArray = Object.keys(reminderMsgListArrayObj).map(i => reminderMsgListArrayObj[i]);
         for(var j = 0; j <= allReminderMsgListArray.length - 1; j++){ // loop for each reminder for a user
           if(((Date.parse(allReminderMsgListArray[j].reminderTime) - (new Date())) < 0) 
           &&  (allReminderMsgListArray[j].reminderSent === 'No')) {
