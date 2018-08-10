@@ -215,3 +215,10 @@ exports.getTeam = functions.https.onRequest((request, response) => {
         });
     });
 });
+
+exports.deleteTeam = functions.https.onRequest((request, response) => {
+    return cors(request, response, () => {
+        const teamId = request.query.teamName;
+        admin.database().ref('/teams/' + teamId).remove();
+    });
+ });
