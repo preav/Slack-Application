@@ -7,29 +7,30 @@ const jQuery = require('jquery');
 
 function getAllChannels(teamName) {
   const checkChannelRef = database.ref('teams/' + teamName);
-  let getAllContactHtml = `<ul class="side-list"><li><strong data-toggle="modal" data-target="#searchModal" id="searchChannel">Channels</strong>
+  let getAllContactHtml = `<ul class="side-list"><li><strong data-toggle="modal" data-teamid="${teamName}" data-target="#searchModal" id="searchChannel">Channels</strong>
     <span><a id="createChannel" data-teamid="${teamName}" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-circle"></i></a></span>
     </li></ul><ul class="side-list side-list-body" id="channelList"></ul>`;
   $('#showContactInformation').append(getAllContactHtml);
   checkChannelRef.on('value', (snapshot) => {
     const getChannelRef = snapshot.val();
-    if (getChannelRef['channels']) {
+    if (getChannelRef && getChannelRef['channels']) {
       database.ref('teams/' + teamName + '/channels').once('value', dataSnapshot => {
         $('#channelList').empty();
         dataSnapshot.forEach(childSnapshot => {
-          // console.log(childSnapshot.key);
           let channelID = childSnapshot.key;
           let channelName = childSnapshot.val().channelName;
-          var channelListHTML = `
-                <li data-channelid="${channelID}" data-teamid="${teamName}" data-channelname="${channelName}" class="channels">
-                ${channelName}
-                <span data-channelid="${channelID}" data-teamid="${teamName}">
-                <!--<a class="muteChannel"><i class="fa fa-microphone-slash"></i></a>
-                <a class="unmuteChannel"><i class="fa fa-microphone"></i></a>-->
-                <a class="removeChannel"><i class="fa fa-times-circle-o"></i></a>
-              </span>
-              </li>`;
-          $('#channelList').append(channelListHTML);
+          if (channelName) {
+            var channelListHTML = `
+                  <li data-channelid="${channelID}" data-teamid="${teamName}" data-channelname="${channelName}" class="channels">
+                  ${channelName}
+                  <span data-channelid="${channelID}" data-teamid="${teamName}">
+                  <!--<a class="muteChannel"><i class="fa fa-microphone-slash"></i></a>
+                  <a class="unmuteChannel"><i class="fa fa-microphone"></i></a>-->
+                  <a class="removeChannel"><i class="fa fa-times-circle-o"></i></a>
+                </span>
+                </li>`;
+            $('#channelList').append(channelListHTML);
+          }
         });
       });
 
@@ -39,26 +40,28 @@ function getAllChannels(teamName) {
 
 $(document).on("click", '.channels', function(){
   const teamID = $(this).data('teamid');
-  const channelId = $(this).data('channelname');
+  const channelId = $(this).data('channelid');
+  $("#enteredCommand").attr('data-slackbot', 'false');
   openChatDetailsForChannel(channelId, teamID);
+  $(".users, .channels").removeClass('active');
+  $(this).addClass('active');
 });
 
 function getAllUsers(teamName) {
   const checkUserRef = database.ref('teams/' + teamName);
-  let getAllContactHtml = `<ul class="side-list"><li data-toggle="modal" data-target="#searchModal" id="searchPeople">Direct Messages
+  if (checkUserRef){
+  let getAllContactHtml = `<ul class="side-list"><li data-toggle="modal" data-teamid="${teamName}" data-target="#searchModal" id="searchPeople">Direct Messages
     </li></ul><ul class="side-list side-list-body" id="usersList"></ul>`;
   $('#showContactInformation').append(getAllContactHtml);
   checkUserRef.on('value', (snapshot) => {
     const checkUserRef = snapshot.val();
     if (checkUserRef['users']) {
-      // console.log("Present");
       database.ref('teams/' + teamName + '/users').once('value', dataSnapshot => {
         $('#usersList').empty();
         dataSnapshot.forEach(childSnapshot => {
           let userNode = childSnapshot.key;
           let userID = childSnapshot.val();
           let user = getUserName(userID);
-          // console.log("UN-"+userName);
           var userListHTML = `
                 <li data-userid="${userID}" data-teamid="${teamName}" data-username="${user.userName}" class="users">
                 ${user.displayName}
@@ -74,12 +77,16 @@ function getAllUsers(teamName) {
     }
   });
 }
+}
 
 // Get the UserId of the person who is selected for chatting
 $(document).on("click", '.users', function(){
   const teamID = $(this).data('teamid');
   const userId = $(this).data('username');
+  $("#enteredCommand").attr('data-slackbot', 'false');
   openChatDetailsForUser(userId, teamID);
+  $(".users, .channels").removeClass('active');
+  $(this).addClass('active');
 });
 
 function getUserName(userID) {
@@ -102,6 +109,7 @@ function getUserName(userID) {
   });
   return user;
 }
+
 // functionality for updating something in firebase via
 function muteUsers(userId) {
   const newPostKey = database.ref(`team-6/directMessages/users/${userId}`).update({
@@ -151,7 +159,6 @@ jQuery(document).on('click', '.removeUser', function (e) {
   $(this).parents('li').remove();
 });
 
-//= =====================================================================
 function muteChannel(channelId) {
   const newPostKey = database.ref('team-6').child('channels').child(`${channelId}`)
     .update({
@@ -213,4 +220,5 @@ export {
   muteChannel,
   unMuteChannel,
   removeChannel,
+  getUserName
 };

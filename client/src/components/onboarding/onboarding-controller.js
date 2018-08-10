@@ -11,7 +11,8 @@ import { saveUpdateUser, getCurrentUserDetails, saveUpdateTeam } from '../../../
 import { getAllChannels, getAllUsers } from '../collaboration/userSetting/userSettingService';
 import { store } from './profileReducer';
 import { saveUpdateUserAfterLogin } from './onboarding-service';
-
+// Create a token generator with the default settings:
+var randtoken = require('rand-token');
 store.subscribe(() =>{
   var currentState = store.getState();
   localStorage["current_user"] = JSON.stringify(currentState);
@@ -48,7 +49,7 @@ export function createInvitationComponent() {
   invitComponent.querySelector('.skip_button').addEventListener('click', (e) => {
     e.preventDefault();
     $('form#formid').find('input:text').val('');
-    proceedNext(teamName,`Skipped inivitation for team ${teamName}`);
+    proceedNext(teamName);
   });
   invitComponent.querySelector('#submit').addEventListener('click', (e) => {
     e.preventDefault();
@@ -59,7 +60,11 @@ export function createInvitationComponent() {
       if (reciever !== '' && reciever !== undefined) {
         console.log(`dfdf-${reciever}`);
         recieverarr.push(reciever);
+
+        // Generate a 16 character alpha-numeric token:
+        var token = randtoken.generate(16);
         const appUrl = window.location.href;
+
         const redireURL = `${appUrl}?teamname=${teamName}`;// &useremail=${reciever}`;
         const output = `<div style="border: 6px solid #ccc;font-family:arial;width: 800px;margin: auto;">
         <div style="text-align:center;padding-top: 50px;"><img src="https://media.licdn.com/dms/image/C560BAQEYp_bjM8rH9w/company-logo_200_200/0?e=2159024400&v=beta&t=YN-rmUmfLXgy7WrKeZ-aDfePrC6cM3GNTQg_wybCpnk" alt="sapient-logo"/></div>
@@ -80,14 +85,16 @@ export function createInvitationComponent() {
       //const sentmailComponent = mailSentBody();
       //$(`#${inivitationViewHolderId}`).empty().append(sentmailComponent);
       $('form#formid').find('input:text').val('');
-      proceedNext(teamName,`Inivitation for team ${teamName}`);
+      alert(`Inivitation for team ${teamName}`);
+      proceedNext(teamName);
     }
   });
   $(`#${inivitationViewHolderId}`).empty().append(invitComponent);
   return invitComponent;
 }
-export function proceedNext(teamName,inputmessage) {
-  alert(inputmessage);
+export function proceedNext(teamName) {
+  //alert(inputmessage);
+  createTeamDashboard(teamName);
   //do next
 }
 document.querySelector('#user-profile').addEventListener('click', () => {
@@ -152,8 +159,6 @@ export function homeComponentView() {
   $(`#${homeViewHolderId}`).empty().append(homeComp);
   document.querySelector('#git-login').addEventListener('click', () => { userGitLogin(); });
   document.querySelector('#git-login').disabled = false;
-  // document.querySelector('#git-signout').classList.add('d-none');
-  // document.querySelector('#user-profile').classList.add('d-none');
   $("#user-settings").addClass('d-none');
   $('#signupContainer').show();
   $('#chatContainer, #searchContainer, #notificationFilter, #notificationCounter').hide();
@@ -161,15 +166,19 @@ export function homeComponentView() {
   return homeComp;
 }
 
+$(document).on("click",".navbar-brand", function(){
+  createDashboardView();
+  $('#signupContainer').show();
+  $('#chatContainer, #searchContainer, #notificationFilter').hide();
+});
+
 export function createDashboardView() {
   const dashComponent = dashboardComponent();
   $(`#${dashboardViewHolderId}`).empty().append(dashComponent);
   document.querySelector('#create-team').addEventListener('click', () => { createTeamFormView(); });
   document.querySelector('#git-signout').addEventListener('click', () => { userGitLogout(); });
-  // document.querySelector('#git-signout').classList.remove('d-none');
-  // document.querySelector('#user-profile').classList.remove('d-none');
   $("#user-settings").removeClass('d-none');
-  $("#searchContainer, #notificationFilter, #notificationCounter").show();
+  $("#notificationCounter").show();
   getTeamsOfCurrentUser();
 
   return dashComponent;
@@ -219,31 +228,42 @@ $(document).on("click", ".removeTeam", function(){
 
 $(document).on("click", ".team-link", function(){
   var teamName = $(this).data('team');
-    $("#chatContainer").show();
-    $('#signupContainer').hide();
+  // alert($(this).data('team'));
+  createTeamDashboard(teamName)
+});
 
+export function createTeamDashboard(teamName)
+{
+  $("#chatContainer, #searchContainer, #notificationFilter").show();
+    $('#signupContainer').hide();
     const obj = store.getState();
     obj.user.currentTeam.teamName = teamName;
     console.log("***************************"+JSON.stringify(obj));
     store.dispatch({type: "LOGIN", obj});
-
+    $('#showContactInformation').html("");
     getAllChannels(teamName);
     getAllUsers(teamName);
-  // alert($(this).data('team'));
-});
 
-export function userGitLogin() {
-  const loggedUser = gitLogin();
-  loggedUser.then((response) => {
-    // console.log(response);
+    $("#currentTeam span").html(teamName);
+    $("#searchAll").attr('data-teamid', teamName);
+  // alert($(this).data('team'));
+};
+
+export async function userGitLogin() {
+  try
+  {
+    const loggedUser = await gitLogin();
+    console.log(loggedUser);
     createDashboardView();
-    saveUpdateUserAfterLogin(response);
+    await saveUpdateUserAfterLogin(loggedUser.user.uid, loggedUser);
     getTeamsOfCurrentUser();
-  }, (error) => {
+  }
+  catch(error)
+  {
     console.log(error.toString());
     gitLogout();
     homeComponentView();
-  });
+  }
 }
 
 export function userGitLogout() {
@@ -252,15 +272,21 @@ export function userGitLogout() {
   gitLogout();
   homeComponentView();
 }
-export function userLoginStatus() {
-  const u = checkAuthStateChange();
-  u.then((response) => {
-    console.log(response);
+export async function userLoginStatus() {
+  try
+  {
+    const u = await checkAuthStateChange();
+    console.log(u);
     createDashboardView();
-  }, (error) => {
-    console.log(error.toString());
+    const result = await saveUpdateUserAfterLogin(u.uid, u);
+    console.log(result);
+    getTeamsOfCurrentUser();
+  }
+  catch(ex)
+  {
+    console.log(ex);
     homeComponentView();
-  });
+  }
 }
 
 export function init() {

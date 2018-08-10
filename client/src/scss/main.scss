@@ -43,6 +43,16 @@ body
     overflow-y: scroll;
 }
 
+#currentTeam {
+    color: #fff;
+    border-top: 1px solid #000;
+    padding: 10px;
+
+    span {
+        color: #0d73f1;
+    }
+}
+
 //.container-fluid{
 //   padding: 0;
 //   text-align: center;
@@ -52,7 +62,7 @@ body
    width: 100%;
    text-align: center;
    padding: 0;
-   height: 93vh;
+   height: 90vh;
    overflow: auto;
 }
 
@@ -99,6 +109,10 @@ body
     cursor: pointer;
 }
 
+.navbar-brand {
+    font-size: 2em;
+}
+
 .team-link:hover
 {
     background-color:#D7DADA;
@@ -136,6 +150,11 @@ body
 
 #contentHolder{
     border-radius: 0.7rem;
+}
+
+#content, #channelContent {
+    max-height: 360px;
+    overflow: auto;
 }
 
 #searchItem{
@@ -331,6 +350,10 @@ $border-radius: .25rem;
         color: #fff;
         cursor: pointer;
 
+        &.active {
+            background: #afafaf;
+        }
+
         &:first-child {
             font-weight: bold;
             border-bottom: 1px solid #000;
@@ -370,3 +393,46 @@ $border-radius: .25rem;
  .contactUser:hover {
     cursor: pointer;
  }
+
+
+// #channelContent, #userContent {
+    .nav {
+        border: 1px solid #ccc;
+
+        .nav-link {
+            border-radius: 0 !important;
+        }
+
+        li {
+            width: 100%;
+            border-bottom: 1px solid #ccc;
+            
+            &:last-child {
+                border-bottom-width: 0;
+            }
+
+            a {
+                padding: 5px;
+                display: block;
+                background: #f2f2f2;
+                border-radius: 0;s
+                &:hover {
+                    background: #ccc;
+                    text-decoration: none;
+                }
+            }
+        }
+    }
+
+// }
+
+
+ //for adusting position under creation channel modal
+ #usersinTeam , #addMem {
+    margin-left: 7%;
+}
+
+ .emojionearea .emojionearea-picker.emojionearea-picker-position-top {
+     right: 0 !important;
+ }
+
