@@ -147,19 +147,18 @@ export function saveUpdateUserProfile1(updated_name, updated_email) {
     let currentUser = firebase.auth().currentUser.uid;   
     var filteredAry;
     const currentTeams  = firebase.database().ref('users').child(currentUser).child('teams');
-
      currentTeams.on('value', function (snapshot) { 
        if(snapshot != null) {
           // console.log(Object.values(snapshot.val())); 
        const allTeamVal = Object.values(snapshot.val());      
        console.log(allTeamVal);
         filteredAry = allTeamVal.filter(e => e !== delTeam)
+        console.log("filltered Team>>>>>"+filteredAry);
+        updateUserTeam(filteredAry).then((response) => {
+          console.log(response);
+        }, (error) => {
+          console.log(`Error in deleteing error`);
+        });
        }
-    });
-   // console.log("current Team>>>>>"+filteredAry);
-    updateUserTeam(filteredAry).then((response) => {
-      console.log(response);
-    }, (error) => {
-      console.log(`Error in deleteing error`);
     });
 } 
