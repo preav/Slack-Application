@@ -127,7 +127,7 @@ function getChannelMessages(teamId) {
 */
 
 export function getAllMessages(teamId) {
-    alert(teamId);
+    // alert(teamId);
     getDirectMessages(teamId);
     // getChannelMessages(teamId);
 }
