@@ -18,10 +18,8 @@ export const createTodolistService = widgetData => new Promise((resolve, reject)
     taskCompleted: widgetData.taskCompleted,
   }).getKey();
 
-  console.log('collectionKey = ', collectionKey);
   if (collectionKey !== '') {
     widgetData.id = collectionKey;
-    console.log('to-do-list task saved successfully...', widgetData.id);
     resolve(widgetData);
   } else {
     reject(new Error(`Error in saving your data into firebase database. 
@@ -45,7 +43,6 @@ export const getTodolistForUserService = userId => new Promise((resolve, reject)
   .then((snapshot) => {
     const todolistData = snapshot.val();
     if (todolistData !== '') {
-      console.log('todolist retrieved successfully...', todolistData);
       resolve(todolistData);
     } else {
       reject(new Error(`Error occured while retrieving todolist for 

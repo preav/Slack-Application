@@ -10,7 +10,7 @@ import { openCalendar } from './calendar/calendar-controller';
 export const hitEnter = function (e) {
   // calling recast api
     recastAPIservice(e).then((recastResponse) => {
-      console.log(`command-line-cotroller.js  recastResponse slug= ${recastResponse.intents[0].slug}`);
+      const user = JSON.parse(window.localStorage.getItem("current_user"));
       const currentdateTime = new Date();
       const creatDate = `${currentdateTime.getDate()}/${
         currentdateTime.getMonth() + 1}/${
@@ -25,10 +25,10 @@ export const hitEnter = function (e) {
           commandEntered: e,
           widgetName: recastResponse.intents[0].slug,
           repositoryName: recastResponse.entities.git_repo[0].value,
-          userId: 'testUser1',
+          userId: user.user.userName,
           creatDate: creatDate,
           creatTime: creatTime,
-          currentdateTime: currentdateTime,
+          currentdateTime: currentdateTime.toString(),
           botResponse: '',
         };
 
@@ -42,10 +42,10 @@ export const hitEnter = function (e) {
           widgetName: recastResponse.intents[0].slug,
           repositoryName: recastResponse.entities.git_repo[0].value,
           issueName: recastResponse.entities.git_issue[0].value,
-          userId: 'testUser1',
+          userId: user.user.userName,
           creatDate: creatDate,
           creatTime: creatTime,
-          currentdateTime: currentdateTime,
+          currentdateTime: currentdateTime.toString(),
           botResponse: '',
         };
         // save createIssue widget state to database code --> calling gitbot-controller
@@ -59,10 +59,10 @@ export const hitEnter = function (e) {
           reminderTime: recastResponse.entities.time[0].value,
           reminderDate: recastResponse.entities.date[0].value,
           remindeeUser: recastResponse.entities.user[0].raw,
-          userId: 'testUser1',
+          userId: user.user.userName,
           creatDate: creatDate,
           creatTime: creatTime,
-          currentdateTime: currentdateTime,
+          currentdateTime: currentdateTime.toString(),
           botResponse: '',
           reminderSent: 'No',
         };
@@ -75,10 +75,10 @@ export const hitEnter = function (e) {
           commandEntered: e,
           widgetName: recastResponse.intents[0].slug,
           task: recastResponse.entities.taskname[0].value,
-          userId: 'testUser1',
+          userId: user.user.userName,
           creatDate: creatDate,
           creatTime: creatTime,
-          currentdateTime: currentdateTime,
+          currentdateTime: currentdateTime.toString(),
           botResponse: '',
           taskCompleted: 'unchecked',
         };
@@ -91,10 +91,10 @@ export const hitEnter = function (e) {
           commandEntered: e,
           widgetName: recastResponse.intents[0].slug,
           calendarEvent: recastResponse.entities.calendarevent[0].value,
-          userId: 'testUser1',
+          userId: user.user.userName,
           creatDate: creatDate,
           creatTime: creatTime,
-          currentdateTime: currentdateTime,
+          currentdateTime: currentdateTime.toString(),
           botResponse: '',
         };
         // save calendar-schedule widget state to database code --> calling calendar-controller
@@ -106,11 +106,11 @@ export const hitEnter = function (e) {
           commandEntered: e,
           widgetName: recastResponse.intents[0].slug,
           channelName: recastResponse.entities.channelname[0].raw,
-          targetUser: recastResponse.entities.user[0].value,
-          userId: 'testUser1',
+          targetUser: recastResponse.entities.mail[0].value,
+          userId: user.user.userName,
           creatDate: creatDate,
           creatTime: creatTime,
-          currentdateTime: currentdateTime,
+          currentdateTime: currentdateTime.toString(),
           botResponse: '',
         };
         // save calendar-schedule widget state to database code --> calling calendar-controller
@@ -120,7 +120,7 @@ export const hitEnter = function (e) {
         const openWidgetType = {
           commandEntered: e,
           widgetName: recastResponse.intents[0].slug,
-          userId: 'testUser1',
+          userId: user.user.userName,
         };
         // open todolist modal --> calling todolist-controller
         openTodolist(openWidgetType);
@@ -129,7 +129,7 @@ export const hitEnter = function (e) {
         const openWidgetType = {
           commandEntered: e,
           widgetName: recastResponse.intents[0].slug,
-          userId: 'testUser1',
+          userId: user.user.userName,
         };
         // open reminder modal --> calling reminder-controller
         openReminder(openWidgetType);
@@ -138,7 +138,7 @@ export const hitEnter = function (e) {
         const openWidgetType = {
           commandEntered: e,
           widgetName: recastResponse.intents[0].slug,
-          userId: 'testUser1',
+          userId: user.user.userName,
         };
         // open calendar modal --> calling reminder-controller
         openCalendar(openWidgetType);

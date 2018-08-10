@@ -46,7 +46,7 @@ export const newReminderlistItemView = function (reminderDataItem) {
 export const showUserReminderBeforeSave = function (UserReminder) {
   return `<div class='createGithubRepo panBackground playGroungDiv-bot' id='createGithubRepo_${UserReminder.id}' >
               <span><strong>Slackbot</strong></span>
-              <p>You told me to remind for ${UserReminder.commandEntered}</p>
+              <p>You told me to ${UserReminder.commandEntered}</p>
               <span><strong>${moment(UserReminder.currentdateTime).fromNow()}</strong></span>
           </div>`;
 };

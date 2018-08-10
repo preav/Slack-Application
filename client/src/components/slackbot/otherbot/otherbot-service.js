@@ -16,10 +16,8 @@ export const createOtherbotService = widgetData => new Promise((resolve, reject)
     botResponse: widgetData.botResponse,
   }).getKey();
 
-  console.log('collectionKey = ', collectionKey);
   if (collectionKey !== '') {
     widgetData.id = collectionKey;
-    console.log('otherbot saved successfully...', widgetData.id);
     resolve(widgetData);
   } else {
     reject(new Error(`Error in saving your data into firebase database. 
@@ -36,3 +34,17 @@ export const updateSlackBotOtherbotResponse = (widgetData, botResponse) => {
   updates[`SlackXT/slackbot/${widgetData.userId}/otherbot/${updateCollectionKey}`] = widgetData;
   return database.ref().update(updates);
 };
+
+// function to get all team list from firebase database -- firebase
+export const getAllTeamsService = () => new Promise((resolve, reject) => {
+  database.ref('teams').once('value')
+  .then((snapshot) => {
+    const teamListData = snapshot.val();
+    if (teamListData !== '') {
+      resolve(teamListData);
+    } else {
+      reject(new Error(`Error occured while retrieving all team list from firebase database.`));
+      console.log('There is error while retrieving all team list from firebase database...');
+    }
+  });
+});
