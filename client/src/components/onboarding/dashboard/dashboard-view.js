@@ -22,7 +22,7 @@ export function dashboardComponent() {
                 <div>
                     <h1>Your workspaces</h1>
                     <p id="teamsDisplayHeader">You're already a member of these Slack workspaces:</p>
-                    <div id="teamsDisplay" class="d-flex justify-content-center flex-column">
+                    <div id="teamsDisplay">
                         <!-- <a class="team-link" href="javascript:void(0)">Your Team One</a> -->
                     </div>
                 </div>

@@ -78,10 +78,14 @@ export function createInvitationComponent() {
         recieverarr.push(reciever);
         const appUrl = window.location.href;
         const redireURL = `${appUrl}?teamname=${teamName}`;// &useremail=${reciever}`;
-        const output = `<p>Please click on the below provided link to join Slack</p><br/><a href="${redireURL}">Join Slack</a>`;
+        const output = `<div style="border: 6px solid #ccc;font-family:arial;width: 800px;margin: auto;">
+        <div style="text-align:center;padding-top: 50px;"><img src="https://media.licdn.com/dms/image/C560BAQEYp_bjM8rH9w/company-logo_200_200/0?e=2159024400&v=beta&t=YN-rmUmfLXgy7WrKeZ-aDfePrC6cM3GNTQg_wybCpnk" alt="sapient-logo"/></div>
+        <div style="padding-bottom: 120px;padding-left: 50px;padding-right: 50px;padding-top: 30px;"><h1 style="color: #bd1414;">Welcome to Sapient-Slack!</h1>
+        <p>You’re added to new Sapient-Slack workspace <strong style="color:#0d73f1;font-size: 20px;">${teamName}</strong>. Want to join the workspace??</p>
+        <div><a style="border-top:13px solid; border-bottom:13px solid; border-right:24px solid; border-left:24px solid; border-color:#2ea664; border-radius:4px; background-color:#2ea664; color:#ffffff; font-size:18px; line-height:18px; word-break:break-word; display:inline-block; text-align:center; font-weight:900; text-decoration:none!important" href="${redireURL}">Yes Join!</a></div></div></div>`;
         Email.send('slackmailing@gmail.com',
           reciever,
-          'Invitation to join slack',
+          'Invitation to join Sapient-Slack',
           output,
           'smtp.gmail.com',
           'slackmailing@gmail.com',
@@ -195,7 +199,10 @@ export function getTeamsOfCurrentUser() {
       $('#teamsDisplayHeader').empty().append("You're already a member of these Slack workspaces:");
       $('#teamsDisplay').empty();
       $.each(response.teams, (k, v) => {
-        $('#teamsDisplay').append(`<a class="team-link" data-team="${v}">${v}</a>`);
+        $('#teamsDisplay').append(`
+        <div class="teamsContainer"><a class="team-link" data-team="${v}">${v}</a>
+        <button type="button" class="btn btn-success addUserTeam btn-sm" data-teamid="${v}" title="Add People to ${v}"><i class="fa fa-plus"></i></button>
+        <button type="button" class="btn btn-danger removeTeam btn-sm" data-teamid="${v}" title="Remove ${v}"><i class="fa fa-remove"></i></button></div>`);
       });
 
     }
@@ -204,6 +211,17 @@ export function getTeamsOfCurrentUser() {
     $('#teamsDisplayHeader').empty().append("You're not of part of any Slack workspace yet.");
   });
 }
+
+$(document).on("click", ".addUserTeam", function(){
+  var teamID = $(this).data('teamid');
+  alert(`ADD ${teamID}`);
+});
+
+$(document).on("click", ".removeTeam", function(){
+  var teamID = $(this).data('teamid');
+  $(this).parents('.teamsContainer').remove();
+  alert(`REMOVE ${teamID}`);
+});
 
 $(document).on("click", ".team-link", function(){
   var teamName = $(this).data('team');
