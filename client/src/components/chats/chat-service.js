@@ -72,7 +72,7 @@ export function openChatDetailsForChannel(channelId, teamID) {
             if (childData.sentToUserName === sentToUserName) {
                 const paraElement = document.createElement('p');
                 const formattedTime = moment(childData.date).fromNow();
-                paraElement.innerHTML = `<strong>${childData.sentByDisplayName}</strong> - ${formattedTime}<br>
+                paraElement.innerHTML = `<strong>${childData.sentByDisplayName}</strong> - <span class="momentDisplay">${formattedTime},/span><br>
                                          ${childData.messageText}`;
                 chatBox.appendChild(paraElement);
             }
@@ -84,11 +84,9 @@ export function openChatDetailsForChannel(channelId, teamID) {
 export function openChatDetailsForUser(userId, teamID) {
     teamId = teamID;
     sentToUserName = userId;
-
     // Get the Names to display, for Receiver and Sender
     sentToDisplayName = getDisplayNameFrom(sentToUserName); // Receiver Display Name
     userDisplayName = getDisplayNameFrom(userName); // Sender Display Name
-
     //renderChatHistory();
     let receiverRef = firebase.database().ref('teams').child(teamID).child('directMessages').child('users').child(sentToUserName).child('messages');
     receiverRef.on('value', function (snapshot) {
@@ -129,7 +127,7 @@ function validateInputs(inputMessage) {
 function buildMessageEntity(message) {
     let msg = {};
     msg.messageText = message; 
-    msg.date = new Date(Date.now());
+    msg.date = Date.now();
     msg.sentToUserName = sentToUserName;
     if (sentToDisplayName == null) // for Channel, userName and userDisplayName is same
         msg.sentToDisplayName = sentToUserName;
@@ -249,27 +247,18 @@ database.ref('messages').once('value', dataSnapshot => {
     //state = createStore(chat, stateArray)
 });
 
-// Render Chat history using subscribe method
-// store.subscribe(() => {
-//     console.log(store.getState());
-// });
-
 function getFile(event) {
-    console.log('getFile called')
     $('#imgupload').trigger('click');
     event.stopPropagation();
     $('#imgupload').change(function(e) {
         e.stopPropagation();
-        console.log("inside change function")
         var files = e.target.files;
-        console.log(files[0])
         var fileName = "/"+files[0].name;
         filesUpload(files[0], fileName);
     });
  }
 
  function filesUpload(fileValue, fileName) {
-    console.log('files upload method has been triggered')
      var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
      $.ajax({
          url: 'https://content.dropboxapi.com/2/files/upload',
@@ -283,12 +272,14 @@ function getFile(event) {
          },
          success: function (data) {
              filesDownload(data.id);
+         },
+         error: function (error) {
+            alert("Sorry! We weren't able to send this file, please try again.");
          }
      })
  }
 
  function filesDownload(fileName) {
-    console.log('filesDownload called')
 	var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
  	var dbx = new dropbox({accessToken: ACCESS_TOKEN});
         dbx.filesDownload({ path: fileName})// here i mentioned the shareable link rather then I want to specify path

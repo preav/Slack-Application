@@ -45,6 +45,7 @@ $(document).on("click", '.channels', function(){
 
 function getAllUsers(teamName) {
   const checkUserRef = database.ref('teams/' + teamName);
+  if (checkUserRef){
   let getAllContactHtml = `<ul class="side-list"><li data-toggle="modal" data-target="#searchModal" id="searchPeople">Direct Messages
     </li></ul><ul class="side-list side-list-body" id="usersList"></ul>`;
   $('#showContactInformation').append(getAllContactHtml);
@@ -73,6 +74,7 @@ function getAllUsers(teamName) {
       });
     }
   });
+}
 }
 
 // Get the UserId of the person who is selected for chatting
