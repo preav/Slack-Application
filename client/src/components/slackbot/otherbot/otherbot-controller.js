@@ -3,7 +3,7 @@ import { otherbotCreateMsg } from './otherbot-view';
 
 // function to create otherbot
 export const createOtherbot = function (widgetData) {
-  const createWidgetEle = document.getElementById('playGround');
+  const createWidgetEle = document.getElementById('messageBody');
   // calling service function to create otherbot in firebase database
   createOtherbotService(widgetData).then((firebaseTodolistdRes) => {
     const errorOrSuccDiv = document.createElement('div');

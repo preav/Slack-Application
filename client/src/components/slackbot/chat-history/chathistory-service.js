@@ -10,7 +10,6 @@ export const getChatHistoryForUserService = userId => new Promise((resolve, reje
   .then((snapshot) => {
     const chathistory = snapshot.val();
     if (chathistory !== '') {
-      console.log('chat history retrieved successfully...', chathistory);
       resolve(chathistory);
     } else {
       reject(new Error(`Error while retrieving chat history for 
@@ -26,7 +25,6 @@ export const getReminderForUserService = userId => new Promise((resolve, reject)
   .then((snapshot) => {
     const userReminderList = snapshot.val();
     if (userReminderList !== '') {
-      console.log('user Reminder List retrieved successfully...', userReminderList);
       resolve(userReminderList);
     } else {
       reject(new Error(`Error while retrieving Reminder List for 

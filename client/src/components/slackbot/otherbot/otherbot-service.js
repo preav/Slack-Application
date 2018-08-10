@@ -16,10 +16,8 @@ export const createOtherbotService = widgetData => new Promise((resolve, reject)
     botResponse: widgetData.botResponse,
   }).getKey();
 
-  console.log('collectionKey = ', collectionKey);
   if (collectionKey !== '') {
     widgetData.id = collectionKey;
-    console.log('otherbot saved successfully...', widgetData.id);
     resolve(widgetData);
   } else {
     reject(new Error(`Error in saving your data into firebase database. 

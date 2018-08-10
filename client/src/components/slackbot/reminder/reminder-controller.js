@@ -12,7 +12,7 @@ import { reminderCreateMsg,
 
 // function to create reminder
 export const createReminder = function (widgetData) {
-  const createRepoWidgetEle = document.getElementById('playGround');
+  const createRepoWidgetEle = document.getElementById('messageBody');
   // calling service function to create reminder in firebase database
   createReminderService(widgetData).then((firebaseRemindRes) => {
     const errorOrSuccDiv = document.createElement('div');
@@ -43,7 +43,7 @@ export const createReminder = function (widgetData) {
 
 // function to open Reminder modal
 export const openReminder = function (openWidgetType) {
-  const createWidgetEle = document.getElementById('playGround');
+  const createWidgetEle = document.getElementById('messageBody');
   // calling service function to get reminder data from firebase database
   getReminderForUserService(openWidgetType.userId).then((reminderListData) => {
     // converting object to array
@@ -75,19 +75,17 @@ export const openReminder = function (openWidgetType) {
 
 // function to send reminder meaage if time arrieved
 export const sendReminderMeaageOnTime = function () {
-  const createWidgetEle = document.getElementById('playGround');
+  const createWidgetEle = document.getElementById('messageBody');
   getReminderForAllUsersService().then( (reminderMsgListObject) => {
     const reminderMsgListArray = Object.keys(reminderMsgListObject).map(i => reminderMsgListObject[i])
-    for(var k = 1; k <= reminderMsgListArray.length - 1; k++){//loop for each users
+    for(var k = 0; k <= reminderMsgListArray.length - 1; k++){//loop for each users
       var reminderMsgListArrayObj =reminderMsgListArray[k].reminder;
-      // if(reminderMsgListArrayObj === 'undefined'){
+        if (typeof(reminderMsgListArrayObj) !== 'undefined'){
         const allReminderMsgListArray = Object.keys(reminderMsgListArrayObj).map(i => reminderMsgListArrayObj[i])
         for(var j = 0; j <= allReminderMsgListArray.length - 1; j++){ // loop for each reminder for a user
-          console.log('Reminder ', allReminderMsgListArray[j].commandEntered);
           if(((Date.parse(allReminderMsgListArray[j].reminderTime) - (new Date())) < 0) 
           &&  (allReminderMsgListArray[j].reminderSent === 'No')) {
             // once reminder time arrive
-            console.log('time reached to send reminder!!');
             const newRepowidget = document.createElement('div');
             newRepowidget.innerHTML = showUserReminderBeforeSave(allReminderMsgListArray[j]);
             createWidgetEle.appendChild(newRepowidget);
@@ -98,7 +96,7 @@ export const sendReminderMeaageOnTime = function () {
 
           }
         }
-      // }
+       }
     }
     
   });

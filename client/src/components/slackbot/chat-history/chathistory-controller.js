@@ -2,9 +2,20 @@ import { getChatHistoryForUserService,
   getReminderForUserService } from './chathistory-service';
 import { showChatHistory, showUserReminder } from './chathistory-view';
 
+$(document).on("click", "#chatWithSlackbot", function(){
+  getUserSlackbotChatHistory();
+  $("#enteredCommand").attr('data-slackbot', 'true');
+});
+
+
 // function to create otherbot
-export const getUserChatHistory = function (userId) {
-  const createWidgetEle = document.getElementById('playGround');
+//export const getUserSlackbotChatHistory = function () {
+function getUserSlackbotChatHistory(){
+  console.log('getUserSlackbotChatHistory-----------------------------');
+  const user = JSON.parse(window.localStorage.getItem("current_user"));
+  const userId = user.user.userName;
+  
+  const createWidgetEle = document.getElementById('messageBody');
   // calling service function to create otherbot in firebase database
   getChatHistoryForUserService(userId).then((chathistory) => {
     // converting object to array
@@ -57,12 +68,10 @@ export const getUserChatHistory = function (userId) {
     if(typeof(chatHistoryRemindersentObjArray) !== 'undefined'){
       unsortedArray = [...unsortedArray, ...chatHistoryRemindersentObjArray];
     }
-    
     // sort array on datetime and display dom
     if(typeof(unsortedArray) !== 'undefined'){
       var sortedArray = new Array();
       sortedArray = unsortedArray.sort((a,b) => new Date(a.currentdateTime) - new Date(b.currentdateTime));
-      console.log('sortedArray ====', sortedArray);
       for(var z = 0; z <= sortedArray.length - 1; z++){
         const newRepowidget = document.createElement('div');
         if(sortedArray[z].widgetName === 'remindersent') {

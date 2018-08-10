@@ -262,11 +262,11 @@
             </div>
 
             <div class="md-form mb-4">
-                <label>Add Members</label>
-                <div id="usersinTeam">
+              <label>Add Members</label>
+              <div id="usersinTeam">
 
-                </div>
               </div>
+            </div>
 
             <div class="modal-footer d-flex justify-content-center">
               <button class="btn btn-warning" id="createChannel1">Create Channel
@@ -279,26 +279,31 @@
     </div>
     <div class="container-fluid">
       <div id="signupContainer"></div>
-      
+
     </div>
     <div class="show-login" id="chatContainer">
       <div class="container-fluid d-flex text-left containerWrapper">
         <section id="chatLists" class="col-xs-5 col-sm-3">
+          <div id="chatWithSlackbot">
+            <ul class="side-list">
+              <li>Chat with bot</li>
+            </ul>
+          </div>
           <div id="showContactInformation">
           </div>
         </section>
         <section id="chatArea" class="col-xs-7 col-sm-9 d-flex flex-column">
           <div id="messageBody">
-            <div id="playGround"></div>
+
 
           </div>
           <label for="enteredCommand" class="sr-only"> Text Message Area </label>
           <form id="add-msg-form" onsubmit="return false">
             <div class="input-group mb-2">
-              <!-- <div class="input-group-prepend" id="addMedia" role="button">
+              <div class="input-group-prepend" id="addMedia" role="button">
                 <span class="input-group-text"> + </span>
               </div>
-              <input type="file" id="imgupload" class="d-none" /> -->
+              <input type="file" id="imgupload" class="d-none" />
               <input type="text" class="form-control text-left" type="text" id="enteredCommand" placeholder="Message #channel...">
               <div class="input-group-append">
                 <input type="submit" id="enter" class="btn btn-success m-0" value="Send" />
