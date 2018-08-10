@@ -1,16 +1,15 @@
 
 import firebase from 'firebase';
-import { database } from '../userSetting/userSettingService';
-// import { getAllChannels } from '../userSetting/userSettingService';
+import { database , getUserName } from '../userSetting/userSettingService';
 import { getAllUsers } from "./../userSetting/userSettingService"
 const jQuery = require('jquery');
 
 
 function fnCreateChannel() {
-  const userV = [];
-  jQuery('.addUserToChannel').each(function () {
-    console.log(jQuery(this).val());
-    userV.push(jQuery(this).val());
+  const userV = {};
+  $('input[name="selectedUserName"]:checked').each(function () {
+    const USERDISPLAY = $(this).data();
+    userV[USERDISPLAY.username]=USERDISPLAY
   });
   const teamID = $('#createChannel').data('teamid');
   const channelN = document.getElementById('channelName').value;
@@ -18,55 +17,43 @@ function fnCreateChannel() {
   database.ref('teams/'+teamID+'/channels').push({
     channelName : channelN,
     private: channelT,
-    users: userV,
-  }, (error) => {
+    userV :  userV
+   }, (error) => {
     if (error) {
       console.log(error, 'There is error while saving data into firebase...');
     } else {
-      // addLi();
       console.log('channel created successfully...');
     }
   });
 }
 document.getElementById('createChannel1').addEventListener('click', fnCreateChannel);
 
-function getAllUsersFromTeam(userID1) {
-  // console.log("UserId1",userID1);
-    // getUserName(userID1);
-  // console.log("something",teamName);
-  // console.log("something23",userNode);
-  // getAllUsers(teamName);
-  // console.log("userid" ,userID );
-  // getUserName(userID);
-  // console.log('teamName======>', userContactref);
-  // userContactref.once('value', (snapshot) => {
-  //   const getAllContactValue = Object.keys(snapshot.val());
-  //   let getAllContactHtml = '';
-  //   const abc = getAllContactValue.map((contactVal) => {
-  //     getAllContactHtml += `
-  //       <div>
-  //           <div class="buttom-panel text-center mt-1">
-  //               <div userId='${contactVal}'>
-  //                 <input type="checkbox" value=${contactVal} name="chVal" class="addUserToChannel">${contactVal}<br>
-  //               </div>
-  //           </div>
-  //       </div>
-  //       `;
-  //     return getAllContactHtml;
-  //   });
-  //   jQuery('#usersinTeam').append(getAllContactHtml);
-  // });
+function getAllUsersFromTeam(teamID) {
+  const checkUserRef = database.ref('teams/' + teamID);
+  checkUserRef.on('value', (snapshot) => {
+    const checkUserRef = snapshot.val();
+    if (checkUserRef['users']) {
+      database.ref('teams/' + teamID + '/users').once('value', dataSnapshot => {
+        $('#usersinTeam').empty();
+        dataSnapshot.forEach(childSnapshot => {
+          let userNode = childSnapshot.key;
+          let userID = childSnapshot.val();
+          let user = getUserName(userID);
+          var getAllUserHtml = `
+              <div>
+                <input type="checkbox" data-userid="${userID}" data-username="${user.userName}" class="users" name="selectedUserName" data-userDisplay="${user.displayName}">
+                ${user.displayName}
+              </div>`;
+          $('#usersinTeam').append(getAllUserHtml);
+        });
+      });
+    }
+  });
 }
 
-jQuery(document).on('click', '#createChannel', (e) => {
-  // const userNode = $(this).parents('span').data('usernode');
-  // const teamID = $(this).parents('span').data('teamid');
-  // console.log("coming here",userNode);
-  // console.log("coming here",teamID);
-  const userID1 = $(this).parents('span').data('userid');
-  console.log("userID1",userID1);
-  // getAllUsers();
-  // getAllUsersFromTeam(userID1);
+$(document).on('click', '#createChannel', function(e) {
+  const teamID = $(this).data('teamid');
+  getAllUsersFromTeam(teamID);
 });
 
 export { fnCreateChannel, getAllUsersFromTeam };
