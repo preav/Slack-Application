@@ -1,5 +1,5 @@
 import { homePageComponent, homeViewHolderId } from './home/home-view';
-import { dashboardComponent, dashboardViewHolderId } from './dashboard/dashboard-view';
+import { dashboardComponent, dashboardViewHolderId, editProfileHolderId } from './dashboard/dashboard-view';
 import { createTeamViewHolderId, createTeamComponent } from './team-create/team-create-view';
 import { inivitationViewHolderId, invitationComponent, mailSentBody } from './invitation/invitation-view';
 import { Email } from './invitation/smtp';
@@ -64,11 +64,16 @@ export function createInvitationComponent() {
         // Generate a 16 character alpha-numeric token:
         var token = randtoken.generate(16);
         const appUrl = window.location.href;
-        const redireURL = `${appUrl}?teamname=${teamName}&token=${token}`;// &useremail=${reciever}`;
-        const output = `<p>Please click on the below provided link to join Slack</p><br/><a href="${redireURL}">Join Slack</a>`;
+
+        const redireURL = `${appUrl}?teamname=${teamName}`;// &useremail=${reciever}`;
+        const output = `<div style="border: 6px solid #ccc;font-family:arial;width: 800px;margin: auto;">
+        <div style="text-align:center;padding-top: 50px;"><img src="https://media.licdn.com/dms/image/C560BAQEYp_bjM8rH9w/company-logo_200_200/0?e=2159024400&v=beta&t=YN-rmUmfLXgy7WrKeZ-aDfePrC6cM3GNTQg_wybCpnk" alt="sapient-logo"/></div>
+        <div style="padding-bottom: 120px;padding-left: 50px;padding-right: 50px;padding-top: 30px;"><h1 style="color: #bd1414;">Welcome to Sapient-Slack!</h1>
+        <p>You’re added to new Sapient-Slack workspace <strong style="color:#0d73f1;font-size: 20px;">${teamName}</strong>. Want to join the workspace??</p>
+        <div><a style="border-top:13px solid; border-bottom:13px solid; border-right:24px solid; border-left:24px solid; border-color:#2ea664; border-radius:4px; background-color:#2ea664; color:#ffffff; font-size:18px; line-height:18px; word-break:break-word; display:inline-block; text-align:center; font-weight:900; text-decoration:none!important" href="${redireURL}">Yes Join!</a></div></div></div>`;
         Email.send('slackmailing@gmail.com',
           reciever,
-          'Invitation to join slack',
+          'Invitation to join Sapient-Slack',
           output,
           'smtp.gmail.com',
           'slackmailing@gmail.com',
@@ -95,14 +100,14 @@ document.querySelector('#user-profile').addEventListener('click', () => {
   getCurrentUserData().then((data) => {
     // const tempCurrUsrData = data;
     console.log(`user data >>>>>>>>>>>>>>>>>>>>>${data.profilePicture}`);
-    $(`#${dashboardViewHolderId}`).empty().append(profileViewComponent(data));
+    $(`#${editProfileHolderId}`).empty().append(profileViewComponent(data));
 
     $('#updateUserDataBtn').click(() => {
       const userName = document.getElementById('userName').value;
       const email = document.getElementById('mailId').value;
       console.log("calling update>>>>"+userName+"-----"+email);
       //saveUpdateUserProfile(userName, email);
-
+      $('#editModal').modal('hide')
       saveUpdateUserProfile(userName, email).then((response) => {
         console.log(response);
       }, (error) => {
@@ -110,10 +115,10 @@ document.querySelector('#user-profile').addEventListener('click', () => {
       });
     });
 
-    $('#closeBtn').click(() => {
-      $( ".editProfileDiv" ).hide();
-      createDashboardView();
-    });
+    // $('#closeBtn').click(() => {
+    //   $( ".editProfileDiv" ).hide();
+    //   createDashboardView();
+    // });
   });
 });
 
@@ -152,8 +157,6 @@ export function homeComponentView() {
   $(`#${homeViewHolderId}`).empty().append(homeComp);
   document.querySelector('#git-login').addEventListener('click', () => { userGitLogin(); });
   document.querySelector('#git-login').disabled = false;
-  // document.querySelector('#git-signout').classList.add('d-none');
-  // document.querySelector('#user-profile').classList.add('d-none');
   $("#user-settings").addClass('d-none');
   $('#signupContainer').show();
   $('#chatContainer, #searchContainer, #notificationFilter, #notificationCounter').hide();
@@ -161,15 +164,19 @@ export function homeComponentView() {
   return homeComp;
 }
 
+$(document).on("click",".navbar-brand", function(){
+  createDashboardView();
+  $('#signupContainer').show();
+  $('#chatContainer, #searchContainer, #notificationFilter').hide();
+});
+
 export function createDashboardView() {
   const dashComponent = dashboardComponent();
   $(`#${dashboardViewHolderId}`).empty().append(dashComponent);
   document.querySelector('#create-team').addEventListener('click', () => { createTeamFormView(); });
   document.querySelector('#git-signout').addEventListener('click', () => { userGitLogout(); });
-  // document.querySelector('#git-signout').classList.remove('d-none');
-  // document.querySelector('#user-profile').classList.remove('d-none');
   $("#user-settings").removeClass('d-none');
-  $("#searchContainer, #notificationFilter, #notificationCounter").show();
+  $("#notificationCounter").show();
   getTeamsOfCurrentUser();
 
   return dashComponent;
@@ -183,7 +190,10 @@ export function getTeamsOfCurrentUser() {
       $('#teamsDisplayHeader').empty().append("You're already a member of these Slack workspaces:");
       $('#teamsDisplay').empty();
       $.each(response.teams, (k, v) => {
-        $('#teamsDisplay').append(`<a class="team-link" data-team="${v}">${v}</a>`);
+        $('#teamsDisplay').append(`
+        <div class="teamsContainer"><a class="team-link" data-team="${v}">${v}</a>
+        <button type="button" class="btn btn-success addUserTeam btn-sm" data-teamid="${v}" title="Add People to ${v}"><i class="fa fa-plus"></i></button>
+        <button type="button" class="btn btn-danger removeTeam btn-sm" data-teamid="${v}" title="Remove ${v}"><i class="fa fa-remove"></i></button></div>`);
       });
     }
     else
@@ -196,16 +206,28 @@ export function getTeamsOfCurrentUser() {
   });
 }
 
+$(document).on("click", ".addUserTeam", function(){
+  var teamID = $(this).data('teamid');
+  alert(`ADD ${teamID}`);
+});
+
+$(document).on("click", ".removeTeam", function(){
+  var teamID = $(this).data('teamid');
+  $(this).parents('.teamsContainer').remove();
+  alert(`REMOVE ${teamID}`);
+});
+
 $(document).on("click", ".team-link", function(){
   var teamName = $(this).data('team');
-    $("#chatContainer").show();
+    $("#chatContainer, #searchContainer, #notificationFilter").show();
     $('#signupContainer').hide();
+    
 
     const obj = store.getState();
     obj.user.currentTeam.teamName = teamName;
     console.log("***************************"+JSON.stringify(obj));
     store.dispatch({type: "LOGIN", obj});
-
+    $('#showContactInformation').html("");
     getAllChannels(teamName);
     getAllUsers(teamName);
   // alert($(this).data('team'));

@@ -39,8 +39,11 @@ function getAllChannels(teamName) {
 
 $(document).on("click", '.channels', function(){
   const teamID = $(this).data('teamid');
-  const channelId = $(this).data('channelname');
+  const channelId = $(this).data('channelid');
+  $("#enteredCommand").attr('data-slackbot', 'false');
   openChatDetailsForChannel(channelId, teamID);
+  $(".users, .channels").removeClass('active');
+  $(this).addClass('active');
 });
 
 function getAllUsers(teamName) {
@@ -79,7 +82,10 @@ function getAllUsers(teamName) {
 $(document).on("click", '.users', function(){
   const teamID = $(this).data('teamid');
   const userId = $(this).data('username');
+  $("#enteredCommand").attr('data-slackbot', 'false');
   openChatDetailsForUser(userId, teamID);
+  $(".users, .channels").removeClass('active');
+  $(this).addClass('active');
 });
 
 function getUserName(userID) {

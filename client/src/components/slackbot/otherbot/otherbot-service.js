@@ -34,3 +34,17 @@ export const updateSlackBotOtherbotResponse = (widgetData, botResponse) => {
   updates[`SlackXT/slackbot/${widgetData.userId}/otherbot/${updateCollectionKey}`] = widgetData;
   return database.ref().update(updates);
 };
+
+// function to get all team list from firebase database -- firebase
+export const getAllTeamsService = () => new Promise((resolve, reject) => {
+  database.ref('teams').once('value')
+  .then((snapshot) => {
+    const teamListData = snapshot.val();
+    if (teamListData !== '') {
+      resolve(teamListData);
+    } else {
+      reject(new Error(`Error occured while retrieving all team list from firebase database.`));
+      console.log('There is error while retrieving all team list from firebase database...');
+    }
+  });
+});
