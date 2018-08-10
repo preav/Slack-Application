@@ -5,10 +5,11 @@ function createHTMLElement(html) {
   }
 
   function tabDisplay(src)
-  {
-    const srcTab=`<li class="nav-item">
+  { 
+    /*const srcTab=`<li class="nav-item">
     <a href="#${src}" class="nav-link text-secondary" data-toggle="tab" role="tab" aria-controls="${src}">${src}</a>
-    </li>`; 
+    </li>`; */
+    const srcTab=`<li class="nav-item"><a data-toggle="pill" class="nav-link" href="#${src}">${src}</a></li>`;
     return createHTMLElement(srcTab);
 
   }
@@ -24,7 +25,8 @@ function createHTMLElement(html) {
   function displayUserChat(user, msg)
   {
       document.getElementById('userTab').appendChild(tabDisplay(`${user}`));
-      document.getElementById('channelContent').appendChild(tabContentDisplay(`${user}`,`${msg}`));
+      document.getElementById('userContent').appendChild(tabContentDisplay(`${user}`,`${msg}`));
+     // $('#userTab').metisMenu();
   }
   function displayChannelsChat(channel, msg)
   {

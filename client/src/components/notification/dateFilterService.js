@@ -1,9 +1,11 @@
 import firebase from 'firebase';
 import {displayUserChat,displayChannelsChat} from './dateFilterView';
 import database from '../../../../firebase/firebase';
+import moment from 'moment';
 console.log("Database", database);
 
-const userID='Triveni';
+//window.localStorage.getItem("current_user");
+const userID='anilkumar-bv';
 const teamId='team-6';
 export function getMessagesFromFireBase(startDate, endDate) {
   document.getElementById('chatResult').style.display='block';
@@ -62,8 +64,9 @@ function dateConverter(recorddate, startDate, endDate){
    var pasrdendDate = new Date(endDate); 
 
    if((pasrdCheck <= pasrdendDate && pasrdCheck >= pasrdstartDate)) 
-   {      
-  formatDate =  datevalues[1]+"/"+datevalues[2]+"/"+datevalues[0]+ " "+datevalues[3]+":"+datevalues[4];
+   {  
+     let firebaseTimestamp =  datevalues[1]+"/"+datevalues[2]+"/"+datevalues[0]+ " "+datevalues[3]+":"+datevalues[4]+":"+datevalues[5];
+    formatDate= moment( firebaseTimestamp, 'MM/DD/YYYY HH:mm:ss').format("MM/DD/YYYY H:mm:ss a");    
      }
      return formatDate;
     }
