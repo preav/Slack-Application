@@ -10,6 +10,8 @@ import { checkAuthStateChange, gitLogin, gitLogout } from '../../../../firebase/
 import { saveUpdateUser, getCurrentUserDetails, saveUpdateTeam } from '../../../../firebase/onboarding-db';
 import { getAllChannels, getAllUsers } from '../collaboration/userSetting/userSettingService';
 import { store } from './profileReducer';
+// Create a token generator with the default settings:
+var randtoken = require('rand-token');
 
 store.subscribe(() =>{
   var currentState = store.getState();
@@ -76,8 +78,11 @@ export function createInvitationComponent() {
       if (reciever !== '' && reciever !== undefined) {
         console.log(`dfdf-${reciever}`);
         recieverarr.push(reciever);
+
+        // Generate a 16 character alpha-numeric token:
+        var token = randtoken.generate(16);
         const appUrl = window.location.href;
-        const redireURL = `${appUrl}?teamname=${teamName}`;// &useremail=${reciever}`;
+        const redireURL = `${appUrl}?teamname=${teamName}&token=${token}`;// &useremail=${reciever}`;
         const output = `<p>Please click on the below provided link to join Slack</p><br/><a href="${redireURL}">Join Slack</a>`;
         Email.send('slackmailing@gmail.com',
           reciever,

@@ -46,6 +46,7 @@
     "node-sass": "^4.9.2",
     "node-waves": "^0.7.6",
     "popper.js": "^1.14.3",
+    "rand-token": "^0.4.0",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
     "sass-loader": "^7.0.3",
