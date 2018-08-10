@@ -7,28 +7,30 @@ const jQuery = require('jquery');
 
 function getAllChannels(teamName) {
   const checkChannelRef = database.ref('teams/' + teamName);
-  let getAllContactHtml = `<ul class="side-list"><li><strong data-toggle="modal" data-target="#searchModal" id="searchChannel">Channels</strong>
+  let getAllContactHtml = `<ul class="side-list"><li><strong data-toggle="modal" data-teamid="${teamName}" data-target="#searchModal" id="searchChannel">Channels</strong>
     <span><a id="createChannel" data-teamid="${teamName}" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-circle"></i></a></span>
     </li></ul><ul class="side-list side-list-body" id="channelList"></ul>`;
   $('#showContactInformation').append(getAllContactHtml);
   checkChannelRef.on('value', (snapshot) => {
     const getChannelRef = snapshot.val();
-    if (getChannelRef['channels']) {
+    if (getChannelRef && getChannelRef['channels']) {
       database.ref('teams/' + teamName + '/channels').once('value', dataSnapshot => {
         $('#channelList').empty();
         dataSnapshot.forEach(childSnapshot => {
           let channelID = childSnapshot.key;
           let channelName = childSnapshot.val().channelName;
-          var channelListHTML = `
-                <li data-channelid="${channelID}" data-teamid="${teamName}" data-channelname="${channelName}" class="channels">
-                ${channelName}
-                <span data-channelid="${channelID}" data-teamid="${teamName}">
-                <!--<a class="muteChannel"><i class="fa fa-microphone-slash"></i></a>
-                <a class="unmuteChannel"><i class="fa fa-microphone"></i></a>-->
-                <a class="removeChannel"><i class="fa fa-times-circle-o"></i></a>
-              </span>
-              </li>`;
-          $('#channelList').append(channelListHTML);
+          if (channelName) {
+            var channelListHTML = `
+                  <li data-channelid="${channelID}" data-teamid="${teamName}" data-channelname="${channelName}" class="channels">
+                  ${channelName}
+                  <span data-channelid="${channelID}" data-teamid="${teamName}">
+                  <!--<a class="muteChannel"><i class="fa fa-microphone-slash"></i></a>
+                  <a class="unmuteChannel"><i class="fa fa-microphone"></i></a>-->
+                  <a class="removeChannel"><i class="fa fa-times-circle-o"></i></a>
+                </span>
+                </li>`;
+            $('#channelList').append(channelListHTML);
+          }
         });
       });
 
@@ -47,7 +49,8 @@ $(document).on("click", '.channels', function(){
 
 function getAllUsers(teamName) {
   const checkUserRef = database.ref('teams/' + teamName);
-  let getAllContactHtml = `<ul class="side-list"><li data-toggle="modal" data-target="#searchModal" id="searchPeople">Direct Messages
+  if (checkUserRef){
+  let getAllContactHtml = `<ul class="side-list"><li data-toggle="modal" data-teamid="${teamName}" data-target="#searchModal" id="searchPeople">Direct Messages
     </li></ul><ul class="side-list side-list-body" id="usersList"></ul>`;
   $('#showContactInformation').append(getAllContactHtml);
   checkUserRef.on('value', (snapshot) => {
@@ -73,6 +76,7 @@ function getAllUsers(teamName) {
       });
     }
   });
+}
 }
 
 // Get the UserId of the person who is selected for chatting
