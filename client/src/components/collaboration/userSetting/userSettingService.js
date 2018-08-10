@@ -13,7 +13,7 @@ function getAllChannels(teamName) {
   $('#showContactInformation').append(getAllContactHtml);
   checkChannelRef.on('value', (snapshot) => {
     const getChannelRef = snapshot.val();
-    if (getChannelRef['channels']) {
+    if (getChannelRef && getChannelRef['channels']) {
       database.ref('teams/' + teamName + '/channels').once('value', dataSnapshot => {
         $('#channelList').empty();
         dataSnapshot.forEach(childSnapshot => {
