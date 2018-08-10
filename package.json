@@ -18,6 +18,7 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-stage-0": "^6.24.1",
     "bootstrap": "^4.1.2",
+    "copy-webpack-plugin": "^4.5.2",
     "cors": "^2.8.4",
     "css-loader": "^1.0.0",
     "datejs": "^1.0.0-rc3",
@@ -43,9 +44,11 @@
     "jquery-autocomplete": "^1.2.8",
     "jquery-ui": "^1.12.1",
     "markdown": "^0.5.0",
+    "moment": "^2.22.2",
     "node-sass": "^4.9.2",
     "node-waves": "^0.7.6",
     "popper.js": "^1.14.3",
+    "rand-token": "^0.4.0",
     "react-redux": "^5.0.7",
     "redux": "^4.0.0",
     "sass-loader": "^7.0.3",
@@ -61,8 +64,7 @@
     "chai": "^4.1.2",
     "deep-freeze": "0.0.1",
     "expose-loader": "^0.7.5",
-    "mocha": "^5.2.0",
-    "moment": "^2.22.2"
+    "mocha": "^5.2.0"
   },
   "directories": {
     "test": "test"
