@@ -17,7 +17,6 @@ function getAllChannels(teamName) {
       database.ref('teams/' + teamName + '/channels').once('value', dataSnapshot => {
         $('#channelList').empty();
         dataSnapshot.forEach(childSnapshot => {
-          // console.log(childSnapshot.key);
           let channelID = childSnapshot.key;
           let channelName = childSnapshot.val().channelName;
           var channelListHTML = `
@@ -39,8 +38,11 @@ function getAllChannels(teamName) {
 
 $(document).on("click", '.channels', function(){
   const teamID = $(this).data('teamid');
-  const channelId = $(this).data('channelname');
+  const channelId = $(this).data('channelid');
+  $("#enteredCommand").attr('data-slackbot', 'false');
   openChatDetailsForChannel(channelId, teamID);
+  $(".users, .channels").removeClass('active');
+  $(this).addClass('active');
 });
 
 function getAllUsers(teamName) {
@@ -51,14 +53,12 @@ function getAllUsers(teamName) {
   checkUserRef.on('value', (snapshot) => {
     const checkUserRef = snapshot.val();
     if (checkUserRef['users']) {
-      // console.log("Present");
       database.ref('teams/' + teamName + '/users').once('value', dataSnapshot => {
         $('#usersList').empty();
         dataSnapshot.forEach(childSnapshot => {
           let userNode = childSnapshot.key;
           let userID = childSnapshot.val();
           let user = getUserName(userID);
-          // console.log("UN-"+userName);
           var userListHTML = `
                 <li data-userid="${userID}" data-teamid="${teamName}" data-username="${user.userName}" class="users">
                 ${user.displayName}
@@ -79,7 +79,10 @@ function getAllUsers(teamName) {
 $(document).on("click", '.users', function(){
   const teamID = $(this).data('teamid');
   const userId = $(this).data('username');
+  $("#enteredCommand").attr('data-slackbot', 'false');
   openChatDetailsForUser(userId, teamID);
+  $(".users, .channels").removeClass('active');
+  $(this).addClass('active');
 });
 
 function getUserName(userID) {
@@ -102,6 +105,7 @@ function getUserName(userID) {
   });
   return user;
 }
+
 // functionality for updating something in firebase via
 function muteUsers(userId) {
   const newPostKey = database.ref(`team-6/directMessages/users/${userId}`).update({
@@ -151,7 +155,6 @@ jQuery(document).on('click', '.removeUser', function (e) {
   $(this).parents('li').remove();
 });
 
-//= =====================================================================
 function muteChannel(channelId) {
   const newPostKey = database.ref('team-6').child('channels').child(`${channelId}`)
     .update({
@@ -213,4 +216,5 @@ export {
   muteChannel,
   unMuteChannel,
   removeChannel,
+  getUserName
 };
