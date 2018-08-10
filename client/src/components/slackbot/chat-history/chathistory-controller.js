@@ -6,18 +6,21 @@ $(document).on("click", "#chatWithSlackbot", function(){
   getUserSlackbotChatHistory();
   $("#enteredCommand").attr('data-slackbot', 'true');
 });
-
+ 
 
 // function to create otherbot
 //export const getUserSlackbotChatHistory = function () {
 function getUserSlackbotChatHistory(){
-  console.log('getUserSlackbotChatHistory-----------------------------');
   const user = JSON.parse(window.localStorage.getItem("current_user"));
   const userId = user.user.userName;
   
   const createWidgetEle = document.getElementById('messageBody');
   // calling service function to create otherbot in firebase database
   getChatHistoryForUserService(userId).then((chathistory) => {
+    // first thing first - remove old dom history           
+    while(createWidgetEle.firstChild){
+      createWidgetEle.removeChild(createWidgetEle.firstChild);
+    }
     // converting object to array
     let tempObj = chathistory;
     const chatHistoryArray = Object.keys(tempObj).map(k => tempObj[k])
