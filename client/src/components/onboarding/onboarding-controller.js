@@ -49,7 +49,7 @@ export function createInvitationComponent() {
   invitComponent.querySelector('.skip_button').addEventListener('click', (e) => {
     e.preventDefault();
     $('form#formid').find('input:text').val('');
-    proceedNext(teamName,`Skipped inivitation for team ${teamName}`);
+    proceedNext(teamName);
   });
   invitComponent.querySelector('#submit').addEventListener('click', (e) => {
     e.preventDefault();
@@ -85,14 +85,16 @@ export function createInvitationComponent() {
       //const sentmailComponent = mailSentBody();
       //$(`#${inivitationViewHolderId}`).empty().append(sentmailComponent);
       $('form#formid').find('input:text').val('');
-      proceedNext(teamName,`Inivitation for team ${teamName}`);
+      alert(`Inivitation for team ${teamName}`);
+      proceedNext(teamName);
     }
   });
   $(`#${inivitationViewHolderId}`).empty().append(invitComponent);
   return invitComponent;
 }
-export function proceedNext(teamName,inputmessage) {
-  alert(inputmessage);
+export function proceedNext(teamName) {
+  //alert(inputmessage);
+  createTeamDashboard(teamName);
   //do next
 }
 document.querySelector('#user-profile').addEventListener('click', () => {
@@ -219,7 +221,13 @@ $(document).on("click", ".removeTeam", function(){
 
 $(document).on("click", ".team-link", function(){
   var teamName = $(this).data('team');
-    $("#chatContainer, #searchContainer, #notificationFilter").show();
+  // alert($(this).data('team'));
+  createTeamDashboard(teamName)
+});
+
+export function createTeamDashboard(teamName)
+{
+  $("#chatContainer, #searchContainer, #notificationFilter").show();
     $('#signupContainer').hide();
     const obj = store.getState();
     obj.user.currentTeam.teamName = teamName;
@@ -232,7 +240,7 @@ $(document).on("click", ".team-link", function(){
     $("#currentTeam span").html(teamName);
     $("#searchAll").attr('data-teamid', teamName);
   // alert($(this).data('team'));
-});
+};
 
 export async function userGitLogin() {
   try
