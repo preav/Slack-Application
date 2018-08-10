@@ -389,6 +389,11 @@ $border-radius: .25rem;
     cursor: pointer;
  }
 
+ //for adusting position under creation channel modal
+ #usersinTeam , #addMem {
+    margin-left: 7%;
+}
+
  .emojionearea .emojionearea-picker.emojionearea-picker-position-top {
      right: 0 !important;
  }
