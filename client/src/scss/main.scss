@@ -359,3 +359,9 @@ $border-radius: .25rem;
  .contactUser:hover {
     cursor: pointer;
  }
+
+ //for adusting position under creation channel modal
+ #usersinTeam , #addMem {
+    margin-left: 7%;
+}
+
