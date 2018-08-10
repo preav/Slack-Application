@@ -43,6 +43,16 @@ body
     overflow-y: scroll;
 }
 
+#currentTeam {
+    color: #fff;
+    border-top: 1px solid #000;
+    padding: 10px;
+
+    span {
+        color: #0d73f1;
+    }
+}
+
 //.container-fluid{
 //   padding: 0;
 //   text-align: center;
@@ -377,4 +387,8 @@ $border-radius: .25rem;
 
  .contactUser:hover {
     cursor: pointer;
+ }
+
+ .emojionearea .emojionearea-picker.emojionearea-picker-position-top {
+     right: 0 !important;
  }

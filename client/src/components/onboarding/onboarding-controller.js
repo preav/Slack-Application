@@ -221,8 +221,6 @@ $(document).on("click", ".team-link", function(){
   var teamName = $(this).data('team');
     $("#chatContainer, #searchContainer, #notificationFilter").show();
     $('#signupContainer').hide();
-    
-
     const obj = store.getState();
     obj.user.currentTeam.teamName = teamName;
     console.log("***************************"+JSON.stringify(obj));
@@ -230,6 +228,8 @@ $(document).on("click", ".team-link", function(){
     $('#showContactInformation').html("");
     getAllChannels(teamName);
     getAllUsers(teamName);
+
+    $("#currentTeam span").html(teamName);
   // alert($(this).data('team'));
 });
 
