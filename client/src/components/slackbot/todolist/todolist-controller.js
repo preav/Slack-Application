@@ -8,7 +8,7 @@ import { todolistCreateMsg, openTodolistView, newTodolistItemView } from './todo
 
 // function to create task in todolist
 export const createTodolistTask = function (widgetData) {
-  const createWidgetEle = document.getElementById('playGround');
+  const createWidgetEle = document.getElementById('messageBody');
   // calling service function to create reminder in firebase database
   createTodolistService(widgetData).then((firebaseTodolistdRes) => {
     const errorOrSuccDiv = document.createElement('div');
@@ -37,7 +37,7 @@ export const createTodolistTask = function (widgetData) {
 
 // function to open todolist modal
 export const openTodolist = function (openWidgetType) {
-  const createWidgetEle = document.getElementById('playGround');
+  const createWidgetEle = document.getElementById('messageBody');
   // calling service function to get todolist data from firebase database
   getTodolistForUserService(openWidgetType.userId).then((todolistData) => {
     // converting object to array
@@ -73,7 +73,6 @@ $(document).on('click', '.todoListItemsAction', function () {
   if (action === 'checked') {
     // check
     // calling firebase database update
-    //console.log('oooooo', markOrUnmarkOrDelete(action, $(this).data('value'), $(this).data('userid')));
     markOrUnmarkOrDelete(action, $(this).data('value'), $(this).data('userid'));
 
 
@@ -87,7 +86,6 @@ $(document).on('click', '.todoListItemsAction', function () {
   } else if (action === 'unchecked') {
     // uncheck
     // calling firebase database update
-    //console.log('hhhhh', markOrUnmarkOrDelete(action, $(this).data('value'), $(this).data('userid')) );
     markOrUnmarkOrDelete(action, $(this).data('value'), $(this).data('userid'));
     $(this).toggleClass('fa-check-square-o text-success fa-square-o text-secondary').data('action', 'checked');
     $(this).parents('li.list-group-item').addClass('bg-light');

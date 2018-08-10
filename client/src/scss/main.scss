@@ -139,6 +139,13 @@ body
     border-color: white;
 }
 
+.ui-autocomplete-category {
+    font-weight: bold;
+    padding: .2em .4em;
+    margin: .8em 0 .2em;
+    line-height: 1.5;
+}
+
 #footerContent{
     font-size: 11.84px;
     color: rgb(102, 100, 100);
@@ -319,6 +326,7 @@ $border-radius: .25rem;
         padding: 5px 10px;
         list-style: none;
         color: #fff;
+        cursor: pointer;
 
         &:first-child {
             font-weight: bold;
@@ -338,6 +346,14 @@ $border-radius: .25rem;
                 &:hover {
                     color: #999;
                 }
+            }
+        }
+    }
+    &.side-list-body {
+        li {
+            &:first-child {
+            font-weight: normal;
+            border-width: 0;
             }
         }
     }

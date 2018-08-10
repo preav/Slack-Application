@@ -48,8 +48,15 @@ $("#enteredCommand").emojioneArea({
       keypress: function (editor, event) {
           if (event.which == 13) {
               event.preventDefault();
-              var enteredValue = $('#enteredCommand').data("emojioneArea").getText();;
-              hitEnter(enteredValue);
+              var enteredValue = $('#enteredCommand').data("emojioneArea").getText();
+              var slackWindow = $("#enteredCommand").attr('data-slackbot');
+              if(slackWindow) {
+                //   alert("Slack");
+                hitEnter(enteredValue);
+              } else {
+                  alert("Message");
+              }
+              
           }
       }
   }

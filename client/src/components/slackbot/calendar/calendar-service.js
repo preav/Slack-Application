@@ -16,10 +16,8 @@ export const createCalendarEventService = widgetData => new Promise((resolve, re
     botResponse: widgetData.botResponse,
   }).getKey();
 
-  console.log('collectionKey = ', collectionKey);
   if (collectionKey !== '') {
     widgetData.id = collectionKey;
-    console.log('calendar event saved successfully...', widgetData.id);
     resolve(widgetData);
   } else {
     reject(new Error(`Error in saving your data into firebase database. 
@@ -43,7 +41,6 @@ export const getCalendarForUserService = userId => new Promise((resolve, reject)
   .then((snapshot) => {
     const calendarListData = snapshot.val();
     if (calendarListData !== '') {
-      console.log('calendar list retrieved successfully...', calendarListData);
       resolve(calendarListData);
     } else {
       reject(new Error(`Error occured while retrieving calendar list for 

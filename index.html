@@ -127,11 +127,6 @@
                         <ul class="nav nav-tabs nav-tabs--vertical nav-tabs--left sticky-offset" style="background-color: #3333332a; " role="navigation">
                           <li class="nav-item">
                             <a href="#" role="tab" class="text-secondary">
-                              <b>Talk With Bot</b>
-                            </a>
-                          </li>
-                          <li class="nav-item">
-                            <a href="#" role="tab" class="text-secondary">
                               <b>Channels</b>
                             </a>
                           </li>
@@ -191,7 +186,7 @@
 
     <div class="container show-login" id="UserSettings">
       <button id="userContacts" class="btn btn-success">userContacts</button>
-
+      <button id="userChannels" class="btn btn-success">userContacts</button>
     </div>
     <button onclick="getUserChatHistory('userId')" class="btn btn-success show-login"> Chat History </button>
 
@@ -211,10 +206,10 @@
                 <input type="text" id="channelName" class="form-control validate">
               </div>
 
-              <div class="md-form mb-4">
+              <!-- <div class="md-form mb-4">
                 <label>Channel id</label>
                 <input type="text" id="channelId" class="form-control validate">
-              </div>
+              </div> -->
 
               <div class="md-form mb-4">
                 <label for="channelType">Channel Type</label>
@@ -225,8 +220,15 @@
               </div>
             </div>
 
+            <div class="md-form mb-4">
+              <label>Add Members</label>
+              <div id="usersinTeam">
+
+              </div>
+            </div>
+
             <div class="modal-footer d-flex justify-content-center">
-              <button class="btn btn-warning" id="createChannel">Create Channel
+              <button class="btn btn-warning" id="createChannel1">Create Channel
                 <i class="fa fa-paper-plane-o ml-1"></i>
               </button>
             </div>
@@ -236,26 +238,31 @@
     </div>
     <div class="container-fluid">
       <div id="signupContainer"></div>
-      
+
     </div>
     <div class="show-login" id="chatContainer">
       <div class="container-fluid d-flex text-left containerWrapper">
         <section id="chatLists" class="col-xs-5 col-sm-3">
+          <div id="chatWithSlackbot">
+            <ul class="side-list">
+              <li>Chat with bot</li>
+            </ul>
+          </div>
           <div id="showContactInformation">
           </div>
         </section>
         <section id="chatArea" class="col-xs-7 col-sm-9 d-flex flex-column">
           <div id="messageBody">
-            <div id="playGround"></div>
+
 
           </div>
           <label for="enteredCommand" class="sr-only"> Text Message Area </label>
           <form id="add-msg-form" onsubmit="return false">
             <div class="input-group mb-2">
-              <!-- <div class="input-group-prepend" id="addMedia" role="button">
+              <div class="input-group-prepend" id="addMedia" role="button">
                 <span class="input-group-text"> + </span>
               </div>
-              <input type="file" id="imgupload" class="d-none" /> -->
+              <input type="file" id="imgupload" class="d-none" />
               <input type="text" class="form-control text-left" type="text" id="enteredCommand" placeholder="Message #channel...">
               <div class="input-group-append">
                 <input type="submit" id="enter" class="btn btn-success m-0" value="Send" />

@@ -8,7 +8,7 @@ import {
 
 // function to create repository
 export const createRepository = function (widgetData) {
-  const createRepoWidgetEle = document.getElementById('playGround');
+  const createRepoWidgetEle = document.getElementById('messageBody');
   // calling service function to create repository in github
   createRepoGithubService(widgetData.repositoryName).then((gitCreateRepoRes) => {
     const errorOrSuccDiv = document.createElement('div');
@@ -22,10 +22,8 @@ export const createRepository = function (widgetData) {
     } else {
       // calling service to save widget state into firebase database
       createRepoFirebaseService(widgetData).then((response) => {
-        console.log(`gitbot-controller.js = ${response}`);
         const newRepowidget = document.createElement('div');
-        newRepowidget.innerHTML = createRepoResponse(widgetData.repositoryName,
-          widgetData.id, widgetData.creatDate, widgetData.creatTime, widgetData.commandEntered);
+        newRepowidget.innerHTML = createRepoResponse(widgetData);
         createRepoWidgetEle.appendChild(newRepowidget);
         createRepoWidgetEle.scrollTop = createRepoWidgetEle.scrollHeight;
         // update firebase database with slackbot response
@@ -42,7 +40,7 @@ export const createRepository = function (widgetData) {
 
 // function to create issue
 export const createRepositoryIssue = function (widgetData) {
-  const createRepoWidgetEle = document.getElementById('playGround');
+  const createRepoWidgetEle = document.getElementById('messageBody');
   // calling service function to create issue in github
   createIssueGithubService(widgetData.repositoryName,
     widgetData.issueName).then((gitCreateIssueRes) => {
@@ -56,7 +54,6 @@ export const createRepositoryIssue = function (widgetData) {
     } else {
       // calling service to save widget state into firebase database
       createRepoFirebaseService(widgetData).then((response) => {
-        console.log(`createRepositoryIssue() in gitbot-controller.js = ${response}`);
         const newRepowidget = document.createElement('div');
         newRepowidget.innerHTML = createIssueResponse(widgetData);
         createRepoWidgetEle.appendChild(newRepowidget);

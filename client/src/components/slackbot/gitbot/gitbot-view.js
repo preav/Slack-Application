@@ -3,12 +3,12 @@ export const createRepoResponse = function (widgetData) {
   return `<div class='createGithubRepo playGroungDiv-you' id='createGithubRepo-you_${widgetData.id}' >
         <span><strong><a href="#">You</a></strong></span>
         <p>${widgetData.commandEntered}</p>
-        <span>On ${widgetData.creatDate} at ${widgetData.creatTime}</span>
+        <span><strong>A few seconds ago<strong></span>
         </div>
         <div class='createGithubRepo panBackground playGroungDiv-bot' id='createGithubRepo_${widgetData.id}' >
         <span><strong>Slackbot</strong></span>
         <p>I have created repository (${widgetData.repositoryName}) on github.</p>
-        <span>On ${widgetData.creatDate} at ${widgetData.creatTime}</span>
+        <span><strong>A few seconds ago<strong></span>
     </div>`;
 };
 
@@ -17,12 +17,12 @@ export const createIssueResponse = function (widgetData) {
   return `<div class='createGithubRepo playGroungDiv-you' id='createGithubIssue-you_${widgetData.id}' >
           <span><strong><a href="#">You</a></strong></span>
           <p>${widgetData.commandEntered}</p>
-          <span>On ${widgetData.creatDate} at ${widgetData.creatTime}</span>
+          <span><strong>A few seconds ago<strong></span>
           </div>
           <div class='createGithubRepo panBackground playGroungDiv-bot' id='createGithubIssue_${widgetData.id}' >
           <span><strong>Slackbot</strong></span>
           <p>I have created an issue (${widgetData.issueName}) on repository (${widgetData.repositoryName})</p>
-          <span>On ${widgetData.creatDate} at ${widgetData.creatTime}</span>
+          <span><strong>A few seconds ago<strong></span>
       </div>`;
 };
 
@@ -38,11 +38,11 @@ export const showErrorMsg = function (err, creatDate, creatTime, commandEntered)
   return `<div class='createGithubRepo playGroungDiv-you' >
         <span><strong><a href="#">You</a></strong></span>
         <p>${commandEntered}</p>
-        <span>On ${creatDate} at ${creatTime}</span>
+        <span><strong>A few seconds ago<strong></span>
         </div>
         <div id="fail_msg" class="playGroungDiv-bot">
         <span><strong>Slackbot</strong></span>
-        <p>${err}</p><span>On ${creatDate} at ${creatTime}</span>
+        <p>${err}</p><span><strong>A few seconds ago<strong></span>
         </div>
     `;
 };
@@ -52,11 +52,11 @@ export const showErrorMsgIssueCreate = function (err, creatDate, creatTime, comm
   return `<div class='createGithubRepo playGroungDiv-you' >
           <span><strong><a href="#">You</a></strong></span>
           <p>${commandEntered}</p>
-          <span>On ${creatDate} at ${creatTime}</span>
+          <span><strong>A few seconds ago<strong></span>
           </div>
           <div id="fail_msg" class="playGroungDiv-bot">
           <span><strong>Slackbot</strong></span>
-          <p>${err}</p><span>On ${creatDate} at ${creatTime}</span>
+          <p>${err}</p><span><strong>A few seconds ago<strong></span>
           </div>
       `;
 };
@@ -64,7 +64,7 @@ export const showErrorMsgIssueCreate = function (err, creatDate, creatTime, comm
 // function to show success message
 export const showSuccessMsg = function (success, creatDate, creatTime) {
   return `
-        <div id="success_msg" class="playGroungDiv-bot"><p>${success}</p><span>On ${creatDate} at ${creatTime}</span>
+        <div id="success_msg" class="playGroungDiv-bot"><p>${success}</p><span><strong>A few seconds ago<strong></span>
         </div>
     `;
 };

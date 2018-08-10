@@ -3,11 +3,10 @@ import { GITHUB_API_TOKEN, GITHUB_API_CREATE_REPO_URL, GITHUB_API_USER_URL } fro
 
 // function to retrieve github token from firebase database -- firebase
 export const getGithubToken = () => new Promise((resolve, reject) => {
-  database.ref(`SlackXT/slackbot/gitToken`).once('value')
+  database.ref(`SlackXT/gitToken`).once('value')
   .then((snapshot) => {
     const githubToken = snapshot.val();
     if (githubToken !== '') {
-      console.log('github token retrieved successfully...', githubToken);
       resolve(githubToken);
     } else {
       reject(new Error(`Error while retrieving github token from firebase database.`));
@@ -28,9 +27,7 @@ export const createRepoFirebaseService = widgetData => new Promise((resolve, rej
     currentdateTime: widgetData.currentdateTime,
   }).getKey();
 
-  console.log('collectionKey = ', collectionKey);
   if (collectionKey !== '') {
-    console.log('saved successfully...', widgetData.id);
     widgetData.id = collectionKey;
     resolve(widgetData);
   } else {
