@@ -4,7 +4,7 @@ export const inivitationViewHolderId = 'signupContainer';
 
 export function invitationComponent() {
   const invitationElement = createHTMLElement(
-    `<div class="container mt-3 h-100" style="background-color: antiquewhite;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+    `<div class="container mt-3 h-100" style="background-color:#f4f9fa ;box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
   <div class="row h-500 justify-content-center align-items-center">
     <form id="formid" class="col-8">
       <div class="form-group container1">
