@@ -5,7 +5,7 @@ import { calendarEventCreateMsg,openCalendarView,newCalendarlistItemView } from 
 
 // function to create calendar event
 export const createCalendarEvent = function (widgetData) {
-  const createWidgetEle = document.getElementById('playGround');
+  const createWidgetEle = document.getElementById('messageBody');
   // calling service function to create calendar event in firebase database
   createCalendarEventService(widgetData).then((firebaseTodolistdRes) => {
     const errorOrSuccDiv = document.createElement('div');
@@ -36,7 +36,7 @@ export const createCalendarEvent = function (widgetData) {
 
 // function to open Calendar modal
 export const openCalendar = function (openWidgetType) {
-  const createWidgetEle = document.getElementById('playGround');
+  const createWidgetEle = document.getElementById('messageBody');
   // calling service function to get calendar data from firebase database
   getCalendarForUserService(openWidgetType.userId).then((calendarListData) => {
     // converting object to array

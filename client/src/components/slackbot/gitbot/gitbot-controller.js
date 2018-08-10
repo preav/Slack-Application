@@ -8,7 +8,7 @@ import {
 
 // function to create repository
 export const createRepository = function (widgetData) {
-  const createRepoWidgetEle = document.getElementById('playGround');
+  const createRepoWidgetEle = document.getElementById('messageBody');
   // calling service function to create repository in github
   createRepoGithubService(widgetData.repositoryName).then((gitCreateRepoRes) => {
     const errorOrSuccDiv = document.createElement('div');
@@ -40,7 +40,7 @@ export const createRepository = function (widgetData) {
 
 // function to create issue
 export const createRepositoryIssue = function (widgetData) {
-  const createRepoWidgetEle = document.getElementById('playGround');
+  const createRepoWidgetEle = document.getElementById('messageBody');
   // calling service function to create issue in github
   createIssueGithubService(widgetData.repositoryName,
     widgetData.issueName).then((gitCreateIssueRes) => {

@@ -8,7 +8,7 @@ import { todolistCreateMsg, openTodolistView, newTodolistItemView } from './todo
 
 // function to create task in todolist
 export const createTodolistTask = function (widgetData) {
-  const createWidgetEle = document.getElementById('playGround');
+  const createWidgetEle = document.getElementById('messageBody');
   // calling service function to create reminder in firebase database
   createTodolistService(widgetData).then((firebaseTodolistdRes) => {
     const errorOrSuccDiv = document.createElement('div');
@@ -37,7 +37,7 @@ export const createTodolistTask = function (widgetData) {
 
 // function to open todolist modal
 export const openTodolist = function (openWidgetType) {
-  const createWidgetEle = document.getElementById('playGround');
+  const createWidgetEle = document.getElementById('messageBody');
   // calling service function to get todolist data from firebase database
   getTodolistForUserService(openWidgetType.userId).then((todolistData) => {
     // converting object to array
