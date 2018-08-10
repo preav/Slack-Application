@@ -8,7 +8,7 @@ export function homePageComponent() {
         <div class="d-flex flex-fill home-section-inner">
         <section class="col">
             <div>
-            <img src="./client/src//img/slack.png" alt="Slack brings all your communication together">
+            <img src="./client/src/img/slack.png" alt="Slack brings all your communication together">
             </div>
         </section>
         <section class="col">

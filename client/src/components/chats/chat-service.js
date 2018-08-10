@@ -1,10 +1,10 @@
 import { createStore } from 'redux'
+import moment from 'moment';
+import { markdown } from 'markdown'
+import firebase from 'firebase';
 import { chat } from './chat-reducers'
 import { addChatToStore } from './chat-controller'
-import moment from 'moment';
-var markdown = require("markdown").markdown;
 import '../../../../firebase/firebase-config';
-import firebase from 'firebase';
 var dropbox = require('dropbox').Dropbox;
 
 //creating Store
@@ -12,8 +12,10 @@ const store = createStore(chat);
 
 //event listeners
 document.getElementById('addMedia').addEventListener('click', getFile);
-document.getElementById('enter').addEventListener('click', sendMessage);
+// document.getElementById('enter').addEventListener('click', sendMessage);
 
+// Log the initial state
+// console.log('initial Value',store.getState())
 let sentToUserName = ''; // github username, eg. anilkumar-bv
 let sentToDisplayName = ''; // github Name, eg. Anil Kumar
 let userName = ''; // github username
@@ -22,18 +24,19 @@ let forChannel = false;
 
 // Get Current User Details
 let currentUser = window.localStorage.getItem("current_user");
-if (currentUser && currentUser.user !== 'undefined') {
+if (currentUser && currentUser != 'null' && currentUser.user !== 'undefined') {
     userName = JSON.parse(currentUser).user.userName;
     userDisplayName = getDisplayNameFrom(userName);
-}
-else {
-    userName = 'anilkumar-bv'; // initialize to one of the User
+} else {
+    // initialize to one of the User
+    userName = 'anilkumar-bv';
 }
 
+// Function to retrieve User Display Name from Login User Name
 function getDisplayNameFrom(userNameInput) {
-    //get the User Name from userName
+    // get the User Name from userName
     let userDisplayNameLocal = '';
-    let usersDbRef = firebase.database().ref('users');
+    const usersDbRef = firebase.database().ref('users');
     usersDbRef.once('value', (dataSnapshot) => {
         dataSnapshot.forEach(childSnapshot => {
             if (childSnapshot.val().username === userNameInput) {
@@ -47,48 +50,38 @@ function getDisplayNameFrom(userNameInput) {
             }
         });
     })
-
     return userDisplayNameLocal;
 }
 
-// Get a reference to the database service
-var database = firebase.database();
-let receiverRef = null; //firebase.database().ref(teamId).child('channels').child().child('users').child(userDisplayName);
+let receiverRef = null;
 let senderRef = null;
 let teamId = '';
 
-// Following function is called when a Channel is clicked upon to retrieve the Messages
+// Following function is called when
+// A Channel is clicked upon to retrieve the Messages, and to initiate a Chat with the Channel
 export function openChatDetailsForChannel(channelId, teamID) {
     teamId = teamID;
     forChannel = true;
     sentToUserName = channelId;
 
-    receiverRef = firebase.database().ref('teams').child(teamId).child('channels').child(sentToUserName).child('messages');
-    receiverRef.on('value', function (snapshot) {
+    receiverRef = firebase.database().ref(`teams/${teamId}/channels/${sentToUserName}/messages`);
+    receiverRef.on('value', snapshot => {
         let chatBox = document.getElementById('messageBody');
         chatBox.innerHTML = '';
         snapshot.forEach(function (childSnapshot) {
-            let childData = childSnapshot.val();
-            if (childData.sentToUserName === sentToUserName) {
-                const paraElement = document.createElement('p');
-                const formattedTime = moment(childData.date).fromNow();
-                paraElement.innerHTML = `<strong>${childData.sentByDisplayName}</strong> - <span class="momentDisplay">${formattedTime},/span><br>
-                                         ${childData.messageText}`;
-                chatBox.appendChild(paraElement);
+            if (childSnapshot.val().sentToUserName === sentToUserName) {
+                renderMessage(childSnapshot, chatBox);
             }
         });
-        chatBox.scrollTo(0,document.body.scrollHeight);
+        chatBox.scrollTo(0, document.body.scrollHeight);
     });
 }
 
 export function openChatDetailsForUser(userId, teamID) {
     teamId = teamID;
     sentToUserName = userId;
-    // Get the Names to display, for Receiver and Sender
-    sentToDisplayName = getDisplayNameFrom(sentToUserName); // Receiver Display Name
-    userDisplayName = getDisplayNameFrom(userName); // Sender Display Name
-    //renderChatHistory();
-    let receiverRef = firebase.database().ref('teams').child(teamID).child('directMessages').child('users').child(sentToUserName).child('messages');
+
+    let receiverRef = firebase.database().ref(`teams/${teamID}/directMessages/users/${sentToUserName}/messages`);
     receiverRef.on('value', function (snapshot) {
         let chatBox = document.getElementById('messageBody');
         chatBox.innerHTML = '';
@@ -96,14 +89,10 @@ export function openChatDetailsForUser(userId, teamID) {
             let childData = childSnapshot.val();
             if ((childData.sentByUserName === sentToUserName || childData.sentToUserName === sentToUserName) &&
                 (childData.sentByUserName === userName || childData.sentToUserName === userName)) {
-                const paraElement = document.createElement('p');
-                const formattedTime = moment(childSnapshot.val().date).fromNow();
-                paraElement.innerHTML = `<strong>${childSnapshot.val().sentByDisplayName}</strong> - ${formattedTime}<br>
-                                        ${childSnapshot.val().messageText}`;
-                chatBox.appendChild(paraElement);
+                renderMessage(childSnapshot, chatBox);
             }
         });
-        chatBox.scrollTo(0,document.body.scrollHeight);
+        chatBox.scrollTo(0, document.body.scrollHeight);
     });
 }
 
@@ -126,40 +115,37 @@ function validateInputs(inputMessage) {
 // Function to build Message Entity
 function buildMessageEntity(message) {
     let msg = {};
-    msg.messageText = message; 
-    msg.date = Date.now();
+    msg.messageText = message;
+    msg.date = new Date(Date.now());
     msg.sentToUserName = sentToUserName;
-    if (sentToDisplayName == null) // for Channel, userName and userDisplayName is same
-        msg.sentToDisplayName = sentToUserName;
-    else
-        msg.sentToDisplayName = sentToDisplayName;
+
+    // Get the Names to display, for Receiver and Sender
+    sentToDisplayName = getDisplayNameFrom(sentToUserName); // Receiver Display Name
+    userDisplayName = getDisplayNameFrom(userName); // Sender Display Name
 
     // if it's for Channel, sentToDisplayName should be same as sentToUserName
-    if(forChannel)
+    if (forChannel)
         msg.sentToDisplayName = sentToUserName;
-        
+
     msg.sentByUserName = userName;
+    msg.sentByDisplayName = userDisplayName;
 
-
-    if (userDisplayName == null)
-        msg.sentByDisplayName = userName;
-    else
+    if (userDisplayName)
         msg.sentByDisplayName = userDisplayName;
+    else
+        msg.sentByDisplayName = userName;
 
     return msg;
 }
 
-function sendMessage(evt) {
+export function sendMessage(evt) {
     // Validate the input Message
-    const rawMessage = document.querySelector('#enteredCommand').value;
+    const rawMessage = $('#enteredCommand').data("emojioneArea").getText();
     if (!validateInputs(rawMessage)) {
         return;
     }
 
-    // Clear the Input text box
-    for (let elem of document.getElementsByClassName('emojionearea-editor')) {
-        elem.innerText = ' ';
-    }
+    $('#enteredCommand').data("emojioneArea").setText("");
     const message = markdown.toHTML(rawMessage);
     const currentDateTime = Date.now();
 
@@ -183,7 +169,7 @@ function sendMessage(evt) {
 }
 
 function pushMessagesForChannel(msg) {
-    receiverRef = firebase.database().ref('teams').child(teamId).child('channels').child(sentToUserName).child('messages');
+    receiverRef = firebase.database().ref(`teams/${teamId}/channels/${sentToUserName}/messages`);
 
     // push Message to DB
     receiverRef.push(msg);
@@ -193,22 +179,18 @@ function pushMessagesForChannel(msg) {
         let chatBox = document.getElementById('messageBody');
         chatBox.innerHTML = '';
         snapshot.forEach(function (childSnapshot) {
-            let childData = childSnapshot.val();
-            if (childData.sentToUserName === sentToUserName) {
-                const paraElement = document.createElement('p');
-                const formattedTime = moment(childData.date).fromNow();
-                paraElement.innerHTML = `<strong>${childData.sentByDisplayName}</strong> - ${formattedTime}<br>
-                                             ${childData.messageText}`;
-                chatBox.appendChild(paraElement);
+            if (childSnapshot.val().sentToUserName === sentToUserName) {
+                renderMessage(childSnapshot, chatBox);
             }
         });
+        chatBox.scrollTo(0, document.body.scrollHeight);
     });
 }
 
 function pushMessagesForUser(msg) {
-    console.log('push messages to db called')
-    senderRef = firebase.database().ref('teams').child(teamId).child('directMessages').child('users').child(userName).child('messages');
-    receiverRef = firebase.database().ref('teams').child(teamId).child('directMessages').child('users').child(sentToUserName).child('messages');
+    
+    senderRef = firebase.database().ref(`teams/${teamId}`).child('directMessages').child('users').child(userName).child('messages');
+    receiverRef = firebase.database().ref(`teams/${teamId}`).child('directMessages').child('users').child(sentToUserName).child(`messages`);
     senderRef.push(msg);
     receiverRef.push(msg);
 
@@ -220,32 +202,17 @@ function pushMessagesForUser(msg) {
             let childData = childSnapshot.val();
             if ((childData.sentByUserName === sentToUserName || childData.sentToUserName === sentToUserName) &&
                 (childData.sentByUserName === userName || childData.sentToUserName === userName)) {
-                const paraElement = document.createElement('p');
-                const formattedTime = moment(childSnapshot.val().date).fromNow();
-                paraElement.innerHTML = `<strong>${childSnapshot.val().sentByDisplayName}</strong> - ${formattedTime}<br>
-                                            ${childSnapshot.val().messageText}`;
-                chatBox.appendChild(paraElement);
+                renderMessage(childSnapshot, chatBox);
             }
         });
-        chatBox.scrollTo(0,document.body.scrollHeight);
+        chatBox.scrollTo(0, document.body.scrollHeight);
     });
 }
 
-// get the Initial data from the Chat
-database.ref('messages').once('value', dataSnapshot => {
-    let stateArray = [];
-    dataSnapshot.forEach(childSnapshot => {
-        let chatInstance = {};
-        chatInstance.messageText = childSnapshot.val().messageText;
-        chatInstance.date = childSnapshot.val().date;
-        chatInstance.sentByUserName = childSnapshot.val().sentByUserName;
-        chatInstance.sentToUserName = childSnapshot.val().sentToUserName;
-        chatInstance.sentByDisplayName = childSnapshot.val().sentByDisplayName;
-        chatInstance.sentToDisplayName = childSnapshot.val().sentToDisplayName;
-        stateArray.push(chatInstance);
-    });
-    //state = createStore(chat, stateArray)
-});
+// Render Chat history using subscribe method
+// store.subscribe(() => {
+//     console.log(store.getState());
+// });
 
 function getFile(event) {
     $('#imgupload').trigger('click');
@@ -257,6 +224,7 @@ function getFile(event) {
         filesUpload(files[0], fileName);
     });
  }
+
 
  function filesUpload(fileValue, fileName) {
      var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
@@ -272,16 +240,13 @@ function getFile(event) {
          },
          success: function (data) {
              filesDownload(data.id);
-         },
-         error: function (error) {
-            alert("Sorry! We weren't able to send this file, please try again.");
          }
      })
  }
 
  function filesDownload(fileName) {
-	var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
- 	var dbx = new dropbox({accessToken: ACCESS_TOKEN});
+    var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
+    var dbx = new dropbox({accessToken: ACCESS_TOKEN});
         dbx.filesDownload({ path: fileName})// here i mentioned the shareable link rather then I want to specify path
             .then(function (data) {
                 var downloadUrl = URL.createObjectURL(data.fileBlob);
@@ -289,10 +254,23 @@ function getFile(event) {
                 var htmlElement = document.createElement('div');
                 htmlElement.innerHTML = template;
                 var builtMessage = buildMessageEntity(template);
-                console.log(builtMessage)
                 pushMessagesForUser(builtMessage);
             })
             .catch(function (error) {
                 console.error(error);
             });
+}
+
+// Render Chat history using subscribe method
+// store.subscribe(() => {
+//     console.log(store.getState());
+// });
+
+// function to Render the individual Message
+function renderMessage(childSnapshot, chatBox) {
+    const paraElement = document.createElement('p');
+    const formattedTime = moment(childSnapshot.val().date).fromNow();
+    paraElement.innerHTML = `<strong>${childSnapshot.val().sentByDisplayName}</strong> - ${formattedTime}<br>
+                                ${childSnapshot.val().messageText}`;
+    chatBox.appendChild(paraElement);
 }

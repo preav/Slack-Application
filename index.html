@@ -25,7 +25,7 @@
     <!-- Navigation bar -->
     <header class="navigationBar">
       <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Slack#</a>
+        <a class="navbar-brand" href="#"><img class="pr-2" alt="slack sapient logo" src="./client/src/img/slack-sapient-logo.png"/>Sapient Slack</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigationBarId" aria-controls="navigationBarId"
           aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -34,9 +34,7 @@
         <div class="collapse navbar-collapse" id="navigationBarId">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-              <a class="nav-link" href="#">Home
-                <span class="sr-only">(current)</span>
-              </a>
+              <a class="nav-link" href="#"></a>
             </li>
           </ul>
           <!-- Date filter option -->
@@ -87,11 +85,31 @@
               <i class="fa fa-cog"></i>
             </button>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" id="user-profile">Edit Profile</a>
+              <a class="dropdown-item" id="user-profile" data-toggle="modal" data-target="#editModal">Edit Profile</a>
               <a class="dropdown-item" id="git-signout">Logout</a>
             </div>
           </div>
-
+          <!-- START: Edit Modal -->
+          <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content ">
+                <div class="modal-header">
+                  <h3 class="modal-title" id="editModalLabel">Edit Profile</h3>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div id="editProfileContainer"></div>
+                </div>
+                <div class="modal-footer">
+                  <input type="button" class="btn btn-primary updateUserDataBtn" value="Save Changes" id="updateUserDataBtn">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- END: Edit Modal -->
 
           <!-- The Modal -->
           <div class="modal" id="myModal">
@@ -214,15 +232,15 @@
               <div class="md-form mb-4">
                 <label for="channelType">Channel Type</label>
                 <select class="form-control" id="channelType">
-                  <option value="privateChannel" id="privateChannel">Private</option>
-                  <option value="publicChannel" id="publicChannel">Public</option>
+                  <option value="private" id="privateChannel">Private</option>
+                  <option value="public" id="publicChannel">Public</option>
                 </select>
               </div>
             </div>
 
             <div class="md-form mb-4">
-              <label>Add Members</label>
-              <div id="usersinTeam">
+                <label id="addMem">Add Members</label>
+                <div id="usersinTeam">
 
               </div>
             </div>
@@ -243,6 +261,7 @@
     <div class="show-login" id="chatContainer">
       <div class="container-fluid d-flex text-left containerWrapper">
         <section id="chatLists" class="col-xs-5 col-sm-3">
+          <h4 class="mb-0" id="currentTeam">Team: <span>aaa</span></h4>
           <div id="chatWithSlackbot">
             <ul class="side-list">
               <li>Chat with bot</li>
@@ -264,9 +283,9 @@
               </div>
               <input type="file" id="imgupload" class="d-none" />
               <input type="text" class="form-control text-left" type="text" id="enteredCommand" placeholder="Message #channel...">
-              <div class="input-group-append">
+              <!-- <div class="input-group-append">
                 <input type="submit" id="enter" class="btn btn-success m-0" value="Send" />
-              </div>
+              </div> -->
             </div>
           </form>
         </section>
