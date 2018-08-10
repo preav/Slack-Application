@@ -52,7 +52,7 @@ body
    width: 100%;
    text-align: center;
    padding: 0;
-   height: 93vh;
+   height: 90vh;
    overflow: auto;
 }
 
@@ -97,6 +97,10 @@ body
     padding: 12px;
     margin-bottom: 10px;
     cursor: pointer;
+}
+
+.navbar-brand {
+    font-size: 2em;
 }
 
 .team-link:hover
