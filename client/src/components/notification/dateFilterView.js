@@ -4,6 +4,7 @@ function createHTMLElement(html) {
     return template.content.firstElementChild;
   }
 
+
   function tabDisplay(src)
   { 
     /*const srcTab=`<li class="nav-item">
@@ -14,10 +15,14 @@ function createHTMLElement(html) {
 
   }
   function tabContentDisplay(src, msg)
-  {
-    const srcContentDisplay=`<div class="tab-pane fade" id="${src}" role="tabpanel">
-    <p>${msg}</p>           
- </div>`; 
+  { let srcContentDisplay;
+    
+   /* if(Array.isArray(msg[src])) {    
+      srcContentDisplay =`<div class="tab-pane fade" id="${src}" role="tabpanel">
+    ${msg[src].map(item => `<p>${item}</p>`).join('')} </div>`; 
+  }*/
+  srcContentDisplay =`<div class="tab-pane fade" id="${src}" role="tabpanel">
+  ${msg} </div>`; 
     return createHTMLElement(srcContentDisplay);
 
   }
