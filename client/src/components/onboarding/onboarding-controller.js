@@ -211,18 +211,21 @@ $(document).on("click", ".team-link", function(){
   // alert($(this).data('team'));
 });
 
-export function userGitLogin() {
-  const loggedUser = gitLogin();
-  loggedUser.then((response) => {
-    // console.log(response);
+export async function userGitLogin() {
+  try
+  {
+    const loggedUser = await gitLogin();
+    console.log(loggedUser);
     createDashboardView();
-    saveUpdateUserAfterLogin(response);
+    await saveUpdateUserAfterLogin(loggedUser.user.uid, loggedUser);
     getTeamsOfCurrentUser();
-  }, (error) => {
+  }
+  catch(error)
+  {
     console.log(error.toString());
     gitLogout();
     homeComponentView();
-  });
+  }
 }
 
 export function userGitLogout() {
@@ -231,15 +234,21 @@ export function userGitLogout() {
   gitLogout();
   homeComponentView();
 }
-export function userLoginStatus() {
-  const u = checkAuthStateChange();
-  u.then((response) => {
-    console.log(response);
+export async function userLoginStatus() {
+  try
+  {
+    const u = await checkAuthStateChange();
+    console.log(u);
     createDashboardView();
-  }, (error) => {
-    console.log(error.toString());
+    const result = await saveUpdateUserAfterLogin(u.uid, u);
+    console.log(result);
+    getTeamsOfCurrentUser();
+  }
+  catch(ex)
+  {
+    console.log(ex);
     homeComponentView();
-  });
+  }
 }
 
 export function init() {

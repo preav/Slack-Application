@@ -22,13 +22,14 @@ const getUrlParameter = function getUrlParameter(sParam) {
   return undefined;
 };
 
-export async function saveUpdateUserAfterLogin(response)
+export async function saveUpdateUserAfterLogin(userUID, response)
 {
   const result = "success";
-  const curUser = await getCurrentUserDetails();
+  let curUser = null;
+  try { curUser = await getCurrentUserDetails(); }  catch(ex)  { throw ex; };
   const teamnameFromUrl = decodeURIComponent(getUrlParameter('teamname')).trim();
   const url = window.location.href;
-  const userUID = response.user.uid;
+  //const userUID = response.user.uid;
   let userData = null;
 
   console.log(curUser);
@@ -66,7 +67,7 @@ export async function saveUpdateUserAfterLogin(response)
   store.dispatch({type: "LOGIN", obj});
   // END: REDUX //
 
-  console.log(userData.teams);
+  console.log("Teams: "+userData.teams);
 
   if (teamnameFromUrl != null && teamnameFromUrl != 'undefined' && teamnameFromUrl != "") 
   {
@@ -74,7 +75,13 @@ export async function saveUpdateUserAfterLogin(response)
 
     if(userData.teams != null && userData.teams != 'undefined' && userData.teams != "") {
       console.log("Updating teams of user");
-      userData.teams = [...userData.teams, teamnameFromUrl];      
+      // Check if team already exist or not
+      let teamExist = containsInArray(userData.teams, teamnameFromUrl);
+      console.log(`teamExist: ${teamExist}`);
+      if(teamExist === false) 
+      {
+        userData.teams = [...userData.teams, teamnameFromUrl]; 
+      }     
     }
     else {
       console.log("Adding new/first team to user");
@@ -82,24 +89,45 @@ export async function saveUpdateUserAfterLogin(response)
     }
 
     // Updating user details in team
-    let team = await getTeamDetail(teamnameFromUrl);
+    let team = null;
+    try { team = await getTeamDetail(teamnameFromUrl); } catch(ex) { console.log(ex); throw ex };
 
     if(team != null && team != 'undefined' && team != "") {
-      team.users =  [...team.users, userUID];
+      // Check if userId already exist or not
+      let userExist = containsInArray(team.users, userUID);
+      console.log("userExist: "+userExist);
+      if(userExist === false)
+      {
+        team.users =  [...team.users, userUID];
+      }
     }
     else {
+      team = {};
       team.users =  [userUID];
     }
 
-    let teamSaveResult = await saveUpdateTeam(teamnameFromUrl, team);
+    let teamSaveResult = null;
+    try { teamSaveResult = await saveUpdateTeam(teamnameFromUrl, team); } catch(ex) { throw ex };
     console.log(teamSaveResult);
   }
 
   // Saving/updating user
-  let userSaveResult = await saveUpdateUser(userUID, userData);
+  let userSaveResult = null;
+  try { userSaveResult = await saveUpdateUser(userUID, userData); } catch(ex) { throw ex };
   console.log(userSaveResult);
   
   window.history.pushState("object or string", "Slack", url.split("?")[0]);
 
   return result;
+}
+
+export function containsInArray(arrayObject, elementToSearch)
+{
+  var exist = false;
+  Array.from(arrayObject).forEach(function(element) 
+  {
+    if(element === elementToSearch)
+      exist = true;
+  });
+  return exist;
 }
