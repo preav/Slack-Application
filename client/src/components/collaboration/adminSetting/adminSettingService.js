@@ -9,6 +9,7 @@ function fnCreateChannel() {
   const userV = {};
   $('input[name="selectedUserName"]:checked').each(function () {
     const USERDISPLAY = $(this).data();
+    console.log("USERDISPLAY====>",USERDISPLAY);
     userV[USERDISPLAY.username]=USERDISPLAY
   });
   const teamID = $('#createChannel').data('teamid');
@@ -38,13 +39,14 @@ function getAllUsersFromTeam(teamID) {
         dataSnapshot.forEach(childSnapshot => {
           let userNode = childSnapshot.key;
           let userID = childSnapshot.val();
-          let user = getUserName(userID);
-          var getAllUserHtml = `
+          let user = getUserName(userID).then((user) => {
+            var getAllUserHtml = `
               <div>
                 <input type="checkbox" data-userid="${userID}" data-username="${user.userName}" class="users" name="selectedUserName" data-userDisplay="${user.displayName}">
                 ${user.displayName}
               </div>`;
           $('#usersinTeam').append(getAllUserHtml);
+          })
         });
       });
     }
