@@ -215,14 +215,11 @@ function pushMessagesForUser(msg) {
 // });
 
 function getFile(event) {
-    console.log('getFile called')
     $('#imgupload').trigger('click');
     event.stopPropagation();
     $('#imgupload').change(function(e) {
         e.stopPropagation();
-        console.log("inside change function")
         var files = e.target.files;
-        console.log(files[0])
         var fileName = "/" + files[0].name;
         filesUpload(files[0], fileName);
     });
