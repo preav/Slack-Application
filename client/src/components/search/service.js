@@ -76,7 +76,8 @@ function getDirectMessages(teamId) {
                     for (let i = 0; i < globallist[2].messages.length; i++) {
                         if (globallist[2].messages[i].label ===message &&
                             globallist[2].messages[i].sentby===by &&
-                            globallist[2].messages[i].sentTo===to)
+                            globallist[2].messages[i].sentTo===to
+                        )
                             flag = false;
                     }
                     if (flag == true) {
@@ -201,6 +202,20 @@ export function searchAll() {
                 this._super();
                 this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
             },
+            _renderItem: function( ul, item ) {
+                if(item.category ==="message"){
+                   return $("<li>")
+                  .attr( "data-value", item.value )
+                  .append( item.label )
+                  .append(item.sentby)
+                  .append(item.sentTo)
+                  .appendTo( ul );
+                }
+                return $( "<li>" )
+                  .attr( "data-value", item.value )
+                  .append( item.label )
+                  .appendTo( ul );
+              },
             _renderMenu: function (ul, items) {
                 var that = this,
                     currentCategory = "";
