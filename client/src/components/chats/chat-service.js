@@ -215,11 +215,14 @@ function pushMessagesForUser(msg) {
 // });
 
 function getFile(event) {
+    console.log('getFile called')
     $('#imgupload').trigger('click');
     event.stopPropagation();
     $('#imgupload').change(function(e) {
         e.stopPropagation();
+        console.log("inside change function")
         var files = e.target.files;
+        console.log(files[0])
         var fileName = "/" + files[0].name;
         filesUpload(files[0], fileName);
     });
@@ -227,6 +230,7 @@ function getFile(event) {
 
 
 function filesUpload(fileValue, fileName) {
+    console.log('files upload method has been triggered')
     var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
     $.ajax({
         url: 'https://content.dropboxapi.com/2/files/upload',
@@ -245,19 +249,17 @@ function filesUpload(fileValue, fileName) {
 }
 
 function filesDownload(fileName) {
+    console.log('filesDownload called')
     var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
-    var dbx = new dropbox({
-        accessToken: ACCESS_TOKEN
-    });
-    dbx.filesDownload({
-            path: fileName
-        }) // here i mentioned the shareable link rather then I want to specify path
+    var dbx = new dropbox({ accessToken: ACCESS_TOKEN });
+    dbx.filesDownload({ path: fileName }) // here i mentioned the shareable link rather then I want to specify path
         .then(function(data) {
             var downloadUrl = URL.createObjectURL(data.fileBlob);
             var template = `<a href=${downloadUrl} download=${data.name}> Media File Received </a>`;
             var htmlElement = document.createElement('div');
             htmlElement.innerHTML = template;
             var builtMessage = buildMessageEntity(template);
+            console.log(builtMessage)
             pushMessagesForUser(builtMessage);
         })
         .catch(function(error) {
