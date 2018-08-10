@@ -12,7 +12,7 @@ export const noficationTemplate = (msgList) => {
     if (msgList.length > 0) {
         msgList.forEach((item) => {
             msgCardStr += `<div class="card" style="max-width: 202px;">
-            <img class="card-img-top" src="" alt="userImage">
+            <img class="card-img-top" src=""  alt="userImage">
             <div class="card-body">
             <p class="card-text" id="mes">${item.sentBy}</p>
             <p class="card-text" id="mes">${item.messageText}</p></div>
