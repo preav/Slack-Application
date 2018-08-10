@@ -90,10 +90,13 @@ body
 
 .team-link
 {
+    width: 88%;
     border: 1px solid #B5B8B9;
     border-radius: 5px;
-    padding: .6rem 0 .6rem 1rem;
-    margin-bottom: 1.2rem;
+    display: inline-block;
+    padding: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
 }
 
 .team-link:hover
@@ -326,6 +329,7 @@ $border-radius: .25rem;
         padding: 5px 10px;
         list-style: none;
         color: #fff;
+        cursor: pointer;
 
         &:first-child {
             font-weight: bold;
