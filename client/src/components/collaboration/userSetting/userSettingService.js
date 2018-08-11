@@ -23,9 +23,9 @@ function getAllChannels(teamName) {
             var channelListHTML = `
                   <li data-channelid="${channelID}" data-teamid="${teamName}" data-channelname="${channelName}" class="channels">
                   ${channelName}
-                  <span data-channelid="${channelID}" data-teamid="${teamName}">
-                  <!--<a class="muteChannel"><i class="fa fa-microphone-slash"></i></a>
-                  <a class="unmuteChannel"><i class="fa fa-microphone"></i></a>-->
+                  <span data-channelid="${channelID}" data-teamid="${teamName}" data-channelname="${channelName}">
+                  <a class="muteChannel"><i class="fa fa-microphone-slash"></i></a>
+                  <a class="unmuteChannel"></a>
                   <a class="removeChannel"><i class="fa fa-times-circle-o"></i></a>
                 </span>
                 </li>`;
@@ -66,11 +66,11 @@ function getAllUsers(teamName) {
             var userListHTML = `
                   <li data-userid="${userID}" data-teamid="${teamName}" data-username="${user.userName}" class="users">
                   ${user.displayName}
-                  <span data-usernode="${userNode}" data-teamid="${teamName}">
-                  <!--<a class="muteUser"><i class="fa fa-microphone-slash"></i></a>
-                  <a class="unmuteUser"><i class="fa fa-microphone"></i></a>-->
-                  <a class="removeUser"><i class="fa fa-times-circle-o"></i></a>
-                </span>
+                  <span data-usernode="${userNode}" data-teamid="${teamName}" data-userid="${userID}" data-username="${user.userName}">
+                    <a class="muteUser"><i class="fa fa-microphone-slash"></i></a>
+                    <a class="unmuteUser"></a>
+                    <a class="removeUser"><i class="fa fa-times-circle-o"></i></a>
+                  </span>
                 </li>`;
             $('#usersList').append(userListHTML);
           });
@@ -113,9 +113,9 @@ async function getUserName(userID) {
 }
 
 // functionality for updating something in firebase via
-function muteUsers(userId) {
-  const newPostKey = database.ref(`team-6/directMessages/users/${userId}`).update({
-    mute: true,
+function muteUsers(userNode,teamID,userId,username) {
+  const newPostKey = database.ref(`teams/`+teamID+`/prefrences/mute/users/`+ userId).update({
+      userName:username
   }, (error) => {
     if (error) {
       console.log(error, 'There is error while saving data into firebase...');
@@ -125,26 +125,25 @@ function muteUsers(userId) {
   });
 }
 
-jQuery(document).on('click', '.muteUser', (e) => {
-  const userId = e.target.parentElement.getAttribute('userId');
-  muteUsers(userId);
-});
-
-function unMuteUsers(userId) {
-  const newPostKey = database.ref(`${teamName}/directMessages/users/${userId}`).update({
-    mute: false,
-  }, (error) => {
-    if (error) {
-      console.log(error, 'There is error while saving data into firebase...');
-    } else {
-      console.log('saved successfully...');
-    }
-  });
+function unMuteUsers(userNode,teamID,userId,username) {
+  const newPostKey = database.ref(`teams/`+teamID+`/prefrences/mute/users/`+ userId).remove();
 }
 
-jQuery(document).on('click', '.unmuteUser', (e) => {
-  const userId = e.target.parentElement.getAttribute('userId');
-  unMuteUsers(userId);
+jQuery(document).on('click', '.muteUser', function(e) {
+  e.preventDefault;
+  $('.unmuteUser').toggle();
+  const userNode = $(this).parents('span').data('usernode');
+  const teamID = $(this).parents('span').data('teamid');
+  const userId = $(this).parents('span').data('userid');
+  const username = $(this).parents('span').data('username');
+  console.log("===>",userNode,teamID,userId,username);
+  let icon = $("i", this).toggleClass("fa fa-microphone-slash fa fa-microphone");
+  if (icon.hasClass("fa fa-microphone-slash")){
+    alert("nothing");
+    unMuteUsers(userNode,teamID,userId,username);
+  }else{
+    muteUsers(userNode,teamID,userId,username);
+  }
 });
 
 
@@ -161,10 +160,9 @@ jQuery(document).on('click', '.removeUser', function (e) {
   $(this).parents('li').remove();
 });
 
-function muteChannel(channelId) {
-  const newPostKey = database.ref('team-6').child('channels').child(`${channelId}`)
-    .update({
-      mute: true,
+function muteChannel(teamID,channelId,channelName) {
+  const newPostKey = database.ref(`teams/`+teamID+`/prefrences/mute/channels/`+ channelId).update({
+    channelName:channelName
     }, (error) => {
       if (error) {
         console.log(error, 'There is error while saving data into firebase...');
@@ -174,16 +172,9 @@ function muteChannel(channelId) {
     });
 }
 
-jQuery(document).on('click', '.muteChannel', (e) => {
-  const channelId = e.target.parentElement.getAttribute('channelId');
-  muteChannel(channelId);
-});
-
-
-function unMuteChannel(channelId) {
-  const newPostKey = database.ref('team-6').child('channels').child(`${channelId}`)
-    .update({
-      mute: 'saket',
+function unMuteChannel(teamID,channelId,channelName) {
+  const newPostKey = database.ref(`teams/`+teamID+`/prefrences/mute/channels/`+ channelId).update({
+    channelName:channelName
     }, (error) => {
       if (error) {
         console.log(error, 'There is error while saving data into firebase...');
@@ -193,9 +184,20 @@ function unMuteChannel(channelId) {
     });
 }
 
-jQuery(document).on('click', '.unmuteChannel', (e) => {
-  const channelId = e.target.getAttribute('channelId');
-  unMuteChannel(channelId);
+jQuery(document).on('click', '.muteChannel', function(e) {
+  e.preventDefault;
+  $('.unmuteChannel').toggle();
+  const teamID = $(this).parents('span').data('teamid');
+  const channelId = $(this).parents('span').data('channelid');
+  const channelName = $(this).parents('span').data('channelname');
+  console.log("++++===>",teamID,channelId,channelName);
+  let icon = $("i", this).toggleClass("fa fa-microphone-slash fa fa-microphone");
+  if (icon.hasClass("fa fa-microphone-slash")){
+    alert("nothing");
+    unMuteChannel(teamID,channelId,channelName);
+  }else{
+    muteChannel(teamID,channelId,channelName);
+  }
 });
 
 function removeChannel(channelID, teamID) {
