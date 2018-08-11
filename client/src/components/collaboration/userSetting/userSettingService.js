@@ -38,7 +38,8 @@ function getAllChannels(teamName) {
   });
 }
 
-$(document).on("click", '.channels', function(){
+$(document).on("click", '.channels', function(e){
+  e.preventDefault;
   const teamID = $(this).data('teamid');
   const channelId = $(this).data('channelid');
   $("#enteredCommand").attr('data-slackbot', 'false');
@@ -83,7 +84,8 @@ function getAllUsers(teamName) {
 }
 
 // Get the UserId of the person who is selected for chatting
-$(document).on("click", '.users', function(){
+$(document).on("click", '.users', function(e){
+  e.preventDefault;
   const teamID = $(this).data('teamid');
   const userId = $(this).data('username');
   $("#enteredCommand").attr('data-slackbot', 'false');
@@ -136,7 +138,7 @@ jQuery(document).on('click', '.muteUser', function(e) {
   const teamID = $(this).parents('span').data('teamid');
   const userId = $(this).parents('span').data('userid');
   const username = $(this).parents('span').data('username');
-  console.log("===>",userNode,teamID,userId,username);
+  // console.log("===>",userNode,teamID,userId,username);
   let icon = $("i", this).toggleClass("fa fa-microphone-slash fa fa-microphone");
   if (icon.hasClass("fa fa-microphone-slash")){
     alert("nothing");
@@ -173,15 +175,7 @@ function muteChannel(teamID,channelId,channelName) {
 }
 
 function unMuteChannel(teamID,channelId,channelName) {
-  const newPostKey = database.ref(`teams/`+teamID+`/prefrences/mute/channels/`+ channelId).update({
-    channelName:channelName
-    }, (error) => {
-      if (error) {
-        console.log(error, 'There is error while saving data into firebase...');
-      } else {
-        console.log('saved successfully...');
-      }
-    });
+  const newPostKey = database.ref(`teams/`+teamID+`/prefrences/mute/channels/`+ channelId).remove();
 }
 
 jQuery(document).on('click', '.muteChannel', function(e) {
@@ -190,7 +184,7 @@ jQuery(document).on('click', '.muteChannel', function(e) {
   const teamID = $(this).parents('span').data('teamid');
   const channelId = $(this).parents('span').data('channelid');
   const channelName = $(this).parents('span').data('channelname');
-  console.log("++++===>",teamID,channelId,channelName);
+  // console.log("++++===>",teamID,channelId,channelName);
   let icon = $("i", this).toggleClass("fa fa-microphone-slash fa fa-microphone");
   if (icon.hasClass("fa fa-microphone-slash")){
     alert("nothing");
@@ -205,7 +199,8 @@ function removeChannel(channelID, teamID) {
 }
 
 
-$(document).on('click', '.removeChannel', function () {
+$(document).on('click', '.removeChannel', function (e) {
+  e.preventDefault;
   const channelID = $(this).parents('span').data('channelid');
   const teamID = $(this).parents('span').data('teamid');
   // console.log(channelId);
