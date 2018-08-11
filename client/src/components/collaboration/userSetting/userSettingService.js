@@ -24,7 +24,7 @@ function getAllChannels(teamName) {
                   <li data-channelid="${channelID}" data-teamid="${teamName}" data-channelname="${channelName}" class="channels">
                   ${channelName}
                   <span data-channelid="${channelID}" data-teamid="${teamName}" data-channelname="${channelName}">
-                  <a class="muteChannel"><i class="fa fa-microphone-slash"></i></a>
+                  <a class="muteChannel"><i class="fa fa-microphone"></i></a>
                   <a class="unmuteChannel"></a>
                   <a class="removeChannel"><i class="fa fa-times-circle-o"></i></a>
                 </span>
@@ -68,7 +68,7 @@ function getAllUsers(teamName) {
                   <li data-userid="${userID}" data-teamid="${teamName}" data-username="${user.userName}" class="users">
                   ${user.displayName}
                   <span data-usernode="${userNode}" data-teamid="${teamName}" data-userid="${userID}" data-username="${user.userName}">
-                    <a class="muteUser"><i class="fa fa-microphone-slash"></i></a>
+                    <a class="muteUser"><i class="fa fa-microphone"></i></a>
                     <a class="unmuteUser"></a>
                     <a class="removeUser"><i class="fa fa-times-circle-o"></i></a>
                   </span>
@@ -139,8 +139,8 @@ jQuery(document).on('click', '.muteUser', function(e) {
   const userId = $(this).parents('span').data('userid');
   const username = $(this).parents('span').data('username');
   // console.log("===>",userNode,teamID,userId,username);
-  let icon = $("i", this).toggleClass("fa fa-microphone-slash fa fa-microphone");
-  if (icon.hasClass("fa fa-microphone-slash")){
+  let icon = $("i", this).toggleClass("fa fa-microphone fa fa-microphone-slash");
+  if (icon.hasClass("fa fa-microphone")){
     alert("nothing");
     unMuteUsers(userNode,teamID,userId,username);
   }else{
@@ -185,8 +185,8 @@ jQuery(document).on('click', '.muteChannel', function(e) {
   const channelId = $(this).parents('span').data('channelid');
   const channelName = $(this).parents('span').data('channelname');
   // console.log("++++===>",teamID,channelId,channelName);
-  let icon = $("i", this).toggleClass("fa fa-microphone-slash fa fa-microphone");
-  if (icon.hasClass("fa fa-microphone-slash")){
+  let icon = $("i", this).toggleClass("fa fa-microphone fa fa-microphone-slash");
+  if (icon.hasClass("fa fa-microphone")){
     alert("nothing");
     unMuteChannel(teamID,channelId,channelName);
   }else{
