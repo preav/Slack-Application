@@ -49,3 +49,16 @@ export const newTodolistItemView = function (todolistDataItem, userId) {
   data-action='${todolistDataItem.taskCompleted}'  data-value='${todolistDataItem.id}' data-userid='${userId}'></i>
 </li>`;
 };
+
+export const botDonotHaveAnswer = function (userEntered, botResponse, googleSearch) {
+  return `<div class='createGithubRepo playGroungDiv-you' id='botDonotHaveAnswer_${userEntered}' >
+            <span><strong><a href="#">You</a></strong></span>
+            <p>${userEntered}</p>
+            <span><strong>A few seconds ago<strong></span>
+            </div>
+            <div class='createGithubRepo panBackground playGroungDiv-bot' id='createGithubRepo_${userEntered}' >
+            <span><strong>Slackbot</strong></span>
+            <p>${botResponse} <a href='http://www.google.com/search?q=${userEntered}' target="_blank" >${googleSearch}</a></p>
+            <span><strong>A few seconds ago<strong></span>
+        </div>`;
+};
