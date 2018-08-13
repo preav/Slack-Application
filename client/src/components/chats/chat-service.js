@@ -47,7 +47,7 @@ export function openChatDetailsForUser(userId, teamID) {
                 if (childSnapshot.val().sentByUserName !== userName) {
                     var msgInfo = {
                         "messageText": childSnapshot.val().messageText,
-                        "sentByDisplayName": userName
+                        "sentByDisplayName": childData.sentByUserName
                     };
                     sendDesktopNotification(msgInfo);
                 }
