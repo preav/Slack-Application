@@ -18,8 +18,7 @@ export function addToChat(state, action) {
             date: action.currentDateTime,
             sentByUserName: action.sentByUserName,
             sentToUserName: action.sentToUserName,
-            sentByDisplayName: action.sentByDisplayName,
-            sentToUserName: action.sentToDisplayName
+            sentByDisplayName: action.sentByDisplayName
         }
     ]
 }
