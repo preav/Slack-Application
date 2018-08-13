@@ -15,8 +15,8 @@ function createHTMLElement(html) {
   {
      let srcContentDisplay;
     if(Array.isArray(msg)) {          
-      srcContentDisplay =`<div class="tab-pane fade" id="${src}" role="tabpanel"><p><small>
-    ${msg.map(item => `${item}`).join('')} </small></p></div>`; 
+      srcContentDisplay =`<div class="tab-pane fade" id="${src}" role="tabpanel">
+    ${msg.map(item => `<p><small> ${item} </small></p>`).join('')} </div>`; 
   }
     return createHTMLElement(srcContentDisplay);
 
