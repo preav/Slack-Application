@@ -47,22 +47,28 @@ function getAllChannels(teamName) {
   $(this).addClass('active');
   });
 
+// let count = 0;
+
 function getAllUsers(teamName) {
+  console.log(111);
   const checkUserRef = database.ref('teams/' + teamName);
   if (checkUserRef){
   let getAllContactHtml = `<ul class="side-list"><li data-toggle="modal" data-teamid="${teamName}" data-target="#searchModal" id="searchPeople">Direct Messages
     </li></ul><ul class="side-list side-list-body" id="usersList"></ul>`;
   $('#showContactInformation').append(getAllContactHtml);
-  checkUserRef.on('value', (snapshot) => {
+  // console.log("count",++count);
+  checkUserRef.once('value', (snapshot) => {
     const checkUserRef = snapshot.val();
     if (checkUserRef['users']) {
       database.ref('teams/' + teamName + '/users').once('value', dataSnapshot => {
-        $('#usersList').empty();
+        
         dataSnapshot.forEach(childSnapshot => {
+          
+          $('#usersList').empty();
           let userNode = childSnapshot.key;
           let userID = childSnapshot.val();
           getUserName(userID).then((user) => {
-            console.log(user);
+            // console.log(user);
             var userListHTML = `
                   <li data-userid="${userID}" data-teamid="${teamName}" data-username="${user.userName}" class="users">
                   ${user.displayName}

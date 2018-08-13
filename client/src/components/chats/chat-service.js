@@ -25,7 +25,7 @@ export function openChatDetailsForChannel(channelId, teamID) {
                 renderMessage(childSnapshot, chatBox);
             }
         });
-        chatBox.scrollTo(0, document.body.scrollHeight);
+        //chatBox.scrollTo(0, document.body.scrollHeight);
     });
 }
 
@@ -33,7 +33,7 @@ export function openChatDetailsForUser(userId, teamID) {
     teamId = teamID;
     sentToUserName = userId;
     forChannel = false;
-
+    console.log(444);
     let receiverRef = firebase.database().ref(`teams/${teamID}/directMessages/users/${sentToUserName}/messages`);
     receiverRef.on('value', function(snapshot) {
         let chatBox = document.getElementById('messageBody');
@@ -55,14 +55,16 @@ export function sendMessage(evt) {
     if (!validateInputs(rawMessage)) {
         return;
     }
-
+    
     $('#enteredCommand').data("emojioneArea").setText("");
-    const message = markdown.toHTML(rawMessage);
+    const getMessage = markdown.toHTML(rawMessage);
+    if ((getMessage.indexOf('<p>') >-1 )&& (getMessage.indexOf('</p>') > -1)){
+        var message = getMessage.substring(3, getMessage.length-4);
+    }
+    else var message = getMessage;
     const currentDateTime = Date.now();
-
     // Build the Message entity
     let msg = buildMessageEntity(message);
-
     // If message is sent to a Channel, store message only under the Channel
     if (forChannel) {
         pushMessagesForChannel(msg);
@@ -76,7 +78,7 @@ export function sendMessage(evt) {
     messagesRef.push(msg);
 
     // Add this to State of store
-    store.dispatch(addChatToStore(message, currentDateTime, userName, sentToUserName, userDisplayName, sentToDisplayName));
+    store.dispatch(addChatToStore(message, currentDateTime, userName, sentToUserName, userDisplayName));
 }
 
 //creating Store
@@ -243,7 +245,7 @@ function filesDownload(fileName) {
             var downloadUrl = URL.createObjectURL(data.fileBlob);
             var template = `<a href=${downloadUrl} download=${data.name}> Media File Received </a>`;
             var htmlElement = document.createElement('div');
-            htmlElement.innerHTML = template;
+            //htmlElement.innerHTML = template;
             var builtMessage = buildMessageEntity(template);
             pushMessagesForUser(builtMessage);
         })
@@ -262,6 +264,7 @@ function renderMessage(childSnapshot, chatBox) {
     const paraElement = document.createElement('p');
     const formattedTime = moment(childSnapshot.val().date).fromNow();
     paraElement.innerHTML = `<strong>${childSnapshot.val().sentByDisplayName}</strong> - ${formattedTime}<br>
-                                ${childSnapshot.val().messageText}`;
+    ${childSnapshot.val().messageText}`;
     chatBox.appendChild(paraElement);
+    //chatBox.scrollTo(0, document.body.scrollHeight);
 }
