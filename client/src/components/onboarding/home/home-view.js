@@ -5,7 +5,7 @@ export const homeViewHolderId = 'signupContainer';
 export function homePageComponent() {
   const homeComponent = createHTMLElement(
     `<div class="d-flex flex-fill home-section">
-        <div class="d-flex flex-fill home-section-inner">
+        <div class="d-flex flex-fill home-section-inner flex-wrap">
         <section class="col">
             <div>
             <img src="./client/src/img/slack.png" alt="Slack brings all your communication together">
