@@ -135,7 +135,7 @@ function dateConverter(recorddate, startDate, endDate){
    if((pasrdCheck <= pasrdendDate && pasrdCheck >= pasrdstartDate)) 
    {  
      let firebaseTimestamp =  datevalues[1]+"/"+datevalues[2]+"/"+datevalues[0]+ " "+datevalues[3]+":"+datevalues[4]+":"+datevalues[5];
-    formatDate= moment( firebaseTimestamp, 'MM/DD/YYYY HH:mm:ss').format("MM/DD/YYYY H:mm:ss a");    
+    formatDate= moment( firebaseTimestamp, 'MM/DD/YYYY HH:mm:ss').format("MM/DD/YYYY h:mm:ss a");    
      }
      return formatDate;
     }  
@@ -145,50 +145,52 @@ function dateConverter(recorddate, startDate, endDate){
     let directMessages = new Object();
     let userID = JSON.parse(currentUser).user.userName;
     console.log('curremtTeam name',JSON.parse(localStorage.getItem("current_user")).user.currentTeam.teamName);
-    const users = database.ref("teams/"+JSON.parse(localStorage.getItem("current_user")).user.currentTeam.teamName+"/directMessages/users");
+    console.log("teams/"+JSON.parse(localStorage.getItem("current_user")).user.currentTeam.teamName+"/directMessages/users/"+userID);
+    const users = database.ref("teams/"+JSON.parse(localStorage.getItem("current_user")).user.currentTeam.teamName+"/directMessages/users/"+userID);
    console.log('users', users);
     users.on('value', (snapshot) => {
       console.log('snapshot', snapshot.val());
         const getAllUserIds = Object.values(snapshot.val());
-        const abc = getAllUserIds.map((msgVal) => {
-            Object.entries(msgVal).forEach(([key, value]) => {
-                const msgsList = value;
-                let sentTo;
-                let sentby
-                Object.entries(msgsList).forEach(([key, value]) => {
-                    const msgData = value;                    
-                    let rcvDate=msgData.date;        
-                     formatedDate = dateConverter(rcvDate,startDate, endDate);
-                    if(formatedDate != null){
-                    /*  let sentby=msgData.sentBy;
-                      let sentTo= msgData.sentTo; 
-                     if(sentby.length >15)
-         { sentby= getDisplayNameFrom(msgData.sentBy);
-          console.log('changes name',sentby);}*/
-                   sentby=msgData.sentByDisplayName;
-                     if(msgData.sentByUserName !=null)
-                     {sentby=msgData.sentByUserName;}
-                      sentTo= msgData.sentToUserName;
-                   let message=msgData.messageText;   
-                                     
-                      if(sentby === `${userID}` || sentTo === `${userID}`)
-                      {let keyx ='';
-                        const msg= `${sentby}` +"-"+ `${formatedDate}`+" : "+`${message}`;         
-                        if(sentby === `${userID}`)
-                                {keyx =`${sentTo}`;}
-                                if(sentTo === `${userID}`)
-                                {keyx =`${sentby}`;}         
-                            if (Object.keys(directMessages).length != 0
-                             && directMessages[keyx] != undefined ){
-                              directMessages[keyx].push(`${msg}`);
-                            }
-                            else{
-                              directMessages[keyx]= new Array(`${msg}`);
-                            } 
+        console.log(getAllUserIds);
+
+        Array.from(getAllUserIds).forEach(function(value) 
+        {
+          const msgsList = value;
+          let sentTo;
+          let sentby
+          Object.entries(msgsList).forEach(([key, value]) => {
+              const msgData = value;                    
+              let rcvDate=msgData.date;        
+               formatedDate = dateConverter(rcvDate,startDate, endDate);
+              if(formatedDate != null){
+              /*  let sentby=msgData.sentBy;
+                let sentTo= msgData.sentTo; 
+               if(sentby.length >15)
+                { sentby= getDisplayNameFrom(msgData.sentBy);
+                  console.log('changes name',sentby);}*/
+             sentby=msgData.sentByDisplayName;
+               if(msgData.sentByUserName !=null)
+               {sentby=msgData.sentByUserName;}
+                sentTo= msgData.sentToUserName;
+             let message=msgData.messageText;   
+                               
+                if(sentby === `${userID}` || sentTo === `${userID}`)
+                {let keyx ='';
+                  const msg= `${sentby}` +"-"+ `${formatedDate}`+" : "+`${message}`;         
+                  if(sentby === `${userID}`)
+                          {keyx =`${sentTo}`;}
+                          if(sentTo === `${userID}`)
+                          {keyx =`${sentby}`;}         
+                      if (Object.keys(directMessages).length != 0
+                       && directMessages[keyx] != undefined ){
+                        directMessages[keyx].push(`${msg}`);
                       }
-               }  
-                });
-            });
+                      else{
+                        directMessages[keyx]= new Array(`${msg}`);
+                      } 
+                }
+         }  
+          });
         });
     });
 
