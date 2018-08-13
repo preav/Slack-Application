@@ -43,8 +43,12 @@ export function openChatDetailsForUser(userId, teamID) {
             if ((childData.sentByUserName === sentToUserName || childData.sentToUserName === sentToUserName) &&
                 (childData.sentByUserName === userName || childData.sentToUserName === userName)) {
                 renderMessage(childSnapshot, chatBox);
+                console.log(childData)
+                if (childSnapshot.val().sentByUserName !== userName) {
 
-                sendDesktopNotification(childSnapshot.val().messageText)
+                    sendDesktopNotification(childSnapshot.val().messageText)
+
+                }
             }
 
         });
