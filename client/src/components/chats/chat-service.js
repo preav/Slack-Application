@@ -44,11 +44,12 @@ export function openChatDetailsForUser(userId, teamID) {
                 (childData.sentByUserName === userName || childData.sentToUserName === userName)) {
                 renderMessage(childSnapshot, chatBox);
 
-
+                sendDesktopNotification(childSnapshot.val().messageText)
             }
 
         });
         chatBox.scrollTo(0, document.body.scrollHeight);
+
     });
 }
 
@@ -71,7 +72,7 @@ export function sendMessage(evt) {
         pushMessagesForChannel(msg);
     } else { // If it's Direct Messages, store message under both the Sender and Receiver nodes
         pushMessagesForUser(msg);
-        sendDesktopNotification(msg)
+
 
     }
 
