@@ -1,6 +1,10 @@
 // <<<<<<<<<< FOR DESKTOP NOTIFICATIONS >>>>>>>>>>>>>
 
-// checks window state
+let notificationList = []
+export const getnotificationList = () => {
+        return notificationList
+    }
+    // checks window state
 var vis = (function() {
     var stateKey, eventKey, keys = {
         hidden: "visibilitychange",
@@ -50,26 +54,29 @@ function desktopNotification(currentWindow) {
     console.log('desk not called')
     if (Notification.permission === "granted") {
         console.log("granted")
-        var text = "Message can be displayed here";
-        sendDesktopNotification(text, currentWindow);
+        var msgInfo = { "messageText": "", "sentBy": "" };
+        // sendDesktopNotification(msgInfo, currentWindow);
     } else {
         console.log("not granted")
     }
 }
 
 //2. send Notification
-function sendDesktopNotification(text, currentWindow) {
-    let notification = new Notification('New Notification', {
+export function sendDesktopNotification(msgInfo, currentWindow) {
+    let notification = new Notification('Message from ' + msgInfo.sentBy, {
         //icon: "user profile icon, fetch from DB",
-        body: text,
+        body: msgInfo.messageText,
         tag: "multiple notifications"
     });
-    //’tag’ handles muti tab scenario i.e when multiple tabs are
-    // open then only one notification is sent
+
+    //Demo
+    notificationList.push(msgInfo)
+        //’tag’ handles muti tab scenario i.e when multiple tabs are
+        // open then only one notification is sent
 
     //3. handle notification events and set timeout
     notification.onclick = function() {
         currentWindow.focus();
     };
-    setTimeout(notification.close.bind(notification), 10000);
+    setTimeout(notification.close.bind(notification), 5000);
 }
