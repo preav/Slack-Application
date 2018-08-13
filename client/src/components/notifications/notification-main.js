@@ -54,7 +54,7 @@ function desktopNotification(currentWindow) {
     console.log('desk not called')
     if (Notification.permission === "granted") {
         console.log("granted")
-        var msgInfo = { "messageText": "", "sentBy": "" };
+        var msgInfo = { "messageText": "", "sentByDisplayName": "" };
         // sendDesktopNotification(msgInfo, currentWindow);
     } else {
         console.log("not granted")
@@ -63,7 +63,7 @@ function desktopNotification(currentWindow) {
 
 //2. send Notification
 export function sendDesktopNotification(msgInfo, currentWindow) {
-    let notification = new Notification('Message from ' + msgInfo.sentBy, {
+    let notification = new Notification('Message from ' + msgInfo.sentByDisplayName, {
         //icon: "user profile icon, fetch from DB",
         body: msgInfo.messageText,
         tag: "multiple notifications"

@@ -43,7 +43,10 @@ export function openChatDetailsForUser(userId, teamID) {
             if ((childData.sentByUserName === sentToUserName || childData.sentToUserName === sentToUserName) &&
                 (childData.sentByUserName === userName || childData.sentToUserName === userName)) {
                 renderMessage(childSnapshot, chatBox);
+
+
             }
+
         });
         chatBox.scrollTo(0, document.body.scrollHeight);
     });
@@ -68,7 +71,8 @@ export function sendMessage(evt) {
         pushMessagesForChannel(msg);
     } else { // If it's Direct Messages, store message under both the Sender and Receiver nodes
         pushMessagesForUser(msg);
-        sendDesktopNotification(msg)
+        //sendDesktopNotification(msg)
+
     }
 
     // push a copy of the message to "Messages" collection on DB
@@ -161,6 +165,8 @@ function pushMessagesForChannel(msg) {
     // push Message to DB
     receiverRef.push(msg);
 
+
+
     // Render the Messages
     receiverRef.on('value', function(snapshot) {
         let chatBox = document.getElementById('messageBody');
@@ -168,6 +174,7 @@ function pushMessagesForChannel(msg) {
         snapshot.forEach(function(childSnapshot) {
             if (childSnapshot.val().sentToUserName === sentToUserName) {
                 renderMessage(childSnapshot, chatBox);
+
             }
         });
         chatBox.scrollTo(0, document.body.scrollHeight);

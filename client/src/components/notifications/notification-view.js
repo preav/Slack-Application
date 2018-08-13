@@ -14,7 +14,7 @@ export const noficationTemplate = (msgList) => {
             msgCardStr += `<div class="card" style="max-width: 202px;">
             <img class="card-img-top" src=""  alt="userImage">
             <div class="card-body">
-            <p class="card-text" id="mes">${item.sentBy}</p>
+            <p class="card-text" id="mes">${item.sentByDisplayName}</p>
             <p class="card-text" id="mes">${item.messageText}</p></div>
             </div>`
         })
