@@ -1,18 +1,12 @@
-import {
-    createStore
-} from 'redux'
+import { createStore } from 'redux'
 import moment from 'moment';
-import {
-    markdown
-} from 'markdown'
+import { markdown } from 'markdown'
 import firebase from 'firebase';
-import {
-    chat
-} from './chat-reducers'
-import {
-    addChatToStore
-} from './chat-controller'
+import { chat } from './chat-reducers'
+import { addChatToStore } from './chat-controller'
 import '../../../../firebase/firebase-config';
+import { sendDesktopNotification } from '../notifications/notification-main'
+
 var dropbox = require('dropbox').Dropbox;
 
 // Following function is called when
