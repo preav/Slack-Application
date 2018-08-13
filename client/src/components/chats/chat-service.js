@@ -71,14 +71,14 @@ export function sendMessage(evt) {
         pushMessagesForChannel(msg);
     } else { // If it's Direct Messages, store message under both the Sender and Receiver nodes
         pushMessagesForUser(msg);
-        // sendDesktopNotification(msg)
+        sendDesktopNotification(msg)
 
     }
 
     // push a copy of the message to "Messages" collection on DB
     let messagesRef = firebase.database().ref('messages');
     messagesRef.push(msg);
-    sendDesktopNotification(msg)
+    //sendDesktopNotification(msg)
 
     // Add this to State of store
     store.dispatch(addChatToStore(message, currentDateTime, userName, sentToUserName, userDisplayName));
