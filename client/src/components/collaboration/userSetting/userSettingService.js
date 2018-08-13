@@ -38,14 +38,14 @@ function getAllChannels(teamName) {
   });
 }
 
-$(document).on("click", '.channels', function(){
+  $(document).on("click", '.channels', function(){
   const teamID = $(this).data('teamid');
   const channelId = $(this).data('channelid');
   $("#enteredCommand").attr('data-slackbot', 'false');
   openChatDetailsForChannel(channelId, teamID);
   $(".users, .channels").removeClass('active');
   $(this).addClass('active');
-});
+  });
 
 function getAllUsers(teamName) {
   const checkUserRef = database.ref('teams/' + teamName);
