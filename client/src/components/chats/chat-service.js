@@ -25,7 +25,7 @@ export function openChatDetailsForChannel(channelId, teamID) {
                 renderMessage(childSnapshot, chatBox);
             }
         });
-        //chatBox.scrollTo(0, document.body.scrollHeight);
+        chatBox.scrollTop = chatBox.scrollHeight;
     });
 }
 
@@ -33,7 +33,6 @@ export function openChatDetailsForUser(userId, teamID) {
     teamId = teamID;
     sentToUserName = userId;
     forChannel = false;
-    console.log(444);
     let receiverRef = firebase.database().ref(`teams/${teamID}/directMessages/users/${sentToUserName}/messages`);
     receiverRef.on('value', function(snapshot) {
         let chatBox = document.getElementById('messageBody');
@@ -45,7 +44,7 @@ export function openChatDetailsForUser(userId, teamID) {
                 renderMessage(childSnapshot, chatBox);
             }
         });
-        chatBox.scrollTo(0, document.body.scrollHeight);
+        chatBox.scrollTop = chatBox.scrollHeight;
     });
 }
 
@@ -172,7 +171,7 @@ function pushMessagesForChannel(msg) {
                 renderMessage(childSnapshot, chatBox);
             }
         });
-        chatBox.scrollTo(0, document.body.scrollHeight);
+        chatBox.scrollTop = chatBox.scrollHeight;
     });
 }
 
@@ -194,7 +193,7 @@ function pushMessagesForUser(msg) {
                 renderMessage(childSnapshot, chatBox);
             }
         });
-        chatBox.scrollTo(0, document.body.scrollHeight);
+        chatBox.scrollTop = chatBox.scrollHeight;
     });
 }
 
@@ -244,10 +243,13 @@ function filesDownload(fileName) {
         .then(function(data) {
             var downloadUrl = URL.createObjectURL(data.fileBlob);
             var template = `<a href=${downloadUrl} download=${data.name}> Media File Received </a>`;
-            var htmlElement = document.createElement('div');
-            //htmlElement.innerHTML = template;
             var builtMessage = buildMessageEntity(template);
-            pushMessagesForUser(builtMessage);
+            if (forChannel) {
+                pushMessagesForChannel(builtMessage);
+            } else { // If it's Direct Messages, store message under both the Sender and Receiver nodes
+                pushMessagesForUser(builtMessage);
+                sendDesktopNotification(builtMessage)
+            }
         })
         .catch(function(error) {
             console.error(error);
@@ -266,5 +268,5 @@ function renderMessage(childSnapshot, chatBox) {
     paraElement.innerHTML = `<strong>${childSnapshot.val().sentByDisplayName}</strong> - ${formattedTime}<br>
     ${childSnapshot.val().messageText}`;
     chatBox.appendChild(paraElement);
-    //chatBox.scrollTo(0, document.body.scrollHeight);
+    chatBox.scrollTop = chatBox.scrollHeight;
 }
