@@ -18,17 +18,17 @@ store.subscribe(() =>{
   localStorage["current_user"] = JSON.stringify(currentState);
  });
 
-export function createInvitationComponent() {
+export function createInvitationComponent(teamName) {
   const form = document.getElementById('create-team-form');
-  let teamName;
-  Array.from(form.elements).forEach((element) => {
-    // console.log(element.nodeName);
-    // console.log(`${element.name}=${element.value}`);
-    if (element.id.toString() === 'teamName') {
-      teamName = element.value;
-      console.log(`teamname-${teamName}`);
-    }
-  });
+  // let teamName;
+  // Array.from(form.elements).forEach((element) => {
+  //   // console.log(element.nodeName);
+  //   // console.log(`${element.name}=${element.value}`);
+  //   if (element.id.toString() === 'teamName') {
+  //     teamName = element.value;
+  //     console.log(`teamname-${teamName}`);
+  //   }
+  // });
   // const output = '<p>Please click on the below provided link to join Slack</p><br/><a href="https://www.asdf.com">Join Slack</a>';
   const invitComponent = invitationComponent();
   const maxfields = 10;
@@ -140,7 +140,7 @@ export async function createTeamFormView() {
           cTeamComp.querySelector('#form-submit-cancel').addEventListener('click', () => { createDashboardView(); });
           cTeamComp.querySelector('#form-submit').addEventListener('click', () => {
             submitTeamCreateForm();
-            createInvitationComponent();
+            createInvitationComponent(teamName);
           });
           $(`#${createTeamViewHolderId}`).empty().append(cTeamComp);
         }
@@ -197,9 +197,6 @@ export function getTeamsOfCurrentUser() {
         <button type="button" class="btn btn-success addUserTeam btn-sm" data-teamid="${v}" title="Add People to ${v}"><i class="fa fa-plus"></i></button>
         <button type="button" class="btn btn-danger removeTeam btn-sm" data-teamid="${v}" title="Remove ${v}"><i class="fa fa-remove"></i></button></div>`);
       });
-
-    
-
     }
     else
     {
@@ -213,7 +210,9 @@ export function getTeamsOfCurrentUser() {
 
 $(document).on("click", ".addUserTeam", function(){
   var teamID = $(this).data('teamid');
-  alert(`ADD ${teamID}`);
+///= invitation 
+  createInvitationComponent(teamID);
+  //alert(`ADD ${teamID}`);
 });
 
 $(document).on("click", ".removeTeam", function(){
