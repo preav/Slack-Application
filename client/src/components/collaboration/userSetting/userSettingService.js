@@ -61,17 +61,20 @@ function getAllUsers(teamName) {
         dataSnapshot.forEach(childSnapshot => {
           let userNode = childSnapshot.key;
           let userID = childSnapshot.val();
-          let user = getUserName(userID);
-          var userListHTML = `
-                <li data-userid="${userID}" data-teamid="${teamName}" data-username="${user.userName}" class="users">
-                ${user.displayName}
-                <span data-usernode="${userNode}" data-teamid="${teamName}">
-                <!--<a class="muteUser"><i class="fa fa-microphone-slash"></i></a>
-                <a class="unmuteUser"><i class="fa fa-microphone"></i></a>-->
-                <a class="removeUser"><i class="fa fa-times-circle-o"></i></a>
-              </span>
-              </li>`;
-          $('#usersList').append(userListHTML);
+          getUserName(userID).then((user) => {
+            console.log(user);
+            var userListHTML = `
+                  <li data-userid="${userID}" data-teamid="${teamName}" data-username="${user.userName}" class="users">
+                  ${user.displayName}
+                  <span data-usernode="${userNode}" data-teamid="${teamName}">
+                  <!--<a class="muteUser"><i class="fa fa-microphone-slash"></i></a>
+                  <a class="unmuteUser"><i class="fa fa-microphone"></i></a>-->
+                  <a class="removeUser"><i class="fa fa-times-circle-o"></i></a>
+                </span>
+                </li>`;
+            $('#usersList').append(userListHTML);
+          });
+          
         });
       });
     }
@@ -89,14 +92,13 @@ $(document).on("click", '.users', function(){
   $(this).addClass('active');
 });
 
-function getUserName(userID) {
+async function getUserName(userID) {
   let user = {};
   let userDisplayNameLocal = '';
-  let usersDbRef = firebase.database().ref('users');
-  usersDbRef.once('value', (dataSnapshot) => {
+  let usersDbRef = await firebase.database().ref('users').once('value', (dataSnapshot) => {
     dataSnapshot.forEach(childSnapshot => {
       if (childSnapshot.key === userID) {
-        if (childSnapshot.val().name == null) {
+        if (!childSnapshot.val().name) {
           user.userName = childSnapshot.val().username;
           user.displayName = childSnapshot.val().username;
         }
