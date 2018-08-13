@@ -7,7 +7,7 @@ const jQuery = require('jquery');
 
 function getAllChannels(teamName) {
   const checkChannelRef = database.ref('teams/' + teamName);
-  let getAllContactHtml = `<ul class="side-list"><li><strong data-toggle="modal" data-target="#searchModal" data-teamid="${teamName}" id="searchChannel">Channels</strong>
+  let getAllContactHtml = `<ul class="side-list"><li><strong data-toggle="modal" data-teamid="${teamName}" data-target="#searchModal" id="searchChannel">Channels</strong>
     <span><a id="createChannel" data-teamid="${teamName}" data-toggle="modal" data-target="#modalSubscriptionForm"><i class="fa fa-plus-circle"></i></a></span>
     </li></ul><ul class="side-list side-list-body" id="channelList"></ul>`;
   $('#showContactInformation').append(getAllContactHtml);
@@ -19,16 +19,18 @@ function getAllChannels(teamName) {
         dataSnapshot.forEach(childSnapshot => {
           let channelID = childSnapshot.key;
           let channelName = childSnapshot.val().channelName;
-          var channelListHTML = `
-                <li data-channelid="${channelID}" data-teamid="${teamName}" data-channelname="${channelName}" class="channels">
-                ${channelName}
-                <span data-channelid="${channelID}" data-teamid="${teamName}">
-                <!--<a class="muteChannel"><i class="fa fa-microphone-slash"></i></a>
-                <a class="unmuteChannel"><i class="fa fa-microphone"></i></a>-->
-                <a class="removeChannel"><i class="fa fa-times-circle-o"></i></a>
-              </span>
-              </li>`;
-          $('#channelList').append(channelListHTML);
+          if (channelName) {
+            var channelListHTML = `
+                  <li data-channelid="${channelID}" data-teamid="${teamName}" data-channelname="${channelName}" class="channels">
+                  ${channelName}
+                  <span data-channelid="${channelID}" data-teamid="${teamName}">
+                  <!--<a class="muteChannel"><i class="fa fa-microphone-slash"></i></a>
+                  <a class="unmuteChannel"><i class="fa fa-microphone"></i></a>-->
+                  <a class="removeChannel"><i class="fa fa-times-circle-o"></i></a>
+                </span>
+                </li>`;
+            $('#channelList').append(channelListHTML);
+          }
         });
       });
 
@@ -36,14 +38,14 @@ function getAllChannels(teamName) {
   });
 }
 
-$(document).on("click", '.channels', function(){
+  $(document).on("click", '.channels', function(){
   const teamID = $(this).data('teamid');
   const channelId = $(this).data('channelid');
   $("#enteredCommand").attr('data-slackbot', 'false');
   openChatDetailsForChannel(channelId, teamID);
   $(".users, .channels").removeClass('active');
   $(this).addClass('active');
-});
+  });
 
 function getAllUsers(teamName) {
   const checkUserRef = database.ref('teams/' + teamName);
@@ -59,17 +61,20 @@ function getAllUsers(teamName) {
         dataSnapshot.forEach(childSnapshot => {
           let userNode = childSnapshot.key;
           let userID = childSnapshot.val();
-          let user = getUserName(userID);
-          var userListHTML = `
-                <li data-userid="${userID}" data-teamid="${teamName}" data-username="${user.userName}" class="users">
-                ${user.displayName}
-                <span data-usernode="${userNode}" data-teamid="${teamName}">
-                <!--<a class="muteUser"><i class="fa fa-microphone-slash"></i></a>
-                <a class="unmuteUser"><i class="fa fa-microphone"></i></a>-->
-                <a class="removeUser"><i class="fa fa-times-circle-o"></i></a>
-              </span>
-              </li>`;
-          $('#usersList').append(userListHTML);
+          getUserName(userID).then((user) => {
+            console.log(user);
+            var userListHTML = `
+                  <li data-userid="${userID}" data-teamid="${teamName}" data-username="${user.userName}" class="users">
+                  ${user.displayName}
+                  <span data-usernode="${userNode}" data-teamid="${teamName}">
+                  <!--<a class="muteUser"><i class="fa fa-microphone-slash"></i></a>
+                  <a class="unmuteUser"><i class="fa fa-microphone"></i></a>-->
+                  <a class="removeUser"><i class="fa fa-times-circle-o"></i></a>
+                </span>
+                </li>`;
+            $('#usersList').append(userListHTML);
+          });
+          
         });
       });
     }
@@ -87,14 +92,13 @@ $(document).on("click", '.users', function(){
   $(this).addClass('active');
 });
 
-function getUserName(userID) {
+async function getUserName(userID) {
   let user = {};
   let userDisplayNameLocal = '';
-  let usersDbRef = firebase.database().ref('users');
-  usersDbRef.once('value', (dataSnapshot) => {
+  let usersDbRef = await firebase.database().ref('users').once('value', (dataSnapshot) => {
     dataSnapshot.forEach(childSnapshot => {
       if (childSnapshot.key === userID) {
-        if (childSnapshot.val().name == null) {
+        if (!childSnapshot.val().name) {
           user.userName = childSnapshot.val().username;
           user.displayName = childSnapshot.val().username;
         }

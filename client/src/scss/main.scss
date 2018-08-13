@@ -149,6 +149,23 @@ body
     border: 1px solid #919193;
 }
 
+#sentBy{
+    float: left;
+    font-size: 12px;
+    padding-bottom: 0.3rem;
+}
+
+#sentTo{
+    float: right;
+    font-size: 12px;
+    padding-bottom: 0.3rem;
+}
+
+#sentTime{
+    font-size: 10px;
+    padding-bottom: 0.3rem;
+}
+
 #contentHolder{
     border-radius: 0.7rem;
 }
@@ -199,10 +216,21 @@ body
             border-bottom: 1px solid #ccc;
             padding: 5px 10px;
             cursor: pointer;
+            margin: 0;
 
             &:hover {
                 background: #666;
                 color: #fff;
+            }
+
+            &.ui-autocomplete-category {
+                background: #f2f2f2;
+                text-transform: uppercase;
+
+                &:hover {
+                    background: #f2f2f2;
+                    color: #000;
+                }
             }
         }
     }

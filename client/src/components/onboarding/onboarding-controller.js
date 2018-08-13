@@ -5,7 +5,7 @@ import { inivitationViewHolderId, invitationComponent, mailSentBody } from './in
 import { Email } from './invitation/smtp';
 import { submitTeamCreateForm, getTeam } from './team-create/team-create-service';
 import profileViewComponent from './profile/profileView';
-import { getCurrentUserData, saveUpdateUserProfile } from './profile/profileService';
+import { getCurrentUserData, saveUpdateUserProfile, deleteTeam } from './profile/profileService';
 import { checkAuthStateChange, gitLogin, gitLogout } from '../../../../firebase/git-login';
 import { saveUpdateUser, getCurrentUserDetails, saveUpdateTeam } from '../../../../firebase/onboarding-db';
 import { getAllChannels, getAllUsers } from '../collaboration/userSetting/userSettingService';
@@ -49,7 +49,7 @@ export function createInvitationComponent() {
   invitComponent.querySelector('.skip_button').addEventListener('click', (e) => {
     e.preventDefault();
     $('form#formid').find('input:text').val('');
-    proceedNext(teamName,`Skipped inivitation for team ${teamName}`);
+    proceedNext(teamName);
   });
   invitComponent.querySelector('#submit').addEventListener('click', (e) => {
     e.preventDefault();
@@ -66,7 +66,7 @@ export function createInvitationComponent() {
         const appUrl = window.location.href;
 
         const redireURL = `${appUrl}?teamname=${teamName}`;// &useremail=${reciever}`;
-        const output = `<div style="border: 6px solid #ccc;font-family:arial;width: 800px;margin: auto;">
+        const output = `<div style="border: 6px solid #ccc;font-family:arial;width: 100%;margin: auto;">
         <div style="text-align:center;padding-top: 50px;"><img src="https://media.licdn.com/dms/image/C560BAQEYp_bjM8rH9w/company-logo_200_200/0?e=2159024400&v=beta&t=YN-rmUmfLXgy7WrKeZ-aDfePrC6cM3GNTQg_wybCpnk" alt="sapient-logo"/></div>
         <div style="padding-bottom: 120px;padding-left: 50px;padding-right: 50px;padding-top: 30px;"><h1 style="color: #bd1414;">Welcome to Sapient-Slack!</h1>
         <p>You’re added to new Sapient-Slack workspace <strong style="color:#0d73f1;font-size: 20px;">${teamName}</strong>. Want to join the workspace??</p>
@@ -85,14 +85,16 @@ export function createInvitationComponent() {
       //const sentmailComponent = mailSentBody();
       //$(`#${inivitationViewHolderId}`).empty().append(sentmailComponent);
       $('form#formid').find('input:text').val('');
-      proceedNext(teamName,`Inivitation for team ${teamName}`);
+      alert(`Inivitation for team ${teamName}`);
+      proceedNext(teamName);
     }
   });
   $(`#${inivitationViewHolderId}`).empty().append(invitComponent);
   return invitComponent;
 }
-export function proceedNext(teamName,inputmessage) {
-  alert(inputmessage);
+export function proceedNext(teamName) {
+  //alert(inputmessage);
+  createTeamDashboard(teamName);
   //do next
 }
 document.querySelector('#user-profile').addEventListener('click', () => {
@@ -195,6 +197,9 @@ export function getTeamsOfCurrentUser() {
         <button type="button" class="btn btn-success addUserTeam btn-sm" data-teamid="${v}" title="Add People to ${v}"><i class="fa fa-plus"></i></button>
         <button type="button" class="btn btn-danger removeTeam btn-sm" data-teamid="${v}" title="Remove ${v}"><i class="fa fa-remove"></i></button></div>`);
       });
+
+    
+
     }
     else
     {
@@ -214,12 +219,22 @@ $(document).on("click", ".addUserTeam", function(){
 $(document).on("click", ".removeTeam", function(){
   var teamID = $(this).data('teamid');
   $(this).parents('.teamsContainer').remove();
+
+  // delete team 
   alert(`REMOVE ${teamID}`);
+
+  deleteTeam(teamID);
 });
 
 $(document).on("click", ".team-link", function(){
   var teamName = $(this).data('team');
-    $("#chatContainer, #searchContainer, #notificationFilter").show();
+  // alert($(this).data('team'));
+  createTeamDashboard(teamName)
+});
+
+export function createTeamDashboard(teamName)
+{
+  $("#chatContainer, #searchContainer, #notificationFilter").show();
     $('#signupContainer').hide();
     const obj = store.getState();
     obj.user.currentTeam.teamName = teamName;
@@ -229,9 +244,10 @@ $(document).on("click", ".team-link", function(){
     getAllChannels(teamName);
     getAllUsers(teamName);
 
+    $("#currentTeam span").html(teamName);
     $("#searchAll").attr('data-teamid', teamName);
   // alert($(this).data('team'));
-});
+};
 
 export async function userGitLogin() {
   try
