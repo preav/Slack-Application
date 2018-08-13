@@ -25,7 +25,7 @@ export function openChatDetailsForChannel(channelId, teamID) {
                 renderMessage(childSnapshot, chatBox);
             }
         });
-        chatBox.scrollTo(0, document.body.scrollHeight);
+        //chatBox.scrollTo(0, document.body.scrollHeight);
     });
 }
 
@@ -266,4 +266,5 @@ function renderMessage(childSnapshot, chatBox) {
     paraElement.innerHTML = `<strong>${childSnapshot.val().sentByDisplayName}</strong> - ${formattedTime}<br>
     ${childSnapshot.val().messageText}`;
     chatBox.appendChild(paraElement);
+    //chatBox.scrollTo(0, document.body.scrollHeight);
 }
