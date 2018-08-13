@@ -76,7 +76,7 @@ export function sendMessage(evt) {
     messagesRef.push(msg);
 
     // Add this to State of store
-    store.dispatch(addChatToStore(message, currentDateTime, userName, sentToUserName, userDisplayName, sentToDisplayName));
+    store.dispatch(addChatToStore(message, currentDateTime, userName, sentToUserName, userDisplayName));
 }
 
 //creating Store
