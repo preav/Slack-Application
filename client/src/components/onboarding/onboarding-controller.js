@@ -66,7 +66,7 @@ export function createInvitationComponent(teamName) {
         const appUrl = window.location.href;
 
         const redireURL = `${appUrl}?teamname=${teamName}`;// &useremail=${reciever}`;
-        const output = `<div style="border: 6px solid #ccc;font-family:arial;width: 100%;margin: auto;">
+        const output = `<div style="border: 6px solid #ccc;font-family:arial;box-sizing:border-box;width: 100%;margin: auto;">
         <div style="text-align:center;padding-top: 50px;"><img src="https://media.licdn.com/dms/image/C560BAQEYp_bjM8rH9w/company-logo_200_200/0?e=2159024400&v=beta&t=YN-rmUmfLXgy7WrKeZ-aDfePrC6cM3GNTQg_wybCpnk" alt="sapient-logo"/></div>
         <div style="padding-bottom: 120px;padding-left: 50px;padding-right: 50px;padding-top: 30px;"><h1 style="color: #bd1414;">Welcome to Sapient-Slack!</h1>
         <p>You’re added to new Sapient-Slack workspace <strong style="color:#0d73f1;font-size: 20px;">${teamName}</strong>. Want to join the workspace??</p>
