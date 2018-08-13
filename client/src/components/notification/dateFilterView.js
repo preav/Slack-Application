@@ -16,13 +16,13 @@ function createHTMLElement(html) {
   }
   function tabContentDisplay(src, msg)
   { let srcContentDisplay;
-    
-   /* if(Array.isArray(msg[src])) {    
+    console.log('--------aray check----',typeof msg, "---------",msg);
+    if(Array.isArray(msg)) {          
       srcContentDisplay =`<div class="tab-pane fade" id="${src}" role="tabpanel">
-    ${msg[src].map(item => `<p>${item}</p>`).join('')} </div>`; 
-  }*/
-  srcContentDisplay =`<div class="tab-pane fade" id="${src}" role="tabpanel">
-  ${msg} </div>`; 
+    ${msg.map(item => `${item}`).join('')} </div>`; 
+  }
+  /*srcContentDisplay =`<div class="tab-pane fade" id="${src}" role="tabpanel">
+  ${msg} </div>`; */
     return createHTMLElement(srcContentDisplay);
 
   }
@@ -30,7 +30,7 @@ function createHTMLElement(html) {
   function displayUserChat(user, msg)
   {
       document.getElementById('userTab').appendChild(tabDisplay(`${user}`));
-      document.getElementById('userContent').appendChild(tabContentDisplay(`${user}`,`${msg}`));
+      document.getElementById('userContent').appendChild(tabContentDisplay(`${user}`,msg));
      // $('#userTab').metisMenu();
   }
   function displayChannelsChat(channel, msg)
