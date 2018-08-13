@@ -30,6 +30,7 @@ export function openChatDetailsForChannel(channelId, teamID) {
 export function openChatDetailsForUser(userId, teamID) {
     teamId = teamID;
     sentToUserName = userId;
+    forChannel = false;
 
     let receiverRef = firebase.database().ref(`teams/${teamID}/directMessages/users/${sentToUserName}/messages`);
     receiverRef.on('value', function (snapshot) {
@@ -141,7 +142,7 @@ function validateInputs(inputMessage) {
 function buildMessageEntity(message) {
     let msg = {};
     msg.messageText = message;
-    msg.date = new Date(Date.now());
+    msg.date = Date.now();
     msg.sentToUserName = sentToUserName;
     msg.sentByUserName = userName;
     msg.sentByDisplayName = userDisplayName;
