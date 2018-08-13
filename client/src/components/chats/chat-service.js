@@ -55,14 +55,16 @@ export function sendMessage(evt) {
     if (!validateInputs(rawMessage)) {
         return;
     }
-
+    
     $('#enteredCommand').data("emojioneArea").setText("");
-    const message = markdown.toHTML(rawMessage);
+    const getMessage = markdown.toHTML(rawMessage);
+    if ((getMessage.indexOf('<p>') >-1 )&& (getMessage.indexOf('</p>') > -1)){
+        var message = getMessage.substring(3, getMessage.length-4);
+    }
+    else var message = getMessage;
     const currentDateTime = Date.now();
-
     // Build the Message entity
     let msg = buildMessageEntity(message);
-
     // If message is sent to a Channel, store message only under the Channel
     if (forChannel) {
         pushMessagesForChannel(msg);
@@ -243,7 +245,7 @@ function filesDownload(fileName) {
             var downloadUrl = URL.createObjectURL(data.fileBlob);
             var template = `<a href=${downloadUrl} download=${data.name}> Media File Received </a>`;
             var htmlElement = document.createElement('div');
-            htmlElement.innerHTML = template;
+            //htmlElement.innerHTML = template;
             var builtMessage = buildMessageEntity(template);
             pushMessagesForUser(builtMessage);
         })
