@@ -157,7 +157,7 @@ export function sendMessage(evt) {
         pushMessagesForChannel(msg);
     } else { // If it's Direct Messages, store message under both the Sender and Receiver nodes
         pushMessagesForUser(msg);
-        sendDesktopNotification(msg)
+
     }
 
     // push a copy of the message to "Messages" collection on DB
@@ -181,6 +181,7 @@ function pushMessagesForChannel(msg) {
         snapshot.forEach(function(childSnapshot) {
             if (childSnapshot.val().sentToUserName === sentToUserName) {
                 renderMessage(childSnapshot, chatBox);
+                sendDesktopNotification(msg)
             }
         });
         chatBox.scrollTo(0, document.body.scrollHeight);
