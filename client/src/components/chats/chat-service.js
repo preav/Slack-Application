@@ -1,61 +1,19 @@
-import { createStore } from 'redux'
+import {
+    createStore
+} from 'redux'
 import moment from 'moment';
-import { markdown } from 'markdown'
+import {
+    markdown
+} from 'markdown'
 import firebase from 'firebase';
-import { chat } from './chat-reducers'
-import { addChatToStore } from './chat-controller'
+import {
+    chat
+} from './chat-reducers'
+import {
+    addChatToStore
+} from './chat-controller'
 import '../../../../firebase/firebase-config';
-import { sendDesktopNotification } from '../notifications/notification-main'
 var dropbox = require('dropbox').Dropbox;
-
-//creating Store
-const store = createStore(chat);
-
-//event listeners
-document.getElementById('addMedia').addEventListener('click', getFile);
-// document.getElementById('enter').addEventListener('click', sendMessage);
-
-// Log the initial state
-// console.log('initial Value',store.getState())
-let sentToUserName = ''; // github username, eg. anilkumar-bv
-let sentToDisplayName = ''; // github Name, eg. Anil Kumar
-let userName = ''; // github username
-let userDisplayName = ''; // github Name
-let forChannel = false;
-
-// Get Current User Details
-let currentUser = window.localStorage.getItem("current_user");
-if (currentUser && currentUser != 'null' && currentUser.user !== 'undefined') {
-    userName = JSON.parse(currentUser).user.userName;
-    userDisplayName = getDisplayNameFrom(userName);
-} else {
-    // initialize to one of the User
-    userName = 'anilkumar-bv';
-}
-
-// Function to retrieve User Display Name from Login User Name
-function getDisplayNameFrom(userNameInput) {
-    // get the User Name from userName
-    let userDisplayNameLocal = '';
-    const usersDbRef = firebase.database().ref('users');
-    usersDbRef.once('value', (dataSnapshot) => {
-        dataSnapshot.forEach(childSnapshot => {
-            if (childSnapshot.val().username === userNameInput) {
-                // Check if name field is available. If not, return the userName itself
-                if (childSnapshot.val().name == null) {
-                    userDisplayNameLocal = userNameInput;
-                } else {
-                    userDisplayNameLocal = childSnapshot.val().name;
-                }
-            }
-        });
-    })
-    return userDisplayNameLocal;
-}
-
-let receiverRef = null;
-let senderRef = null;
-let teamId = '';
 
 // Following function is called when
 // A Channel is clicked upon to retrieve the Messages, and to initiate a Chat with the Channel
@@ -80,6 +38,7 @@ export function openChatDetailsForChannel(channelId, teamID) {
 export function openChatDetailsForUser(userId, teamID) {
     teamId = teamID;
     sentToUserName = userId;
+    forChannel = false;
 
     let receiverRef = firebase.database().ref(`teams/${teamID}/directMessages/users/${sentToUserName}/messages`);
     receiverRef.on('value', function(snapshot) {
@@ -94,48 +53,6 @@ export function openChatDetailsForUser(userId, teamID) {
         });
         chatBox.scrollTo(0, document.body.scrollHeight);
     });
-}
-
-// function to validate input Message and check if Sender is set
-function validateInputs(inputMessage) {
-    // Check if a User is selected to Chat with
-    if (sentToUserName === '') {
-        alert('Please select a User to Chat with');
-        return false;
-    }
-
-    // Check if empty Text is being sent
-    if (inputMessage.trim() === '') {
-        alert('Please provide input text for Chat');
-        return false;
-    }
-    return true;
-}
-
-// Function to build Message Entity
-function buildMessageEntity(message) {
-    let msg = {};
-    msg.messageText = message;
-    msg.date = new Date(Date.now());
-    msg.sentToUserName = sentToUserName;
-
-    // Get the Names to display, for Receiver and Sender
-    sentToDisplayName = getDisplayNameFrom(sentToUserName); // Receiver Display Name
-    userDisplayName = getDisplayNameFrom(userName); // Sender Display Name
-
-    // if it's for Channel, sentToDisplayName should be same as sentToUserName
-    if (forChannel)
-        msg.sentToDisplayName = sentToUserName;
-
-    msg.sentByUserName = userName;
-    msg.sentByDisplayName = userDisplayName;
-
-    if (userDisplayName)
-        msg.sentByDisplayName = userDisplayName;
-    else
-        msg.sentByDisplayName = userName;
-
-    return msg;
 }
 
 export function sendMessage(evt) {
@@ -166,6 +83,82 @@ export function sendMessage(evt) {
 
     // Add this to State of store
     store.dispatch(addChatToStore(message, currentDateTime, userName, sentToUserName, userDisplayName, sentToDisplayName));
+}
+
+//creating Store
+const store = createStore(chat);
+
+//event listeners
+document.getElementById('addMedia').addEventListener('click', getFile);
+// document.getElementById('enter').addEventListener('click', sendMessage);
+
+// Log the initial state
+// console.log('initial Value',store.getState())
+let sentToUserName = ''; // github username, eg. anilkumar-bv
+let userName = ''; // github username
+let userDisplayName = ''; // github Name
+let forChannel = false;
+let receiverRef = null;
+let senderRef = null;
+let teamId = '';
+
+// Get Current User Details
+let currentUser = window.localStorage.getItem("current_user");
+if (currentUser && currentUser != 'null' && currentUser.user !== 'undefined') {
+    userName = JSON.parse(currentUser).user.userName;
+    getDisplayNameFrom(userName);
+}
+
+// Function to retrieve User Display Name from Login User Name
+function getDisplayNameFrom(userNameInput) {
+    // get the User Display Name from userName
+    const usersDbRef = firebase.database().ref('users');
+    usersDbRef.once('value', (dataSnapshot) => {
+        dataSnapshot.forEach(childSnapshot => {
+            if (childSnapshot.val().username === userNameInput) {
+                // Check if name field is available. If not, return the userName itself
+                if (childSnapshot.val().name == null) {
+                    userDisplayName = userNameInput;
+                } else {
+                    userDisplayName = childSnapshot.val().name;
+                }
+            }
+        });
+    })
+}
+
+// function to validate input Message and check if Sender is set
+function validateInputs(inputMessage) {
+    // Check if a User is selected to Chat with
+    if (sentToUserName === '') {
+        alert('Please select a User to Chat with');
+        return false;
+    }
+
+    // Check if empty Text is being sent
+    if (inputMessage.trim() === '') {
+        alert('Please provide input text for Chat');
+        return false;
+    }
+    return true;
+}
+
+// Function to build Message Entity
+function buildMessageEntity(message) {
+    let msg = {};
+    msg.messageText = message;
+    msg.date = Date.now();
+    msg.sentToUserName = sentToUserName;
+    msg.sentByUserName = userName;
+    msg.sentByDisplayName = userDisplayName;
+
+    // If the user does not have "name" (Display Name) attribute in the User Entity, assign "userName" to DisplayName
+    if (userDisplayName)
+        msg.sentByDisplayName = userDisplayName;
+    else
+        msg.sentByDisplayName = userName;
+
+    return msg;
 }
 
 function pushMessagesForChannel(msg) {
@@ -246,8 +239,12 @@ function filesUpload(fileValue, fileName) {
 
 function filesDownload(fileName) {
     var ACCESS_TOKEN = '-svZYpTlHYAAAAAAAAAAlA6ODRtAP91bFD71MYrpc5glK69vAatHDx3602arXz3f';
-    var dbx = new dropbox({ accessToken: ACCESS_TOKEN });
-    dbx.filesDownload({ path: fileName }) // here i mentioned the shareable link rather then I want to specify path
+    var dbx = new dropbox({
+        accessToken: ACCESS_TOKEN
+    });
+    dbx.filesDownload({
+            path: fileName
+        }) // here i mentioned the shareable link rather then I want to specify path
         .then(function(data) {
             var downloadUrl = URL.createObjectURL(data.fileBlob);
             var template = `<a href=${downloadUrl} download=${data.name}> Media File Received </a>`;

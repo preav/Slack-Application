@@ -51,7 +51,7 @@ let  userID = 'anilkumar-bv';
 
 export function getMessagesFromFireBase(startDate, endDate) {
   document.getElementById('chatResult').style.display='block';
-  // channelMessages(startDate, endDate);
+   channelMessages(startDate, endDate);
    directMessages(startDate, endDate);
     
 }
@@ -116,7 +116,7 @@ function dateConverter(recorddate, startDate, endDate){
 
   function directMessages(startDate, endDate){
     let formatedDate;
-    let directMessages;
+    let directMessages = new Object();
     console.log("/"+`${teamId}`+"/directMessages/users");
     const users = database.ref("/"+`${teamId}`+"/directMessages/users");
     users.on('value', (snapshot) => {
@@ -130,22 +130,24 @@ function dateConverter(recorddate, startDate, endDate){
                      formatedDate = dateConverter(rcvDate,startDate, endDate);
                     if(formatedDate != null){
                       let sentby=msgData.sentBy;
-                     // let sentByuser = getUserName(sentby);
-                      let sentTo= msgData.sentTo; 
+                    // let sentby = getUserName(msgData.sentBy);
+                     let sentTo= msgData.sentTo; 
+                     //    let sentTo = getUserName(msgData.sentTo);
                       let message=msgData.messageText;                     
                       if(sentby === `${userID}` || sentTo === `${userID}`)
                       {
-                        const msg= `${sentby}` +"-"+ `${formatedDate}`+" : "+`${message}`;           
-                      
-                       /*let keyx =`${userID}`;                 
-                            if (directMessages[keyx] !== undefined){
+                        const msg= `${sentby}` +"-"+ `${formatedDate}`+" : "+`${message}`;         
+                        
+                      let keyx =`${userID}`;                 
+                            if (Object.keys(directMessages).length != 0
+                             && directMessages[keyx] != undefined ){
                               directMessages[keyx].push(`${msg}`);
                             }
                             else{
                               directMessages[keyx]= new Array(`${msg}`);
-                            } */
+                            } 
 
-                              displayUserChat(`${sentby}`, `${msg}`); 
+                           //   displayUserChat(`${sentby}`, `${msg}`); 
 
                       }
                }  
@@ -154,10 +156,10 @@ function dateConverter(recorddate, startDate, endDate){
         });
     });
 
-    if(directMessages !=null && directMessages!= undefined)
+  var key;
     for(key in directMessages) {
       if(Array.isArray(directMessages[key])) {
-        a[key].map(item => console.log(key, "Items", item))
+        directMessages[key].map(item => console.log(key, "Items", item))
       }
        console.log(key);
       console.log(directMessages[key]);
