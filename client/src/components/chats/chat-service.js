@@ -90,6 +90,9 @@ let sentToUserName = ''; // github username, eg. anilkumar-bv
 let userName = ''; // github username
 let userDisplayName = ''; // github Name
 let forChannel = false;
+let receiverRef = null;
+let senderRef = null;
+let teamId = '';
 
 // Get Current User Details
 let currentUser = window.localStorage.getItem("current_user");
@@ -100,8 +103,7 @@ if (currentUser && currentUser != 'null' && currentUser.user !== 'undefined') {
 
 // Function to retrieve User Display Name from Login User Name
 function getDisplayNameFrom(userNameInput) {
-    // get the User Name from userName
-    let userDisplayNameLocal = '';
+    // get the User Display Name from userName
     const usersDbRef = firebase.database().ref('users');
     usersDbRef.once('value', (dataSnapshot) => {
         dataSnapshot.forEach(childSnapshot => {
@@ -117,10 +119,6 @@ function getDisplayNameFrom(userNameInput) {
         });
     })
 }
-
-let receiverRef = null;
-let senderRef = null;
-let teamId = '';
 
 // function to validate input Message and check if Sender is set
 function validateInputs(inputMessage) {
