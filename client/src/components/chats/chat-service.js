@@ -42,7 +42,16 @@ export function openChatDetailsForUser(userId, teamID) {
             if ((childData.sentByUserName === sentToUserName || childData.sentToUserName === sentToUserName) &&
                 (childData.sentByUserName === userName || childData.sentToUserName === userName)) {
                 renderMessage(childSnapshot, chatBox);
+                // console.log(childData)
+                if (childSnapshot.val().sentByUserName !== userName) {
+                    var msgInfo = {
+                        "messageText": childSnapshot.val().messageText,
+                        "sentByDisplayName": childData.sentByUserName
+                    };
+                    sendDesktopNotification(msgInfo);
+                }
             }
+
         });
         chatBox.scrollTop = chatBox.scrollHeight;
     });
@@ -54,13 +63,12 @@ export function sendMessage(evt) {
     if (!validateInputs(rawMessage)) {
         return;
     }
-    
+
     $('#enteredCommand').data("emojioneArea").setText("");
     const getMessage = markdown.toHTML(rawMessage);
-    if ((getMessage.indexOf('<p>') >-1 )&& (getMessage.indexOf('</p>') > -1)){
-        var message = getMessage.substring(3, getMessage.length-4);
-    }
-    else var message = getMessage;
+    if ((getMessage.indexOf('<p>') > -1) && (getMessage.indexOf('</p>') > -1)) {
+        var message = getMessage.substring(3, getMessage.length - 4);
+    } else var message = getMessage;
     const currentDateTime = Date.now();
     // Build the Message entity
     let msg = buildMessageEntity(message);
@@ -69,12 +77,14 @@ export function sendMessage(evt) {
         pushMessagesForChannel(msg);
     } else { // If it's Direct Messages, store message under both the Sender and Receiver nodes
         pushMessagesForUser(msg);
-        sendDesktopNotification(msg)
+
+
     }
 
     // push a copy of the message to "Messages" collection on DB
     let messagesRef = firebase.database().ref('messages');
     messagesRef.push(msg);
+    //sendDesktopNotification(msg)
 
     // Add this to State of store
     store.dispatch(addChatToStore(message, currentDateTime, userName, sentToUserName, userDisplayName));
@@ -162,6 +172,8 @@ function pushMessagesForChannel(msg) {
     // push Message to DB
     receiverRef.push(msg);
 
+
+
     // Render the Messages
     receiverRef.on('value', function(snapshot) {
         let chatBox = document.getElementById('messageBody');
@@ -169,6 +181,7 @@ function pushMessagesForChannel(msg) {
         snapshot.forEach(function(childSnapshot) {
             if (childSnapshot.val().sentToUserName === sentToUserName) {
                 renderMessage(childSnapshot, chatBox);
+
             }
         });
         chatBox.scrollTop = chatBox.scrollHeight;
