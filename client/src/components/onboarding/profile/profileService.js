@@ -1,5 +1,7 @@
 import '../../../../../firebase/firebase-config';
 import firebase from 'firebase';
+import { saveUpdateTeam } from '../../../../../firebase/onboarding-db';
+
 
 
 // const currUser = firebase.auth().currentUser.uid;
@@ -161,4 +163,32 @@ export function saveUpdateUserProfile1(updated_name, updated_email) {
         });
        }
     });
-} 
+
+// Deleting user from tea**********************************
+   /* const currentUsers  = firebase.database().ref('teams').child(delTeam).child('users');
+    var filteredUsrArray;
+    if (currentUsers != null || currentUsers != 'undefined') {
+    currentUsers.on('value', function (snapshot) {
+      if(snapshot != null) {
+        const allUsrVal = Object.values(snapshot.val());
+        console.log(allUsrVal);
+        filteredUsrArray = allUsrVal.filter(e => e !== currentUser);
+        console.log("filltered Team>>>>>"+filteredUsrArray);
+      
+if (filteredUsrArray == null || filteredUsrArray == 'undefined') {
+  filteredUsrArray =[];
+  console.log("filltered Team 2222>>>>>"+JSON.stringify(filteredUsrArray));
+
+}
+        var team = {};
+        team.users =  filteredUsrArray;
+        console.log("filltered Team 22233>>>>>"+JSON.stringify(team));
+        saveUpdateTeam(delTeam, team).then((response) => {
+          console.log(response);
+        }, (error) => {
+          console.log(error);
+        });     
+      }
+    });
+} */
+  }
