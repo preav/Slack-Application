@@ -33,7 +33,7 @@ export function openChatDetailsForUser(userId, teamID) {
     teamId = teamID;
     sentToUserName = userId;
     forChannel = false;
-
+    console.log(444);
     let receiverRef = firebase.database().ref(`teams/${teamID}/directMessages/users/${sentToUserName}/messages`);
     receiverRef.on('value', function(snapshot) {
         let chatBox = document.getElementById('messageBody');
@@ -264,6 +264,6 @@ function renderMessage(childSnapshot, chatBox) {
     const paraElement = document.createElement('p');
     const formattedTime = moment(childSnapshot.val().date).fromNow();
     paraElement.innerHTML = `<strong>${childSnapshot.val().sentByDisplayName}</strong> - ${formattedTime}<br>
-                                ${childSnapshot.val().messageText}`;
+    ${childSnapshot.val().messageText}`;
     chatBox.appendChild(paraElement);
 }
